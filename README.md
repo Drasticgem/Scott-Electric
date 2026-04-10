@@ -1,2 +1,2 @@
-# Scott-Electric
-Website for Scott Electric Company
+# Scott Electric Group
+Website for Electric Company

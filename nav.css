@@ -1,0 +1,248 @@
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════ */
+
+.nav {
+  background: var(--navy);
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ── Logo ── */
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.nav__bolt {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.nav__wordmark {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav__brand-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  line-height: 1;
+}
+
+.nav__brand-sub {
+  font-family: var(--font-body);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  margin-top: 3px;
+}
+
+/* ── Center Links ── */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav__link {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: rgba(255,255,255,0.68);
+  transition: color 0.2s var(--ease-out);
+  position: relative;
+  padding: 4px 0;
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--gold);
+  transition: width 0.25s var(--ease-out);
+}
+
+.nav__link:hover {
+  color: #fff;
+}
+
+.nav__link:hover::after {
+  width: 100%;
+}
+
+/* Employee link — gold accent */
+.nav__link--employee {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.nav__link--employee:hover {
+  color: var(--gold-light);
+}
+
+.nav__link--employee::after {
+  background: var(--gold-light);
+}
+
+/* Divider pip between nav sections */
+.nav__divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+
+/* ── CTA Button ── */
+.nav__cta {
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.nav__cta:hover {
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+/* ── Hamburger ── */
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+
+.nav__hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+  transform-origin: center;
+}
+
+.nav__hamburger.is-active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav__hamburger.is-active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav__hamburger.is-active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── Mobile Menu ── */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--navy);
+  z-index: 999;
+  flex-direction: column;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+.mobile-menu.is-open {
+  display: flex;
+}
+
+.mobile-menu__link {
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: block;
+  transition: color 0.2s;
+}
+
+.mobile-menu__link:hover {
+  color: #fff;
+}
+
+.mobile-menu__link--employee {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.mobile-menu__cta {
+  margin-top: 24px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 16px 24px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 1.25rem;
+    height: 60px;
+  }
+
+  .nav__links,
+  .nav__cta {
+    display: none;
+  }
+
+  .nav__hamburger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    top: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    height: 56px;
+    padding: 0 1rem;
+  }
+
+  .mobile-menu {
+    top: 56px;
+    padding: 1.25rem;
+  }
+
+  .nav__brand-name {
+    font-size: 14px;
+  }
+}
