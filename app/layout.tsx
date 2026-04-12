@@ -1,9 +1,27 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Scott Electric Group",
-  description: "Powering South Texas since 1920.",
+  title: "Scott Electric Group — Powering South Texas Since 1920",
+  description:
+    "Scott Electric Group — Electrical, A/C, Telecom & Custom Woodworking for South Texas since 1920. Industrial, commercial, and residential services from Corpus Christi to San Antonio.",
+  openGraph: {
+    title: "Scott Electric Group — Powering South Texas Since 1920",
+    description:
+      "Electrical, A/C, Telecom & Custom Woodworking. Four divisions, one standard. Serving South Texas for over a century.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Scott Electric Group — Powering South Texas Since 1920",
+    description:
+      "Electrical, A/C, Telecom & Custom Woodworking. Four divisions, one standard.",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -13,6 +31,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/*
+          Google Fonts loaded at runtime via <link> — the build environment
+          cannot reach fonts.googleapis.com for next/font/google's build-time
+          fetch, and the legacy static site already used this pattern.
+        */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
