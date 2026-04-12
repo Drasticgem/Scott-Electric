@@ -20,23 +20,17 @@ export function Divisions() {
       aria-label="Our divisions"
     >
       <div className="container-1140">
-        <Reveal className="mb-8">
+        <Reveal className="mb-6">
+          {/* No H2 here — visually a continuation of the hero. The
+              "Four divisions. One standard." heading lives in the
+              Services section below, where it belongs to the
+              detailed services grid. */}
           <p
             className="text-[10px] font-semibold uppercase text-gold"
             style={{ letterSpacing: "0.22em" }}
           >
             Our Divisions
           </p>
-          <h2
-            className="mt-2 font-[family-name:var(--font-display)] font-black text-white"
-            style={{
-              fontSize: "clamp(22px, 2.4vw, 30px)",
-              lineHeight: 1.2,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            Four divisions. One standard.
-          </h2>
         </Reveal>
 
         <Reveal

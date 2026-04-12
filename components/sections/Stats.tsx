@@ -6,7 +6,7 @@ import { STATS } from "@/lib/data/stats";
  */
 export function Stats() {
   return (
-    <aside
+    <section
       aria-label="Company statistics"
       className="border-t border-white/5 bg-navy"
     >
@@ -38,6 +38,6 @@ export function Stats() {
           ))}
         </div>
       </div>
-    </aside>
+    </section>
   );
 }
