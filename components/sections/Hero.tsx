@@ -1,26 +1,18 @@
 import { BUSINESS } from "@/lib/constants";
 import { CREDENTIALS } from "@/lib/data/credentials";
-import { IndustrialSilhouette } from "@/components/icons/DivisionIcons";
-import { Phone } from "lucide-react";
 
 /**
- * Full-bleed layered hero — redesigned from the legacy two-block
- * (video-area then content) hero for better above-the-fold conversion.
+ * Full-bleed layered hero — looping refinery video as the backdrop,
+ * with a vignette overlay on the left side so the headline + CTAs
+ * sit on a dark surface while the right side of the video stays clear.
  *
- * Visual language is identical to the legacy site:
- *   - looping background video (Hero.mp4) over navy fallback
- *   - SVG industrial silhouette at 8% opacity
- *   - animated grain texture
+ *   - looping background video (/videos/hero.mp4) over navy fallback
+ *   - subtle animated grain over the video
+ *   - left-to-right + top-to-bottom dark vignette for text legibility
  *   - glassmorphic location tags (top-left)
- *   - pulsing "Video — Looping" indicator (bottom-right)
  *   - Playfair Display 900 headline with gold <em> emphasis
- *
- * What changed vs legacy:
- *   - Content overlays the background instead of stacking below it,
- *     so H1 + primary CTA always sit above the fold.
- *   - Phone number added as a second hero CTA (tel: link).
- *   - Trust badges upgraded from a dotted inline row to small glass pills.
- *   - Division cards moved out of the hero into their own Divisions section.
+ *   - Primary gold CTA + secondary gold-outline tel: CTA
+ *   - Trust badges as solid pills (no glass — keeps them readable)
  */
 
 const LOCATIONS = [
@@ -59,19 +51,25 @@ export function Hero() {
         }}
       />
 
-      {/* Industrial skyline silhouette — bottom 40% at 8% opacity */}
-      <IndustrialSilhouette className="pointer-events-none absolute bottom-0 left-0 right-0 z-[1] h-[40%] opacity-[0.08]" />
-
-      {/* Gradient overlay for text legibility — stronger at bottom */}
+      {/* Gradient overlay for text legibility — left vignette + top/bottom fade.
+          Layered: left-to-right dark column + top/bottom navy fade. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[2]"
         style={{
-          background: `linear-gradient(180deg,
-            rgba(15,32,64,0.25) 0%,
-            rgba(15,32,64,0.15) 25%,
-            rgba(15,32,64,0.55) 75%,
-            rgba(15,32,64,0.92) 100%)`,
+          background: `
+            linear-gradient(90deg,
+              rgba(10,24,48,0.88) 0%,
+              rgba(10,24,48,0.72) 30%,
+              rgba(10,24,48,0.35) 55%,
+              rgba(10,24,48,0.10) 80%,
+              rgba(10,24,48,0.00) 100%),
+            linear-gradient(180deg,
+              rgba(10,24,48,0.55) 0%,
+              rgba(10,24,48,0.20) 30%,
+              rgba(10,24,48,0.40) 75%,
+              rgba(10,24,48,0.92) 100%)
+          `,
         }}
       />
 
@@ -80,20 +78,6 @@ export function Hero() {
         {LOCATIONS.map((loc) => (
           <LocationTag key={loc.name} name={loc.name} isHQ={"isHQ" in loc && loc.isHQ} />
         ))}
-      </div>
-
-      {/* ── Bottom-right: "Video — Looping" indicator ── */}
-      <div
-        aria-hidden="true"
-        className="absolute bottom-5 right-7 z-[5] flex items-center gap-2 rounded-[20px] border border-white/[0.12] bg-navy/55 px-[14px] py-[6px] pl-[10px] text-[10px] font-medium uppercase text-white/45 max-[768px]:bottom-[14px] max-[768px]:right-[14px] max-[768px]:px-[10px] max-[768px]:py-[5px] max-[768px]:text-[9px]"
-        style={{
-          letterSpacing: "0.1em",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-        }}
-      >
-        <span className="animate-hero-pulse h-[6px] w-[6px] rounded-full bg-[#e74c3c]" />
-        Video — Looping
       </div>
 
       {/* ── Content overlay ── */}
@@ -111,6 +95,7 @@ export function Hero() {
             fontSize: "clamp(32px, 3.8vw, 48px)",
             lineHeight: 1.08,
             letterSpacing: "-0.01em",
+            textShadow: "0 2px 16px rgba(0,0,0,0.55)",
           }}
         >
           Over 100 years
@@ -118,41 +103,39 @@ export function Hero() {
           of powering <em className="not-italic text-gold">South Texas</em>
         </h1>
 
-        <p className="mb-8 max-w-[520px] text-[15px] leading-[1.8] text-white/60 max-[480px]:text-[13px]">
+        <p
+          className="mb-8 max-w-[520px] text-[15px] leading-[1.8] text-white max-[480px]:text-[13px]"
+          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}
+        >
           Electrical, A/C, Telecom, and custom woodworking — from Corpus
           Christi to San Antonio. Industrial, commercial, and residential.
         </p>
 
-        {/* Dual CTAs — gold + outline phone */}
+        {/* Dual CTAs — solid gold primary + gold-outline tel: secondary */}
         <div className="mb-8 flex flex-wrap gap-3 max-[480px]:flex-col">
           <a
             href="#contact"
-            className="rounded-lg bg-gold px-7 py-[14px] text-[14px] font-bold text-navy transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-gold-light max-[480px]:w-full max-[480px]:text-center"
+            className="rounded-lg bg-gold px-7 py-[14px] text-[14px] font-bold text-navy shadow-[0_8px_24px_rgba(212,168,58,0.25)] transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-gold-light max-[480px]:w-full max-[480px]:text-center"
             style={{ letterSpacing: "0.04em" }}
           >
             Get a Free Estimate
           </a>
           <a
             href={BUSINESS.phoneHref}
-            className="inline-flex items-center gap-2 rounded-lg border-[1.5px] border-white/60 bg-white/10 px-7 py-[14px] text-[14px] font-semibold text-white backdrop-blur-md transition-colors duration-200 hover:border-gold hover:bg-white/15 hover:text-gold-light max-[480px]:w-full max-[480px]:justify-center"
+            className="inline-flex items-center justify-center rounded-lg border-2 border-gold bg-navy/70 px-7 py-[14px] text-[14px] font-bold text-gold transition-[background,color,transform] duration-200 hover:-translate-y-px hover:bg-gold hover:text-navy max-[480px]:w-full"
             style={{ letterSpacing: "0.04em" }}
           >
-            <Phone className="h-4 w-4 text-gold" aria-hidden="true" />
             Call {BUSINESS.phoneDisplay}
           </a>
         </div>
 
-        {/* Trust row — upgraded to glass pills */}
+        {/* Trust row — solid navy pills, no glass */}
         <ul className="flex flex-wrap gap-[10px] max-[480px]:gap-2">
           {CREDENTIALS.map((c) => (
             <li
               key={c.shortLabel}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-[14px] py-[7px] text-[11px] font-medium text-white/75"
-              style={{
-                letterSpacing: "0.02em",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-              }}
+              className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-navy-deep/85 px-[14px] py-[7px] text-[11px] font-semibold text-white"
+              style={{ letterSpacing: "0.02em" }}
             >
               <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-gold" />
               {c.shortLabel}
