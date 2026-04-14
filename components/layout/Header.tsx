@@ -190,7 +190,7 @@ function NavLink({
       href={href}
       className={cn(
         "group relative py-1 text-[13px] transition-colors duration-200",
-        variant === "default" && "font-normal text-white/70 hover:text-white",
+        variant === "default" && "font-normal text-white hover:text-gold-light",
         variant === "employee" &&
           "font-medium text-gold hover:text-gold-light",
       )}
@@ -231,7 +231,7 @@ function MobileLink({
       onClick={onNavigate}
       className={cn(
         "block border-b border-white/[0.06] py-4 text-[18px] transition-colors",
-        variant === "default" && "font-normal text-white/70 hover:text-white",
+        variant === "default" && "font-normal text-white hover:text-gold-light",
         variant === "employee" && "font-medium text-gold",
       )}
     >
