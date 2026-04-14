@@ -19,10 +19,10 @@ export function Services() {
   return (
     <section id="services" aria-label="Our services">
       {/* ── Header ── */}
-      <div className="bg-white pt-20 max-[768px]:pt-12">
+      <div className="bg-white pt-20 pb-14 max-[768px]:pt-12 max-[768px]:pb-10">
         <div className="container-1140">
           <Reveal>
-            <div className="mb-10 flex items-end justify-between gap-6 max-[768px]:mb-8 max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-3">
+            <div className="flex items-end justify-between gap-6 max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-3">
               <div>
                 <p
                   className="mb-2 text-[10px] font-semibold uppercase text-gold-dark"
@@ -91,8 +91,8 @@ function ServicePanel({
     <article
       className={[
         "group relative isolate overflow-hidden",
-        // Height — comfortable on desktop, still cinematic on mobile
-        "min-h-[460px] max-[1024px]:min-h-[400px] max-[768px]:min-h-[360px] max-[480px]:min-h-[320px]",
+        // Height — comfortable on desktop, taller on mobile so the photo breathes
+        "min-h-[460px] max-[1024px]:min-h-[440px] max-[768px]:min-h-[620px] max-[480px]:min-h-[580px]",
         // Seam between stacked panels
         index > 0 ? "border-t border-white/5" : "",
       ].join(" ")}
@@ -108,19 +108,30 @@ function ServicePanel({
       />
 
       {/* Shadow overlay — dark on the left where text sits, fades to the right.
-          Stacked with a subtle bottom gradient so the CTA row stays legible. */}
+          On mobile we use a vertical sandwich gradient: dark at top and bottom
+          where the text groups live, transparent through the middle so the
+          background photo reads cleanly. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/70 to-navy/20 max-[768px]:bg-gradient-to-t max-[768px]:from-navy/90 max-[768px]:via-navy/70 max-[768px]:to-navy/30"
+        className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/70 to-navy/20 max-[768px]:bg-[linear-gradient(to_bottom,rgba(15,32,64,0.9)_0%,rgba(15,32,64,0.55)_22%,rgba(15,32,64,0.15)_50%,rgba(15,32,64,0.55)_78%,rgba(15,32,64,0.9)_100%)]"
       />
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent"
       />
 
-      {/* Content */}
-      <div className="relative z-[1] flex min-h-[inherit] items-center">
-        <div className="container-1140 w-full py-16 max-[768px]:py-12">
+      {/* Per-panel overlay boost — Coastal Kitchens photo is high-key, so we
+          darken it a touch more to keep the white headline readable. */}
+      {division.slug === "coastal-kitchens" && (
+        <div aria-hidden="true" className="absolute inset-0 bg-navy/20" />
+      )}
+
+      {/* Content — desktop: vertically centered single block.
+          Mobile: column stretches full panel height, eyebrow+title pinned
+          near the top, description+CTA pinned near the bottom, with a
+          flex spacer in between so the photo breathes through the middle. */}
+      <div className="relative z-[1] flex min-h-[inherit] items-center max-[768px]:items-stretch">
+        <div className="container-1140 flex w-full flex-col py-16 max-[768px]:py-14 max-[480px]:py-12">
           <Reveal>
             <div className="max-w-[560px]">
               <p
@@ -143,10 +154,20 @@ function ServicePanel({
               >
                 {division.name}
               </h3>
+            </div>
+          </Reveal>
 
-              <p
-                className="mt-4 max-w-[520px] text-[15px] leading-[1.65] text-white/75 max-[480px]:text-[14px]"
-              >
+          {/* Spacer — only grows on mobile so the photo is visible through
+              the middle of the panel. Collapses on desktop so the two text
+              groups read as one block. */}
+          <div
+            aria-hidden="true"
+            className="hidden max-[768px]:block max-[768px]:flex-1 max-[768px]:min-h-[80px]"
+          />
+
+          <Reveal>
+            <div className="max-w-[520px] mt-4 max-[768px]:mt-0">
+              <p className="text-[15px] leading-[1.65] text-white/75 max-[480px]:text-[14px]">
                 {division.description}
               </p>
 
