@@ -45,7 +45,7 @@ export function Hero() {
         aria-hidden="true"
         className="absolute inset-0 z-[1] h-full w-full object-cover"
       >
-        <source src="/videos/Hero.mp4" type="video/mp4" />
+        <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
 
       {/* Animated grain — sits above the video, below the legibility overlay */}
