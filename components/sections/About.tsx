@@ -37,7 +37,7 @@ export function About() {
             </p>
             <a
               href="#"
-              className="inline-block rounded-lg border-[1.5px] border-white/25 bg-transparent px-6 py-3 text-[13px] font-medium text-white transition-[border-color,background] duration-200 hover:border-white/45 hover:bg-white/[0.03]"
+              className="inline-block rounded-lg border-[1.5px] border-gold/70 bg-transparent px-6 py-3 text-[13px] font-semibold text-gold transition-colors duration-200 hover:border-gold hover:bg-gold hover:text-navy"
               style={{ letterSpacing: "0.04em" }}
             >
               Read our full story →

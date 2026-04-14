@@ -8,7 +8,7 @@ import { Phone } from "lucide-react";
  * (video-area then content) hero for better above-the-fold conversion.
  *
  * Visual language is identical to the legacy site:
- *   - navy base with radial gold accent + linear industrial gradient
+ *   - looping background video (Hero.mp4) over navy fallback
  *   - SVG industrial silhouette at 8% opacity
  *   - animated grain texture
  *   - glassmorphic location tags (top-left)
@@ -21,10 +21,6 @@ import { Phone } from "lucide-react";
  *   - Phone number added as a second hero CTA (tel: link).
  *   - Trust badges upgraded from a dotted inline row to small glass pills.
  *   - Division cards moved out of the hero into their own Divisions section.
- *
- * If a real hero.mp4 is dropped into /public later, swap the background
- * gradient <div> for a <video> element behind the same overlay — no
- * layout change required.
  */
 
 const LOCATIONS = [
@@ -39,28 +35,29 @@ export function Hero() {
       aria-label="Hero"
       className="relative min-h-[88vh] w-full overflow-hidden bg-navy"
     >
-      {/* ── Background: gradient + grain placeholder ──
-          (Swap for <video> when assets/hero.mp4 exists.) */}
-      <div
-        className="absolute inset-0 z-[1]"
-        style={{
-          background: `
-            radial-gradient(ellipse 80% 60% at 70% 30%, rgba(212,168,58,0.08) 0%, transparent 70%),
-            linear-gradient(135deg, #0c1a33 0%, #162d52 40%, #1a3560 60%, #0f2040 100%)
-          `,
-        }}
+      {/* ── Background: looping hero video ── */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+        className="absolute inset-0 z-[1] h-full w-full object-cover"
       >
-        {/* Animated grain (same data URI the legacy placeholder uses) */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-            backgroundSize: "256px 256px",
-          }}
-        />
-      </div>
+        <source src="/videos/Hero.mp4" type="video/mp4" />
+      </video>
+
+      {/* Animated grain — sits above the video, below the legibility overlay */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-[1] opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+          backgroundSize: "256px 256px",
+        }}
+      />
 
       {/* Industrial skyline silhouette — bottom 40% at 8% opacity */}
       <IndustrialSilhouette className="pointer-events-none absolute bottom-0 left-0 right-0 z-[1] h-[40%] opacity-[0.08]" />
@@ -137,7 +134,7 @@ export function Hero() {
           </a>
           <a
             href={BUSINESS.phoneHref}
-            className="inline-flex items-center gap-2 rounded-lg border-[1.5px] border-white/25 bg-transparent px-7 py-[14px] text-[14px] font-medium text-white transition-colors duration-200 hover:border-white/45 hover:bg-white/[0.03] max-[480px]:w-full max-[480px]:justify-center"
+            className="inline-flex items-center gap-2 rounded-lg border-[1.5px] border-white/60 bg-white/10 px-7 py-[14px] text-[14px] font-semibold text-white backdrop-blur-md transition-colors duration-200 hover:border-gold hover:bg-white/15 hover:text-gold-light max-[480px]:w-full max-[480px]:justify-center"
             style={{ letterSpacing: "0.04em" }}
           >
             <Phone className="h-4 w-4 text-gold" aria-hidden="true" />
