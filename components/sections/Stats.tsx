@@ -2,13 +2,15 @@ import { STATS } from "@/lib/data/stats";
 
 /**
  * 4-column stats bar on navy. <768px collapses to 2×2.
- * Matches legacy .stats-bar exactly.
+ * Sits immediately below the Services photo panels — both the final
+ * panel and the About section that follows are bg-navy, so we omit
+ * any top border to keep the whole column one continuous navy block.
  */
 export function Stats() {
   return (
     <section
       aria-label="Company statistics"
-      className="border-t border-white/5 bg-navy"
+      className="bg-navy"
     >
       <div className="container-1140">
         <div

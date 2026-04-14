@@ -18,6 +18,8 @@ export interface Division {
   exploreLabel: string;
   /** Semantic accent token — matches a color in the theme. */
   accent: DivisionAccent;
+  /** Full-bleed background photo used in the Services section. */
+  heroImage: string;
 }
 
 export const DIVISIONS: Division[] = [
@@ -30,6 +32,7 @@ export const DIVISIONS: Division[] = [
     badge: "Since 1920",
     exploreLabel: "Explore electrical",
     accent: "gold",
+    heroImage: "/images/services/electric.jpg",
   },
   {
     slug: "ac-heating",
@@ -40,6 +43,7 @@ export const DIVISIONS: Division[] = [
     badge: "All brands",
     exploreLabel: "Explore HVAC",
     accent: "ac-blue",
+    heroImage: "/images/services/ac-heating.jpg",
   },
   {
     slug: "telecom",
@@ -50,6 +54,7 @@ export const DIVISIONS: Division[] = [
     badge: "Wired & wireless",
     exploreLabel: "Explore telecom",
     accent: "tele-green",
+    heroImage: "/images/services/telecom.jpg",
   },
   {
     slug: "coastal-kitchens",
@@ -60,5 +65,6 @@ export const DIVISIONS: Division[] = [
     badge: "Custom builds",
     exploreLabel: "Explore kitchens",
     accent: "ck-terra",
+    heroImage: "/images/services/coastal-kitchens.jpg",
   },
 ];
