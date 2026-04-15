@@ -23,8 +23,9 @@ export function WhyScottElectric() {
         className={[
           "group relative isolate overflow-hidden",
           // Taller than a division panel so the copy + 3 credential cards
-          // never feel cramped.
-          "min-h-[620px] max-[1024px]:min-h-[580px] max-[768px]:min-h-[860px] max-[480px]:min-h-[820px]",
+          // never feel cramped. Mobile gets extra height so the stacked
+          // copy and cards both breathe.
+          "min-h-[620px] max-[1024px]:min-h-[580px] max-[768px]:min-h-[980px] max-[480px]:min-h-[940px]",
           // Seam under the last division panel
           "border-t border-white/5",
         ].join(" ")}
@@ -54,7 +55,7 @@ export function WhyScottElectric() {
         {/* Content — desktop: two columns centered vertically.
             Mobile: stacks to single column, copy first then cards. */}
         <div className="relative z-[1] flex min-h-[inherit] items-center">
-          <div className="container-1140 grid w-full grid-cols-2 items-center gap-16 py-20 max-[1024px]:gap-12 max-[768px]:grid-cols-1 max-[768px]:gap-10 max-[768px]:py-16 max-[480px]:py-12">
+          <div className="container-1140 grid w-full grid-cols-2 items-center gap-16 py-20 max-[1024px]:gap-12 max-[768px]:grid-cols-1 max-[768px]:gap-12 max-[768px]:py-24 max-[480px]:py-20">
             {/* Left column — copy */}
             <Reveal>
               <div className="max-w-[560px]">
@@ -154,7 +155,7 @@ function WhyBadge({
   sub: string;
 }) {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-white/[0.07] bg-white/[0.035] px-5 py-[18px] backdrop-blur-[2px] transition-colors duration-200 hover:bg-white/[0.055]">
+    <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-navy/75 px-5 py-[18px] transition-colors duration-200 hover:bg-navy/85">
       <div
         className={`min-w-[72px] shrink-0 font-[family-name:var(--font-display)] font-bold leading-none text-gold ${
           smallValue ? "text-[16px] leading-[1.2]" : "text-[24px]"
