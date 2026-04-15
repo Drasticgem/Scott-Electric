@@ -101,11 +101,12 @@
     font-size: 15px;
     line-height: 1.7;
     color: var(--color-body-text);
-    /* Body bg is the only surface rendered behind the sticky nav at
-       scroll 0 — every section declares its own background, so setting
-       this to navy only affects the strip behind the nav and the iOS
-       overscroll bounce areas, letting the frosted glass blend cleanly. */
-    background: var(--color-navy);
+    /* navy-deep matches the footer, so no lighter seam ever shows below it
+       (iOS dynamic viewport, fractional-DPR hairlines, overscroll bounce).
+       Safe to change because the Hero section has its own bg-navy on the
+       <section> element — that's what the sticky nav's frosted glass blends
+       against at scroll 0, not <body>. */
+    background: var(--color-navy-deep);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
