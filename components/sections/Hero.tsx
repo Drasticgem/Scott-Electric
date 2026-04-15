@@ -24,16 +24,22 @@ const LOCATIONS = [
 export function Hero() {
   return (
     <section
+      id="hero"
       aria-label="Hero"
       className="relative min-h-[88vh] w-full overflow-hidden bg-navy"
     >
-      {/* ── Background: looping hero video ── */}
+      {/* ── Background: looping hero video ──
+          preload="metadata" (not "auto") so the browser only fetches
+          enough bytes to know dimensions/duration during critical render
+          — the rest streams in as the video plays. Cuts main-thread
+          decode work during first paint, which was the primary cause of
+          the mobile load stutter. */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         aria-hidden="true"
         className="absolute inset-0 z-[1] h-full w-full object-cover"
       >
