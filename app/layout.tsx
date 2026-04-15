@@ -55,6 +55,19 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/*
+          Strip any #hash from the URL before hydration so reloading on
+          a deep-linked section (e.g. #services) doesn't trigger the
+          browser's native anchor auto-scroll. We always want full page
+          loads of "/" to land on the hero. In-page link clicks still
+          work — this only runs once on initial document parse.
+        */}
+        <script
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `try{if(window.location.hash){history.replaceState(null,"",window.location.pathname+window.location.search);}}catch(e){}`,
+          }}
+        />
+        {/*
           Google Fonts loaded at runtime via <link> — the build environment
           cannot reach fonts.googleapis.com for next/font/google's build-time
           fetch, and the legacy static site already used this pattern.
