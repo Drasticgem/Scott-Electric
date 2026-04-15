@@ -27,20 +27,11 @@ const EMPLOYEE_LINK = { href: "#employee", label: "Employee" } as const;
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Scroll state — `scrolled` drives the drop-shadow (matches legacy >40
-  // threshold), `hasScrolled` drives the frosted-glass effect and kicks in
-  // as soon as any scroll has happened. Separate thresholds so the glass
-  // fades in immediately (when there's actually hero content behind the
-  // nav to blur) while preserving the original shadow timing.
+  // Scroll shadow — matches initNavShrink() in legacy main.js
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 40);
-      setHasScrolled(y > 0);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -70,15 +61,14 @@ export function Header() {
           "sticky top-0 z-[1000] flex items-center justify-between",
           "h-[64px] max-[768px]:h-[60px] max-[480px]:h-[56px]",
           "px-12 max-[768px]:px-5 max-[480px]:px-4",
-          // Solid navy at rest — the <body> background is offwhite, so any
-          // transparency at scroll 0 bleeds through as a pale blue-gray.
-          // Once the hero scrolls behind the sticky nav, fade in the
-          // frosted-glass look (navy/75 matches the credential cards in
-          // WhyScottElectric).
-          "bg-navy border-b border-white/10",
-          "transition-[background-color,backdrop-filter,box-shadow] duration-200",
-          hasScrolled &&
-            "supports-[backdrop-filter]:bg-navy/75 backdrop-blur-md",
+          // Frosted-glass nav: solid navy fallback, semi-transparent navy +
+          // backdrop blur where supported. Navy fill matches the credential
+          // cards in WhyScottElectric (bg-navy/75). The body background is
+          // navy, so at scroll 0 the glass blends cleanly against navy
+          // instead of bleeding cream.
+          "bg-navy supports-[backdrop-filter]:bg-navy/75 backdrop-blur-md",
+          "border-b border-white/10",
+          "transition-shadow duration-200",
           scrolled && "shadow-[0_2px_16px_rgba(15,32,64,0.25)]",
         )}
       >
