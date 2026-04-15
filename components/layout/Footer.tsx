@@ -65,10 +65,25 @@ function MobileFooter() {
         </a>
       </div>
 
-      {/* Brand mark — same lockup as nav, scaled up for footer presence */}
-      <div className="mt-12 flex flex-col items-center">
-        <Logo size="lg" />
-        <p className="mt-4 text-[11px] text-white/30">
+      {/* Brand mark — oversized SCOTT wordmark */}
+      <div className="mt-14 flex flex-col items-center">
+        <div
+          className="font-[family-name:var(--font-display)] font-bold text-white"
+          style={{
+            fontSize: "clamp(54px, 22.5vw, 112px)",
+            lineHeight: "0.85",
+            letterSpacing: "-0.03em",
+          }}
+        >
+          SCOTT
+        </div>
+        <div
+          className="mt-3 text-[10px] font-semibold uppercase text-gold"
+          style={{ letterSpacing: "0.3em" }}
+        >
+          Electric Group
+        </div>
+        <p className="mt-3 text-[11px] text-white/30">
           Family owned since {BUSINESS.founded}
         </p>
       </div>
