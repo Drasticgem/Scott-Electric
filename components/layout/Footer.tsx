@@ -65,37 +65,10 @@ function MobileFooter() {
         </a>
       </div>
 
-      {/* Massive brand mark */}
-      <div className="mt-14 flex flex-col items-center">
-        <svg
-          width={36}
-          height={36}
-          viewBox="0 0 52 52"
-          fill="none"
-          aria-hidden="true"
-        >
-          <polygon
-            points="26,4 36,16 32,16 42,30 28,30 34,44 14,24 24,24 18,12 28,12"
-            fill="#D4A83A"
-          />
-        </svg>
-        <div
-          className="mt-2 font-[family-name:var(--font-display)] font-bold text-white"
-          style={{
-            fontSize: "clamp(72px, 30vw, 150px)",
-            lineHeight: "0.85",
-            letterSpacing: "-0.03em",
-          }}
-        >
-          SCOTT
-        </div>
-        <div
-          className="mt-3 text-[10px] font-semibold uppercase text-gold"
-          style={{ letterSpacing: "0.3em" }}
-        >
-          Electric Group
-        </div>
-        <p className="mt-3 text-[11px] text-white/30">
+      {/* Brand mark — same lockup as nav, scaled up for footer presence */}
+      <div className="mt-12 flex flex-col items-center">
+        <Logo size="lg" />
+        <p className="mt-4 text-[11px] text-white/30">
           Family owned since {BUSINESS.founded}
         </p>
       </div>
