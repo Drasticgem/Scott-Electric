@@ -95,7 +95,11 @@
     font-size: 15px;
     line-height: 1.7;
     color: var(--color-body-text);
-    background: var(--color-offwhite);
+    /* Body bg is the only surface rendered behind the sticky nav at
+       scroll 0 — every section declares its own background, so setting
+       this to navy only affects the strip behind the nav and the iOS
+       overscroll bounce areas, letting the frosted glass blend cleanly. */
+    background: var(--color-navy);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
