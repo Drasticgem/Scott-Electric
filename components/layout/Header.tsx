@@ -61,7 +61,10 @@ export function Header() {
           "sticky top-0 z-[1000] flex items-center justify-between",
           "h-[64px] max-[768px]:h-[60px] max-[480px]:h-[56px]",
           "px-12 max-[768px]:px-5 max-[480px]:px-4",
-          "bg-navy border-b border-white/5",
+          // Frosted-glass nav: solid navy fallback, semi-transparent navy +
+          // backdrop blur where supported.
+          "bg-navy supports-[backdrop-filter]:bg-navy/70 backdrop-blur-md supports-[backdrop-filter]:backdrop-saturate-150",
+          "border-b border-white/10",
           "transition-shadow duration-200",
           scrolled && "shadow-[0_2px_16px_rgba(15,32,64,0.25)]",
         )}
