@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { BUSINESS } from "@/lib/constants";
 import { Logo } from "./Logo";
 
 const LINKS = [
@@ -92,20 +93,33 @@ export function Header() {
           </NavLink>
         </div>
 
-        {/* Desktop CTA */}
-        <a
-          href="#contact"
-          className={cn(
-            "shrink-0 rounded-[6px] bg-gold px-6 py-[10px]",
-            "text-[13px] font-bold text-navy",
-            "transition-[background,transform] duration-200",
-            "hover:-translate-y-px hover:bg-gold-light",
-            "max-[768px]:hidden",
-          )}
-          style={{ letterSpacing: "0.04em" }}
-        >
-          Get a Free Estimate
-        </a>
+        {/* Desktop CTAs — secondary "Pay Bill" + primary "Get a Free Estimate" */}
+        <div className="flex shrink-0 items-center gap-3 max-[768px]:hidden">
+          <a
+            href={BUSINESS.paymentUrl}
+            className={cn(
+              "rounded-[6px] border border-gold/60 px-5 py-[9px]",
+              "text-[13px] font-semibold text-gold",
+              "transition-[background,color,transform] duration-200",
+              "hover:-translate-y-px hover:border-gold hover:bg-gold/10 hover:text-gold-light",
+            )}
+            style={{ letterSpacing: "0.04em" }}
+          >
+            Pay Bill
+          </a>
+          <a
+            href="#contact"
+            className={cn(
+              "rounded-[6px] bg-gold px-6 py-[10px]",
+              "text-[13px] font-bold text-navy",
+              "transition-[background,transform] duration-200",
+              "hover:-translate-y-px hover:bg-gold-light",
+            )}
+            style={{ letterSpacing: "0.04em" }}
+          >
+            Get a Free Estimate
+          </a>
+        </div>
 
         {/* Hamburger (mobile only) */}
         <button
@@ -170,9 +184,17 @@ export function Header() {
           Employee Portal
         </MobileLink>
         <a
+          href={BUSINESS.paymentUrl}
+          onClick={() => setMenuOpen(false)}
+          className="mt-6 block w-full rounded-[6px] border border-gold/60 px-6 py-4 text-center text-[15px] font-semibold text-gold"
+          style={{ letterSpacing: "0.04em" }}
+        >
+          Pay Bill
+        </a>
+        <a
           href="#contact"
           onClick={() => setMenuOpen(false)}
-          className="mt-6 block w-full rounded-[6px] bg-gold px-6 py-4 text-center text-[15px] font-bold text-navy"
+          className="mt-3 block w-full rounded-[6px] bg-gold px-6 py-4 text-center text-[15px] font-bold text-navy"
         >
           Get a Free Estimate
         </a>

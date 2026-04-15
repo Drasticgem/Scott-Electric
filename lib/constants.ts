@@ -10,6 +10,8 @@ export const BUSINESS = {
   phone: "+13618846326",
   phoneDisplay: "361-884-6326",
   phoneHref: "tel:+13618846326",
+  // TODO: replace with the live customer payment portal URL
+  paymentUrl: "#payment",
   locations: [
     { name: "Corpus Christi", isHQ: true },
     { name: "San Antonio", isHQ: false },

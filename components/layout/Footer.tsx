@@ -47,30 +47,30 @@ export function Footer() {
    ═══════════════════════════════════════════════════════════ */
 function MobileFooter() {
   return (
-    <div className="container-1140 pt-16 pb-8">
+    <div className="container-1140 pt-20 pb-12">
       {/* Let's talk CTA */}
       <div className="text-center">
         <h3 className="font-[family-name:var(--font-display)] text-[34px] font-bold leading-[1.05] text-white">
           Let&apos;s talk
         </h3>
-        <p className="mx-auto mt-4 max-w-[300px] text-[14px] leading-[1.7] text-white/45">
+        <p className="mx-auto mt-5 max-w-[300px] text-[14px] leading-[1.7] text-white/45">
           Power, comfort, connectivity, and craftsmanship for South Texas —
           for over a century.
         </p>
         <a
           href={BUSINESS.phoneHref}
-          className="mt-6 inline-flex items-center justify-center rounded-full bg-gold px-7 py-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-navy-deep transition-colors hover:bg-gold-light"
+          className="mt-8 inline-flex items-center justify-center rounded-full bg-gold px-7 py-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-navy-deep transition-colors hover:bg-gold-light"
         >
           Get in touch
         </a>
       </div>
 
       {/* Brand mark — oversized SCOTT wordmark */}
-      <div className="mt-14 flex flex-col items-center">
+      <div className="mt-24 flex flex-col items-center">
         <div
           className="font-[family-name:var(--font-display)] font-bold text-white"
           style={{
-            fontSize: "clamp(54px, 22.5vw, 112px)",
+            fontSize: "clamp(51px, 21.4vw, 106px)",
             lineHeight: "0.85",
             letterSpacing: "-0.03em",
           }}
@@ -78,72 +78,75 @@ function MobileFooter() {
           SCOTT
         </div>
         <div
-          className="mt-3 text-[10px] font-semibold uppercase text-gold"
+          className="mt-5 text-[10px] font-semibold uppercase text-gold"
           style={{ letterSpacing: "0.3em" }}
         >
           Electric Group
         </div>
-        <p className="mt-3 text-[11px] text-white/30">
+        <p className="mt-4 text-[11px] text-white/30">
           Family owned since {BUSINESS.founded}
         </p>
       </div>
 
       {/* Services / Company columns */}
-      <div className="mt-14 grid grid-cols-2 gap-6 text-center">
+      <div className="mt-24 grid grid-cols-2 gap-8 text-center">
         <div>
           <p
-            className="mb-3 text-[10px] font-semibold uppercase text-gold"
+            className="mb-5 text-[10px] font-semibold uppercase text-gold"
             style={{ letterSpacing: "0.18em" }}
           >
             Services
           </p>
-          {SERVICES.map((s) => (
-            <FooterLink key={s.label} href={s.href}>
-              {s.label}
-            </FooterLink>
-          ))}
+          <div className="space-y-[6px]">
+            {SERVICES.map((s) => (
+              <FooterLink key={s.label} href={s.href}>
+                {s.label}
+              </FooterLink>
+            ))}
+          </div>
         </div>
         <div>
           <p
-            className="mb-3 text-[10px] font-semibold uppercase text-gold"
+            className="mb-5 text-[10px] font-semibold uppercase text-gold"
             style={{ letterSpacing: "0.18em" }}
           >
             Company
           </p>
-          {COMPANY.map((c) => (
-            <FooterLink key={c.label} href={c.href}>
-              {c.label}
-            </FooterLink>
-          ))}
-          <FooterLink href="#employee" accent>
-            Employee Portal
-          </FooterLink>
+          <div className="space-y-[6px]">
+            {COMPANY.map((c) => (
+              <FooterLink key={c.label} href={c.href}>
+                {c.label}
+              </FooterLink>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Contact */}
-      <div className="mt-10 text-center">
+      <div className="mt-16 text-center">
         <p
-          className="mb-3 text-[10px] font-semibold uppercase text-gold"
+          className="mb-5 text-[10px] font-semibold uppercase text-gold"
           style={{ letterSpacing: "0.18em" }}
         >
           Contact
         </p>
-        <FooterLink href={BUSINESS.phoneHref}>
-          {BUSINESS.phoneDisplay}
-        </FooterLink>
-        <FooterLink href="#">Corpus Christi HQ</FooterLink>
-        <FooterLink href="#">San Antonio</FooterLink>
-        <FooterLink href="#">Alice · Weslaco</FooterLink>
+        <div className="space-y-[6px]">
+          <FooterLink href={BUSINESS.phoneHref}>
+            {BUSINESS.phoneDisplay}
+          </FooterLink>
+          <FooterLink href="#">Corpus Christi HQ</FooterLink>
+          <FooterLink href="#">San Antonio</FooterLink>
+          <FooterLink href="#">Alice · Weslaco</FooterLink>
+        </div>
       </div>
 
       {/* Divider + copyright */}
-      <div className="mt-10 border-t border-white/5 pt-6 text-center">
+      <div className="mt-16 border-t border-white/5 pt-8 text-center">
         <p className="text-[11px] text-white/25">
           © {new Date().getFullYear()} Scott Electric Company. All rights
           reserved.
         </p>
-        <p className="mt-1 text-[11px] text-white/25">
+        <p className="mt-2 text-[11px] text-white/25">
           <a href="#" className="text-white/40 hover:text-white/70">
             Privacy Policy
           </a>{" "}
@@ -185,11 +188,13 @@ function DesktopFooter() {
           >
             Services
           </p>
-          {SERVICES.map((s) => (
-            <FooterLink key={s.label} href={s.href}>
-              {s.label}
-            </FooterLink>
-          ))}
+          <div className="space-y-2">
+            {SERVICES.map((s) => (
+              <FooterLink key={s.label} href={s.href}>
+                {s.label}
+              </FooterLink>
+            ))}
+          </div>
         </div>
 
         {/* Company column */}
@@ -200,14 +205,13 @@ function DesktopFooter() {
           >
             Company
           </p>
-          {COMPANY.map((c) => (
-            <FooterLink key={c.label} href={c.href}>
-              {c.label}
-            </FooterLink>
-          ))}
-          <FooterLink href="#employee" accent>
-            Employee Portal
-          </FooterLink>
+          <div className="space-y-2">
+            {COMPANY.map((c) => (
+              <FooterLink key={c.label} href={c.href}>
+                {c.label}
+              </FooterLink>
+            ))}
+          </div>
         </div>
 
         {/* Contact column */}
@@ -218,12 +222,14 @@ function DesktopFooter() {
           >
             Contact
           </p>
-          <FooterLink href={BUSINESS.phoneHref}>
-            {BUSINESS.phoneDisplay}
-          </FooterLink>
-          <FooterLink href="#">Corpus Christi HQ</FooterLink>
-          <FooterLink href="#">San Antonio</FooterLink>
-          <FooterLink href="#">Alice · Weslaco</FooterLink>
+          <div className="space-y-2">
+            <FooterLink href={BUSINESS.phoneHref}>
+              {BUSINESS.phoneDisplay}
+            </FooterLink>
+            <FooterLink href="#">Corpus Christi HQ</FooterLink>
+            <FooterLink href="#">San Antonio</FooterLink>
+            <FooterLink href="#">Alice · Weslaco</FooterLink>
+          </div>
         </div>
       </div>
 
@@ -250,20 +256,14 @@ function DesktopFooter() {
 function FooterLink({
   href,
   children,
-  accent = false,
 }: {
   href: string;
   children: React.ReactNode;
-  accent?: boolean;
 }) {
   return (
     <a
       href={href}
-      className={
-        accent
-          ? "mb-2 block text-[13px] font-medium text-gold transition-colors hover:text-gold-light"
-          : "mb-2 block text-[13px] text-white/40 transition-colors hover:text-white/80"
-      }
+      className="block text-[13px] text-white/40 transition-colors hover:text-white/80"
     >
       {children}
     </a>
