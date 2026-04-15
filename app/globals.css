@@ -88,6 +88,12 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* Paint the area behind <body> with the footer color so iOS overscroll
+       bounce past the footer matches the footer seamlessly (no lighter-navy
+       seam at the bottom of the page). Body bg stays `navy` so the sticky
+       nav's frosted glass still blends cleanly at scroll 0 — html is only
+       visible in the overscroll bounce regions. */
+    background: var(--color-navy-deep);
   }
 
   body {
