@@ -63,26 +63,26 @@ export function Footer() {
    ═══════════════════════════════════════════════════════════ */
 function MobileFooter() {
   return (
-    <div className="container-1140 pt-20 pb-12">
+    <div className="container-1140 pt-32 pb-20">
       {/* Let's talk CTA */}
       <div className="text-center">
         <h3 className="font-[family-name:var(--font-display)] text-[34px] font-bold leading-[1.05] text-white">
           Let&apos;s talk
         </h3>
-        <p className="mx-auto mt-5 max-w-[300px] text-[14px] leading-[1.7] text-white/45">
+        <p className="mx-auto mt-6 max-w-[300px] text-[14px] leading-[1.75] text-white/45">
           Power, comfort, connectivity, and craftsmanship for South Texas —
           for over a century.
         </p>
         <a
           href={BUSINESS.phoneHref}
-          className="mt-8 inline-flex items-center justify-center rounded-full bg-gold px-7 py-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-navy-deep transition-colors hover:bg-gold-light"
+          className="mt-10 inline-flex items-center justify-center rounded-full bg-gold px-7 py-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-navy-deep transition-colors hover:bg-gold-light"
         >
           Get in touch
         </a>
       </div>
 
       {/* Brand mark — oversized SCOTT wordmark */}
-      <div className="mt-24 flex flex-col items-center">
+      <div className="mt-32 flex flex-col items-center">
         <div
           className="font-[family-name:var(--font-display)] font-bold text-white"
           style={{
@@ -105,7 +105,7 @@ function MobileFooter() {
       </div>
 
       {/* Contact → Services → Company — vertically stacked for a longer natural scroll */}
-      <div className="mt-24 space-y-16 text-center">
+      <div className="mt-32 space-y-20 text-center">
         {/* Contact */}
         <div>
           <p
@@ -160,7 +160,7 @@ function MobileFooter() {
       </div>
 
       {/* Divider + copyright */}
-      <div className="mt-16 border-t border-white/5 pt-8 text-center">
+      <div className="mt-24 border-t border-white/5 pt-10 text-center">
         <p className="text-[11px] text-white/25">
           © {new Date().getFullYear()} Scott Electric Company. All rights
           reserved.
