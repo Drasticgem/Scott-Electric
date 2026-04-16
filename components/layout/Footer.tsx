@@ -15,13 +15,29 @@ const COMPANY = [
   { href: "#careers", label: "Careers" },
 ];
 
+/** Inline SVG data URI — bolt pattern tile (80×80) at 12 % opacity.
+ *  Extracted from the brand pattern in public/images/patternnavy.svg
+ *  but inlined to avoid an HTTP request (~200 bytes). */
+const BOLT_PATTERN_URI = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpolygon points='40,6 48,18 45,18 53,30 44,30 47,42 33,28 38,28 34,17 42,17' fill='%23D4A83A' opacity='0.12'/%3E%3C/svg%3E")`;
+
 export function Footer() {
   return (
     <footer
       id="careers"
-      className="bg-navy-deep"
+      className="relative bg-navy-deep"
       aria-labelledby="footer-heading"
     >
+      {/* Bolt pattern overlay — decorative brand texture */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: BOLT_PATTERN_URI,
+          backgroundRepeat: "repeat",
+          backgroundSize: "80px 80px",
+        }}
+      />
+
       <h2 id="footer-heading" className="sr-only">
         Site footer
       </h2>
@@ -29,13 +45,13 @@ export function Footer() {
       {/* ───── MOBILE FOOTER (< 768px) ─────
           Dramatic, centered, conversion-focused.
           "Let's talk" hero CTA → giant SCOTT wordmark → link columns. */}
-      <div className="md:hidden">
+      <div className="relative z-[1] md:hidden">
         <MobileFooter />
       </div>
 
       {/* ───── DESKTOP FOOTER (≥ 768px) ─────
           Dense 4-column informational layout. */}
-      <div className="hidden md:block">
+      <div className="relative z-[1] hidden md:block">
         <DesktopFooter />
       </div>
     </footer>

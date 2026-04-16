@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { BUSINESS } from "@/lib/constants";
 import { Logo } from "./Logo";
+
+/** Project-standard easing curve — matches Reveal component. */
+const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const LINKS = [
   { href: "#about", label: "About" },
@@ -121,7 +125,7 @@ export function Header() {
           </a>
         </div>
 
-        {/* Hamburger (mobile only) */}
+        {/* Hamburger (mobile only) — Framer Motion for smooth iOS animation */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -130,75 +134,76 @@ export function Header() {
           onClick={() => setMenuOpen((v) => !v)}
           className="hidden flex-col gap-[5px] p-1 max-[768px]:flex"
         >
-          <span
-            className={cn(
-              "block h-[2px] w-[22px] rounded-sm bg-white",
-              "origin-center transition-transform duration-300",
-              menuOpen && "translate-y-[7px] rotate-45",
-            )}
+          <motion.span
+            className="block h-[2px] w-[22px] rounded-sm bg-white origin-center"
+            animate={menuOpen ? { y: 7, rotate: 45 } : { y: 0, rotate: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
           />
-          <span
-            className={cn(
-              "block h-[2px] w-[22px] rounded-sm bg-white",
-              "transition-opacity duration-300",
-              menuOpen && "opacity-0",
-            )}
+          <motion.span
+            className="block h-[2px] w-[22px] rounded-sm bg-white"
+            animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           />
-          <span
-            className={cn(
-              "block h-[2px] w-[22px] rounded-sm bg-white",
-              "origin-center transition-transform duration-300",
-              menuOpen && "-translate-y-[7px] -rotate-45",
-            )}
+          <motion.span
+            className="block h-[2px] w-[22px] rounded-sm bg-white origin-center"
+            animate={menuOpen ? { y: -7, rotate: -45 } : { y: 0, rotate: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
           />
         </button>
       </nav>
 
-      {/* Mobile menu overlay */}
-      <div
-        id="mobile-menu"
-        role="dialog"
-        aria-label="Mobile navigation"
-        aria-hidden={!menuOpen}
-        className={cn(
-          "fixed left-0 right-0 bottom-0 z-[999] flex-col overflow-y-auto bg-navy",
-          "top-[64px] max-[768px]:top-[60px] max-[480px]:top-[56px]",
-          "px-8 py-6 max-[480px]:px-5",
-          menuOpen ? "flex" : "hidden",
-        )}
-      >
-        {LINKS.map((link) => (
-          <MobileLink
-            key={link.href}
-            href={link.href}
-            onNavigate={() => setMenuOpen(false)}
+      {/* Mobile menu overlay — AnimatePresence for smooth open/close */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-label="Mobile navigation"
+            className={cn(
+              "fixed left-0 right-0 bottom-0 z-[999] flex flex-col overflow-y-auto bg-navy",
+              "top-[64px] max-[768px]:top-[60px] max-[480px]:top-[56px]",
+              "px-8 py-6 max-[480px]:px-5",
+            )}
+            initial={{ opacity: 0, y: "-3%" }}
+            animate={{ opacity: 1, y: "0%" }}
+            exit={{ opacity: 0, y: "-3%" }}
+            transition={{ duration: 0.25, ease: EASE }}
+            style={{ willChange: "transform, opacity" }}
           >
-            {link.label}
-          </MobileLink>
-        ))}
-        <MobileLink
-          href={EMPLOYEE_LINK.href}
-          variant="employee"
-          onNavigate={() => setMenuOpen(false)}
-        >
-          Employee Portal
-        </MobileLink>
-        <a
-          href={BUSINESS.paymentUrl}
-          onClick={() => setMenuOpen(false)}
-          className="mt-6 block w-full rounded-[6px] border border-gold/60 px-6 py-4 text-center text-[15px] font-semibold text-gold"
-          style={{ letterSpacing: "0.04em" }}
-        >
-          Pay Bill
-        </a>
-        <a
-          href="#contact"
-          onClick={() => setMenuOpen(false)}
-          className="mt-3 block w-full rounded-[6px] bg-gold px-6 py-4 text-center text-[15px] font-bold text-navy"
-        >
-          Get a Free Estimate
-        </a>
-      </div>
+            {LINKS.map((link) => (
+              <MobileLink
+                key={link.href}
+                href={link.href}
+                onNavigate={() => setMenuOpen(false)}
+              >
+                {link.label}
+              </MobileLink>
+            ))}
+            <MobileLink
+              href={EMPLOYEE_LINK.href}
+              variant="employee"
+              onNavigate={() => setMenuOpen(false)}
+            >
+              Employee Portal
+            </MobileLink>
+            <a
+              href={BUSINESS.paymentUrl}
+              onClick={() => setMenuOpen(false)}
+              className="mt-6 block w-full rounded-[6px] border border-gold/60 px-6 py-4 text-center text-[15px] font-semibold text-gold"
+              style={{ letterSpacing: "0.04em" }}
+            >
+              Pay Bill
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 block w-full rounded-[6px] bg-gold px-6 py-4 text-center text-[15px] font-bold text-navy"
+            >
+              Get a Free Estimate
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
