@@ -36,7 +36,9 @@ export function ChatWidget() {
       setIsOpen(true);
       // showWidget first — Tawk.to won't maximize a hidden widget.
       tawk.showWidget?.();
-      tawk.maximize();
+      // Defer maximize so the panel mounts mid-ripple, masking the gap
+      // between our exit animation and Tawk's instant-pop iframe.
+      window.setTimeout(() => tawk.maximize?.(), 150);
       return;
     }
 

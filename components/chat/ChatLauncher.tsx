@@ -38,7 +38,7 @@ export function ChatLauncher({
       // Clean up the ripple node once its animation finishes
       window.setTimeout(() => {
         setRipples((prev) => prev.filter((r) => r !== id));
-      }, 700);
+      }, 1000);
     }
     onOpen();
   };
@@ -53,9 +53,8 @@ export function ChatLauncher({
         pointerEvents: isOpen ? "none" : "auto",
       }}
       transition={{
-        type: "spring",
-        damping: 22,
-        stiffness: 260,
+        duration: 0.45,
+        ease: [0.22, 1, 0.36, 1],
       }}
       style={{
         // Respect iOS home-indicator safe area
@@ -90,10 +89,10 @@ export function ChatLauncher({
                 background:
                   "radial-gradient(circle, rgba(212,168,58,0.9) 0%, rgba(212,168,58,0) 70%)",
               }}
-              initial={{ scale: 1, opacity: 1 }}
-              animate={{ scale: 14, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0.85 }}
+              animate={{ scale: 9, opacity: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
             />
           ))}
         </AnimatePresence>
