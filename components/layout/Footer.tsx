@@ -104,8 +104,27 @@ function MobileFooter() {
         </p>
       </div>
 
-      {/* Services / Company columns */}
-      <div className="mt-24 grid grid-cols-2 gap-8 text-center">
+      {/* Contact → Services → Company — vertically stacked for a longer natural scroll */}
+      <div className="mt-24 space-y-16 text-center">
+        {/* Contact */}
+        <div>
+          <p
+            className="mb-5 text-[10px] font-semibold uppercase text-gold"
+            style={{ letterSpacing: "0.18em" }}
+          >
+            Contact
+          </p>
+          <div className="space-y-[6px]">
+            <FooterLink href={BUSINESS.phoneHref}>
+              {BUSINESS.phoneDisplay}
+            </FooterLink>
+            <FooterLink href="#">Corpus Christi HQ</FooterLink>
+            <FooterLink href="#">San Antonio</FooterLink>
+            <FooterLink href="#">Alice · Weslaco</FooterLink>
+          </div>
+        </div>
+
+        {/* Services */}
         <div>
           <p
             className="mb-5 text-[10px] font-semibold uppercase text-gold"
@@ -121,6 +140,8 @@ function MobileFooter() {
             ))}
           </div>
         </div>
+
+        {/* Company */}
         <div>
           <p
             className="mb-5 text-[10px] font-semibold uppercase text-gold"
@@ -135,24 +156,6 @@ function MobileFooter() {
               </FooterLink>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Contact */}
-      <div className="mt-16 text-center">
-        <p
-          className="mb-5 text-[10px] font-semibold uppercase text-gold"
-          style={{ letterSpacing: "0.18em" }}
-        >
-          Contact
-        </p>
-        <div className="space-y-[6px]">
-          <FooterLink href={BUSINESS.phoneHref}>
-            {BUSINESS.phoneDisplay}
-          </FooterLink>
-          <FooterLink href="#">Corpus Christi HQ</FooterLink>
-          <FooterLink href="#">San Antonio</FooterLink>
-          <FooterLink href="#">Alice · Weslaco</FooterLink>
         </div>
       </div>
 
