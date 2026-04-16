@@ -58,7 +58,7 @@ export function About() {
           </div>
 
           {/* Founder photo — desktop only (right column) */}
-          <div className="hidden shrink-0 md:block md:w-[280px]">
+          <div className="hidden shrink-0 md:block md:w-[420px]">
             <Image
               src="/images/Founder.jpg"
               alt="Original Scott Electric Company building — Engineering &amp; Construction"
