@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
@@ -95,6 +96,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <ChatWidget />
+        <Analytics />
       </body>
     </html>
   );
