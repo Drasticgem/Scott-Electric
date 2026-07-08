@@ -63,7 +63,7 @@ export function Hero() {
                 <Reveal>
                   <div className="max-[768px]:text-center">
                     <p
-                      className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-3"
+                      className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:hidden"
                       style={{ letterSpacing: "0.22em" }}
                     >
                       For Disc Golfers
