@@ -4,7 +4,7 @@
  */
 export const DISCVAULT = {
   name: "DiscVault",
-  tagline: "Your disc collection, finally organized.",
+  tagline: "Your collection matters.",
   email: "hello@discvault.app",
   emailHref: "mailto:hello@discvault.app",
   supportEmail: "support@discvault.app",
