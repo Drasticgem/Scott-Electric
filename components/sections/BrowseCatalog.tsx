@@ -33,7 +33,7 @@ export function BrowseCatalog() {
                 letterSpacing: "-0.015em",
               }}
             >
-              Search 10,000+ discs by brand or mold.
+              Search over 1,000+ discs by brand or mold.
             </h2>
             <p className="text-[15px] leading-[1.7] text-muted">
               The same disc database that powers the app — browse specs

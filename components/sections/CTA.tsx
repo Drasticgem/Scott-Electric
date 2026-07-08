@@ -3,12 +3,12 @@ import { Reveal } from "@/components/animations/Reveal";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 
 /**
- * Closing CTA — soft accent-tinted band with copy on the left and the
- * partner/support form on the right. Anchor target for "#contact" links.
+ * Closing CTA — white band with copy on the left and the partner/support
+ * form on the right. Anchor target for "#contact" links.
  */
 export function CTA() {
   return (
-    <section id="contact" className="bg-accent-pale py-20 max-[768px]:py-14">
+    <section id="contact" className="border-t border-border bg-paper py-20 max-[768px]:py-14">
       <Reveal>
         <div className="container-1140 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
           {/* Copy */}
@@ -35,7 +35,7 @@ export function CTA() {
             </p>
             <a
               href={DISCVAULT.supportEmailHref}
-              className="inline-flex items-center gap-2 rounded-full border-2 border-ink/15 bg-transparent px-6 py-[13px] text-[14px] font-semibold text-ink transition-[border-color,background] duration-200 hover:border-ink/30 hover:bg-white/40"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-ink/15 bg-transparent px-6 py-[13px] text-[14px] font-semibold text-ink transition-[border-color,background] duration-200 hover:border-ink/30 hover:bg-surface"
             >
               {DISCVAULT.supportEmail}
             </a>

@@ -1,5 +1,4 @@
 import { DISCVAULT } from "@/lib/constants";
-import { CREDENTIALS } from "@/lib/data/credentials";
 import { Reveal } from "@/components/animations/Reveal";
 
 /**
@@ -36,22 +35,26 @@ export function Hero() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Your disc collection.
-              <br />
-              Finally <em className="not-italic text-accent">organized</em>.
+              Your collection matters.
             </h1>
 
             <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto">
-              {DISCVAULT.tagline} Catalog discs, build smarter bags, track
-              rounds, and discover what to throw next.
+              Catalog discs, build smarter bags, track rounds, and discover
+              what to throw next.
             </p>
 
-            <div className="mb-9 flex flex-wrap gap-3 max-[480px]:flex-col max-[768px]:justify-center">
+            <div className="mb-9 flex flex-wrap items-center gap-4 max-[768px]:justify-center">
               <a
                 href={DISCVAULT.appStoreUrl}
-                className="rounded-full bg-accent px-7 py-[14px] text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(91,75,218,0.25)] transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-accent-dark max-[480px]:w-full max-[480px]:text-center"
+                className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
               >
-                Download the App
+                {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+                <img
+                  src="/badges/app-store-badge.svg"
+                  alt="Download on the App Store"
+                  width={161}
+                  height={54}
+                />
               </a>
               <a
                 href="#catalog"
@@ -60,19 +63,6 @@ export function Hero() {
                 Browse the Catalog
               </a>
             </div>
-
-            {/* Trust row */}
-            <ul className="flex flex-wrap gap-[10px] max-[480px]:gap-2 max-[768px]:justify-center">
-              {CREDENTIALS.map((c) => (
-                <li
-                  key={c.shortLabel}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-[14px] py-[7px] text-[12px] font-medium text-ink-soft"
-                >
-                  <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-accent" />
-                  {c.shortLabel}
-                </li>
-              ))}
-            </ul>
           </div>
         </Reveal>
 
@@ -107,7 +97,7 @@ function PhoneMockup() {
         <div className="absolute left-1/2 top-0 z-10 h-[24px] w-[110px] -translate-x-1/2 rounded-b-2xl bg-ink" />
 
         {/* Screen */}
-        <div className="absolute inset-[3px] overflow-hidden rounded-[40px] bg-gradient-to-br from-accent-pale via-white to-surface">
+        <div className="absolute inset-[3px] overflow-hidden rounded-[40px] bg-paper">
           <div className="flex h-full flex-col items-center justify-center gap-4 px-6">
             <span className="font-[family-name:var(--font-display)] text-[24px] font-black italic text-ink">
               DiscVault
@@ -118,12 +108,6 @@ function PhoneMockup() {
           </div>
         </div>
       </div>
-
-      {/* Soft glow behind the phone */}
-      <div
-        className="absolute inset-0 -z-10 rounded-full bg-accent/10 blur-[80px]"
-        style={{ transform: "scale(1.3)" }}
-      />
     </div>
   );
 }
