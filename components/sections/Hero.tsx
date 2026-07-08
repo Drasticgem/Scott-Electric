@@ -43,12 +43,18 @@ export function Hero() {
               what to throw next.
             </p>
 
-            <div className="mb-9 flex flex-wrap gap-3 max-[480px]:flex-col max-[768px]:justify-center">
+            <div className="mb-9 flex flex-wrap items-center gap-4 max-[768px]:justify-center">
               <a
                 href={DISCVAULT.appStoreUrl}
-                className="rounded-full bg-accent px-7 py-[14px] text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(91,75,218,0.25)] transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-accent-dark max-[480px]:w-full max-[480px]:text-center"
+                className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
               >
-                Download the App
+                {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+                <img
+                  src="/badges/app-store-badge.svg"
+                  alt="Download on the App Store"
+                  width={161}
+                  height={54}
+                />
               </a>
               <a
                 href="#catalog"

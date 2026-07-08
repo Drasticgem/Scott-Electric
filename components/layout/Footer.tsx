@@ -53,9 +53,15 @@ function MobileFooter() {
         </p>
         <a
           href={DISCVAULT.appStoreUrl}
-          className="mt-8 inline-flex items-center justify-center rounded-full bg-accent px-7 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-accent-dark"
+          className="mt-8 inline-flex transition-transform duration-200 hover:-translate-y-px"
         >
-          Download DiscVault
+          {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+          <img
+            src="/badges/app-store-badge.svg"
+            alt="Download on the App Store"
+            width={161}
+            height={54}
+          />
         </a>
       </div>
 

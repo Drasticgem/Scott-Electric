@@ -94,14 +94,15 @@ export function Header() {
           </a>
           <a
             href={DISCVAULT.appStoreUrl}
-            className={cn(
-              "rounded-full bg-accent px-6 py-[10px]",
-              "text-[13px] font-semibold text-white",
-              "transition-[background,transform] duration-200",
-              "hover:-translate-y-px hover:bg-accent-dark",
-            )}
+            className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
           >
-            Download App
+            {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+            <img
+              src="/badges/app-store-badge.svg"
+              alt="Download on the App Store"
+              width={114}
+              height={38}
+            />
           </a>
         </div>
 
@@ -162,9 +163,15 @@ export function Header() {
             <a
               href={DISCVAULT.appStoreUrl}
               onClick={() => setMenuOpen(false)}
-              className="mt-6 block w-full rounded-full bg-accent px-6 py-4 text-center text-[15px] font-semibold text-white"
+              className="mt-6 flex w-full justify-center"
             >
-              Download App
+              {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+              <img
+                src="/badges/app-store-badge.svg"
+                alt="Download on the App Store"
+                width={161}
+                height={54}
+              />
             </a>
             <a
               href="#catalog"
