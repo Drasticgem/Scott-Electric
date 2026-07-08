@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
 
@@ -127,15 +126,26 @@ export function Hero() {
                   className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[330px]"
                   style={{ width: MAX_W }}
                 >
-                  <Image
-                    src="/images/hero-mockup.png"
-                    alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
-                    width={2048}
-                    height={4191}
-                    quality={90}
-                    priority
-                    className="h-auto w-full"
-                  />
+                  {/* Hand-rolled <picture> (not next/image) so the browser
+                      picks light/dark by media query and only ever fetches
+                      one variant — a next/image <Image> can't swap sources
+                      that way. Both are pre-optimized WebP. */}
+                  <picture>
+                    <source
+                      srcSet="/images/hero-mockup-dark.webp"
+                      media="(prefers-color-scheme: dark)"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element -- picture/source needs a plain img fallback, next/image can't do media-conditional sources */}
+                    <img
+                      src="/images/hero-mockup-light.webp"
+                      alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
+                      width={2818}
+                      height={5760}
+                      fetchPriority="high"
+                      decoding="async"
+                      className="h-auto w-full"
+                    />
+                  </picture>
                 </div>
               </div>
             </Reveal>

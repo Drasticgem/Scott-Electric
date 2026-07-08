@@ -57,6 +57,33 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Dark mode — system-preference only (no manual toggle). Every
+   component already reads color through these tokens (bg-paper,
+   text-ink, bg-surface, border-border, text-muted, bg-accent, ...),
+   so redefining them here re-themes the whole site with no
+   per-component changes needed. Apple-dark-mode-inspired: near-black
+   page background, charcoal card surfaces, brightened accent purple
+   for contrast against black.
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #ffffff;
+    --color-ink-soft: #f5f5f7;
+    --color-paper: #000000;
+    --color-surface: #1c1c1e;
+    --color-surface-mid: #2c2c2e;
+    --color-border: #38383a;
+    --color-muted: #98989d;
+    --color-muted-light: #6e6e73;
+
+    --color-accent: #7c6cf0;
+    --color-accent-light: #9c8ff5;
+    --color-accent-dark: #5b4bda;
+    --color-accent-pale: #2b2560;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
    Base / reset
    ═══════════════════════════════════════════════════════════ */
 @layer base {
