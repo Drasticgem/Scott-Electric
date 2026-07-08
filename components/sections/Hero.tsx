@@ -95,54 +95,77 @@ export function Hero() {
     <section id="hero" aria-label="Hero" className="relative bg-paper">
       <div ref={wrapperRef} className="relative" style={{ height: SCROLL_RANGE }}>
         <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-0">
-          <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-0">
-            {/* Copy column */}
-            <div className="hero-copy-stage order-2 lg:order-1" data-stage={stage}>
-              <Reveal>
-                <div className="max-[768px]:text-center">
-                  <p
-                    className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-0"
-                    style={{ letterSpacing: "0.22em" }}
-                  >
-                    For Disc Golfers
-                  </p>
-
-                  <h1
-                    className="mb-6 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:mb-1"
-                    style={{
-                      fontSize: "clamp(34px, 4.4vw, 58px)",
-                      lineHeight: 1.05,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    Your collection matters.
-                  </h1>
-
-                  <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-1 max-[768px]:text-[13px] max-[768px]:leading-[1.4]">
-                    Catalog discs, build smarter bags, track rounds, and
-                    discover what to throw next.
-                  </p>
-
-                  <div className="mb-9 flex flex-wrap items-center gap-4 max-[768px]:justify-center max-[768px]:mb-0">
-                    <a
-                      href={DISCVAULT.appStoreUrl}
-                      className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
+          <div className="hero-grid container-1140 w-full">
+            {/* Wraps hook+pitch: on mobile this is unwrapped (display:
+                contents) so the mockup can sit between them; on desktop
+                it becomes a real flex column so they regroup into one
+                left-hand block instead of CSS Grid unevenly spacing two
+                rows spanned by the (much taller) mockup. */}
+            <div className="hero-copy-wrapper">
+              {/* Eyebrow + headline — above the mockup on mobile, top of
+                  the left column on desktop. */}
+              <div
+                className="hero-grid-hook hero-copy-stage"
+                data-stage={stage}
+              >
+                <Reveal>
+                  <div className="max-[768px]:text-center">
+                    <p
+                      className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-1"
+                      style={{ letterSpacing: "0.22em" }}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
-                      <img
-                        src="/badges/app-store-badge.svg"
-                        alt="Download on the App Store"
-                        width={161}
-                        height={54}
-                      />
-                    </a>
+                      For Disc Golfers
+                    </p>
+
+                    <h1
+                      className="font-[family-name:var(--font-display)] font-black text-ink"
+                      style={{
+                        fontSize: "clamp(34px, 4.4vw, 58px)",
+                        lineHeight: 1.05,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      Your collection matters.
+                    </h1>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
+
+              {/* Subheadline + CTA — below the mockup on mobile, bottom of
+                  the left column on desktop. */}
+              <div
+                className="hero-grid-pitch hero-copy-stage"
+                data-stage={stage}
+              >
+                <Reveal>
+                  <div className="max-[768px]:text-center max-[768px]:pt-1">
+                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-2 max-[768px]:text-[13px] max-[768px]:leading-[1.4]">
+                      Catalog discs, build smarter bags, track rounds, and
+                      discover what to throw next.
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-4 max-[768px]:justify-center">
+                      <a
+                        href={DISCVAULT.appStoreUrl}
+                        className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+                        <img
+                          src="/badges/app-store-badge.svg"
+                          alt="Download on the App Store"
+                          width={161}
+                          height={54}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </Reveal>
+              </div>
             </div>
 
-            {/* Phone mockup column — shown first on mobile, right column on desktop */}
-            <Reveal className="order-1 lg:order-2">
+            {/* Phone mockup — between the headline and the rest of the
+                copy on mobile, right column on desktop. */}
+            <Reveal className="hero-grid-phone">
               {/* Reserved-space wrapper: fixed at the REST visual size so
                   the larger, always-max-size mockup inside doesn't disturb
                   surrounding layout (overflow is visible, not clipped). */}

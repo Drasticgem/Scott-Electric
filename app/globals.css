@@ -181,3 +181,63 @@
 .hero-copy-stage[data-stage="2"] {
   opacity: 0;
 }
+
+/* Hero grid — on mobile only the eyebrow+headline ("hook") sits above
+   the mockup; the subheadline+CTA ("pitch") comes after it. On desktop
+   "hook" and "pitch" stack together in the left column, mockup on the
+   right, spanning both rows. Named areas (not `order`) drive placement
+   so the same markup can split apart on mobile and regroup on desktop. */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "hook"
+    "phone"
+    "pitch";
+  row-gap: 0;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .hero-grid {
+    row-gap: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    column-gap: 4rem;
+    row-gap: 0;
+    grid-template-areas: "copy phone";
+  }
+}
+
+.hero-grid-hook {
+  grid-area: hook;
+}
+.hero-grid-phone {
+  grid-area: phone;
+}
+.hero-grid-pitch {
+  grid-area: pitch;
+}
+
+/* On mobile this wrapper generates no box of its own, so "hook" and
+   "pitch" act as independent grid items (letting the mockup sit
+   between them). On desktop it becomes a real flex column occupying
+   a single "copy" grid area, regrouping them the way a spanning
+   multi-row grid item can't do without CSS Grid unevenly distributing
+   the phone's extra height across the two auto rows. */
+.hero-copy-wrapper {
+  display: contents;
+}
+
+@media (min-width: 1024px) {
+  .hero-copy-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    grid-area: copy;
+  }
+}
