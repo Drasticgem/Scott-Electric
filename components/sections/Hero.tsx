@@ -1,5 +1,4 @@
 import { DISCVAULT } from "@/lib/constants";
-import { CREDENTIALS } from "@/lib/data/credentials";
 import { Reveal } from "@/components/animations/Reveal";
 
 /**
@@ -58,19 +57,6 @@ export function Hero() {
                 Browse the Catalog
               </a>
             </div>
-
-            {/* Trust row */}
-            <ul className="flex flex-wrap gap-[10px] max-[480px]:gap-2 max-[768px]:justify-center">
-              {CREDENTIALS.map((c) => (
-                <li
-                  key={c.shortLabel}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-[14px] py-[7px] text-[12px] font-medium text-ink-soft"
-                >
-                  <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-accent" />
-                  {c.shortLabel}
-                </li>
-              ))}
-            </ul>
           </div>
         </Reveal>
 

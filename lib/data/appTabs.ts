@@ -16,9 +16,9 @@ export const APP_TABS: AppTab[] = [
   {
     slug: "vault",
     name: "Vault",
-    tagline: "AI-powered insight into every disc you own",
+    tagline: "Every disc you own, all in one place",
     description:
-      "Get instant vault insights like “Overstable Heavy,” browse your discs by category, and see what you've added most recently — all organized the moment you scan it in.",
+      "Browse your collection by category, see what you've added most recently, and get a quick read on your bag's balance — organized the moment you scan it in.",
     exploreLabel: "See Your Vault",
   },
   {
