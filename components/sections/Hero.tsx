@@ -56,12 +56,6 @@ export function Hero() {
                   height={54}
                 />
               </a>
-              <a
-                href="#catalog"
-                className="inline-flex items-center justify-center rounded-full border border-border bg-paper px-7 py-[14px] text-[15px] font-semibold text-ink-soft transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-surface max-[480px]:w-full"
-              >
-                Browse the Catalog
-              </a>
             </div>
           </div>
         </Reveal>
