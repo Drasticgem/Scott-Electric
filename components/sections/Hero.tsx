@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
 
@@ -5,9 +6,9 @@ import { Reveal } from "@/components/animations/Reveal";
  * Hero — white, Apple-esque product intro.
  *
  * Two columns on desktop (copy left, phone mockup right), stacked on
- * mobile. The phone mockup is a placeholder frame standing in for the
- * real cinematic product-demo video, which will be dropped in once
- * final app footage is edited (see PhoneMockup below).
+ * mobile. The mockup is a static device-frame render of the Vault tab
+ * for now — swapped for a cinematic multi-clip product demo once that
+ * footage is edited.
  */
 export function Hero() {
   return (
@@ -63,45 +64,17 @@ export function Hero() {
         {/* Phone mockup column — shown first on mobile, right column on desktop */}
         <Reveal className="order-1 lg:order-2">
           <div className="flex justify-center">
-            <PhoneMockup />
+            <Image
+              src="/images/hero-mockup.png"
+              alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
+              width={260}
+              height={532}
+              priority
+              className="h-auto w-[260px] drop-shadow-[0_30px_50px_rgba(0,0,0,0.18)] max-[1024px]:w-[140px]"
+            />
           </div>
         </Reveal>
       </div>
     </section>
-  );
-}
-
-/**
- * Placeholder iPhone mockup — stands in for the real cinematic product
- * demo (multiple clipped app-screen shots) until final footage/screenshots
- * are ready. Pure CSS/SVG, tilted for a subtle cinematic angle.
- */
-function PhoneMockup() {
-  return (
-    <div
-      className="relative"
-      style={{ perspective: "1400px" }}
-      aria-hidden="true"
-    >
-      <div
-        className="relative h-[560px] w-[280px] max-[1024px]:h-[280px] max-[1024px]:w-[140px] rounded-[46px] border-[6px] border-ink bg-ink shadow-[0_40px_80px_rgba(0,0,0,0.18)] max-[1024px]:rounded-[26px] max-[1024px]:border-[4px]"
-        style={{ transform: "rotateY(-10deg) rotateX(4deg)" }}
-      >
-        {/* Notch */}
-        <div className="absolute left-1/2 top-0 z-10 h-[24px] w-[110px] -translate-x-1/2 rounded-b-2xl bg-ink max-[1024px]:h-[13px] max-[1024px]:w-[60px]" />
-
-        {/* Screen */}
-        <div className="absolute inset-[3px] overflow-hidden rounded-[40px] bg-paper max-[1024px]:rounded-[28px]">
-          <div className="flex h-full flex-col items-center justify-center gap-4 px-6 max-[1024px]:gap-1">
-            <span className="font-[family-name:var(--font-display)] text-[24px] font-black italic text-ink max-[1024px]:text-[13px]">
-              DiscVault
-            </span>
-            <span className="text-[11px] font-medium uppercase text-muted-light max-[1024px]:text-[7px]" style={{ letterSpacing: "0.18em" }}>
-              Product Demo
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
