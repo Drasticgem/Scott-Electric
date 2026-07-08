@@ -19,7 +19,7 @@ export function Hero() {
     >
       <div className="container-1140 grid min-h-[86vh] grid-cols-1 items-center gap-16 py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:min-h-0 max-[768px]:gap-10 max-[768px]:py-16">
         {/* Copy column */}
-        <Reveal>
+        <Reveal className="order-2 lg:order-1">
           <div className="max-[768px]:text-center">
             <p
               className="mb-4 text-[11px] font-semibold uppercase text-accent"
@@ -76,8 +76,8 @@ export function Hero() {
           </div>
         </Reveal>
 
-        {/* Phone mockup column */}
-        <Reveal>
+        {/* Phone mockup column — shown first on mobile, right column on desktop */}
+        <Reveal className="order-1 lg:order-2">
           <div className="flex justify-center">
             <PhoneMockup />
           </div>
