@@ -194,7 +194,7 @@
     "hook"
     "phone"
     "pitch";
-  row-gap: 0;
+  row-gap: 2rem;
   align-items: center;
 }
 

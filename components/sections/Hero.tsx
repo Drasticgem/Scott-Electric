@@ -94,7 +94,7 @@ export function Hero() {
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
       <div ref={wrapperRef} className="relative" style={{ height: SCROLL_RANGE }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-0">
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:items-start max-[768px]:py-0 max-[768px]:pt-16">
           <div className="hero-grid container-1140 w-full">
             {/* Wraps hook+pitch: on mobile this is unwrapped (display:
                 contents) so the mockup can sit between them; on desktop
@@ -111,7 +111,7 @@ export function Hero() {
                 <Reveal>
                   <div className="max-[768px]:text-center">
                     <p
-                      className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-1"
+                      className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-3"
                       style={{ letterSpacing: "0.22em" }}
                     >
                       For Disc Golfers
@@ -138,8 +138,8 @@ export function Hero() {
                 data-stage={stage}
               >
                 <Reveal>
-                  <div className="max-[768px]:text-center max-[768px]:pt-1">
-                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-2 max-[768px]:text-[13px] max-[768px]:leading-[1.4]">
+                  <div className="max-[768px]:text-center">
+                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-6 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
                       Catalog discs, build smarter bags, track rounds, and
                       discover what to throw next.
                     </p>
