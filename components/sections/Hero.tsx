@@ -30,7 +30,7 @@ import { Reveal } from "@/components/animations/Reveal";
 const SCROLL_RANGE = "220vh";
 
 // Rest-state (resting, un-zoomed) visual width of the mockup on desktop.
-// Mobile uses a 180px rest width (see the max-[1024px] overrides below).
+// Mobile uses a 216px rest width (see the max-[1024px] overrides below).
 const REST_W = 340;
 // The mockup's actual CSS layout width — fixed at the full zoomed-in size
 // so the browser always rasterizes at high resolution; scale() shrinks it
@@ -46,7 +46,7 @@ export function Hero() {
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
       <div className="hero-pin-wrapper relative" style={{ height: SCROLL_RANGE }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:items-start max-[768px]:py-0 max-[768px]:pt-16">
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:items-start max-[768px]:py-0 max-[768px]:pt-10">
           <div className="hero-grid container-1140 w-full">
             {/* Wraps hook+pitch: on mobile this is unwrapped (display:
                 contents) so the mockup can sit between them; on desktop
@@ -85,7 +85,7 @@ export function Hero() {
               <div className="hero-grid-pitch hero-copy-scrub">
                 <Reveal>
                   <div className="max-[768px]:text-center">
-                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-6 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
+                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
                       Catalog discs, build smarter bags, track rounds, and
                       discover what to throw next.
                     </p>
@@ -116,11 +116,11 @@ export function Hero() {
                   the larger, always-max-size mockup inside doesn't disturb
                   surrounding layout (overflow is visible, not clipped). */}
               <div
-                className="mx-auto flex items-center justify-center max-[1024px]:!w-[180px] max-[1024px]:!h-[368px]"
+                className="mx-auto flex items-center justify-center max-[1024px]:!w-[216px] max-[1024px]:!h-[442px]"
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[468px]"
+                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[562px]"
                   style={{ width: MAX_W }}
                 >
                   <Image

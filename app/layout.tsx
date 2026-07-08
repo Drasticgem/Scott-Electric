@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+// Chat widget disabled for now — not deleted, may come back later.
+// import { ChatWidget } from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 const softwareAppJsonLd = {
@@ -71,7 +72,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
-        <ChatWidget />
+        {/* <ChatWidget /> */}
         <Analytics />
       </body>
     </html>
