@@ -35,6 +35,10 @@ const REST_W = 340;
 // The mockup's actual CSS layout width — fixed at the full zoomed-in size
 // so the browser always rasterizes at high resolution; scale() shrinks it
 // down for the resting state instead of stretching it up for the zoom.
+// Desktop-only: mobile's fully-zoomed width is capped much smaller (330px,
+// via the max-[1024px] override below + the hero-zoom-mobile keyframe in
+// globals.css) so the bezel doesn't get clipped by a narrow viewport —
+// desktop viewports are wide enough that 2.6x doesn't have that problem.
 const ZOOM_FACTOR = 2.6;
 const MAX_W = REST_W * ZOOM_FACTOR;
 // Mockup image aspect ratio (2048 x 4191), used to size the reserved-space
@@ -120,7 +124,7 @@ export function Hero() {
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[562px]"
+                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[330px]"
                   style={{ width: MAX_W }}
                 >
                   <Image

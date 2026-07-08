@@ -179,10 +179,17 @@
 
 /* One continuous zoom: rest -> grown + panned to a single final
    framing (centered on the top "Vault Insight" card). No intermediate
-   hold/second pan — just one smooth move. */
+   hold/second pan — just one smooth move.
+
+   Mobile uses its own (smaller) zoom ratio than desktop — at
+   REST_SCALE=1/2.6 the fully-zoomed mockup is wider than a mobile
+   viewport, so the bezel gets clipped by the viewport's own edges at
+   full zoom. REST_SCALE here (0.6545) keeps the final zoomed width at
+   330px (see the max-[1024px] override in Hero.tsx), narrow enough
+   that the bezel stays fully visible on any phone-width viewport. */
 @keyframes hero-zoom-mobile {
   from {
-    transform: translate(0px, 0%) scale(0.3846); /* REST_SCALE = 1 / 2.6 */
+    transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
     transform: translate(0px, 11%) scale(1);
