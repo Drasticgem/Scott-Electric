@@ -202,6 +202,39 @@
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
   }
+
+  .hero-tagline-scrub {
+    animation-name: hero-tagline-fade;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+}
+
+/* Hidden by default — only revealed by the animation above, so browsers
+   without view-timeline support (where hero-copy-scrub also never
+   animates, leaving the subheadline/CTA visible throughout) don't end
+   up with the tagline permanently overlapping them. */
+.hero-tagline-scrub {
+  opacity: 0;
+}
+
+/* Crossfades in as hero-copy-fade fades the subheadline/CTA out, so the
+   space they occupied doesn't just sit empty once the zoom finishes. */
+@keyframes hero-tagline-fade {
+  0% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* One continuous zoom: rest -> grown + panned to a single final

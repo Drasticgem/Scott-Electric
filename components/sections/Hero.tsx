@@ -84,31 +84,64 @@ export function Hero() {
               </div>
 
               {/* Subheadline + CTA — below the mockup on mobile, bottom of
-                  the left column on desktop. */}
-              <div className="hero-grid-pitch hero-copy-scrub">
-                <Reveal>
-                  <div className="max-[768px]:text-center">
-                    <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
-                      Catalog discs, build smarter bags, track rounds, and
-                      discover what to throw next.
-                    </p>
+                  the left column on desktop. `relative` so the tagline
+                  below can overlay this exact spot once this fades out.
+                  The fade itself lives on the INNER wrapper, not this
+                  outer one — an ancestor's opacity:0 blanks its whole
+                  subtree, which would take the tagline down with it if
+                  the fade were on this shared parent instead. */}
+              <div className="hero-grid-pitch relative">
+                <div className="hero-copy-scrub">
+                  <Reveal>
+                    <div className="max-[768px]:text-center">
+                      <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
+                        Catalog discs, build smarter bags, track rounds, and
+                        discover what to throw next.
+                      </p>
 
-                    <div className="flex flex-wrap items-center gap-4 max-[768px]:justify-center">
-                      <a
-                        href={DISCVAULT.appStoreUrl}
-                        className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
-                        <img
-                          src="/badges/app-store-badge.svg"
-                          alt="Download on the App Store"
-                          width={161}
-                          height={54}
-                        />
-                      </a>
+                      <div className="flex flex-wrap items-center gap-4 max-[768px]:justify-center">
+                        <a
+                          href={DISCVAULT.appStoreUrl}
+                          className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element -- official Apple badge asset, used unmodified per brand guidelines */}
+                          <img
+                            src="/badges/app-store-badge.svg"
+                            alt="Download on the App Store"
+                            width={161}
+                            height={54}
+                          />
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </Reveal>
+                  </Reveal>
+                </div>
+
+                {/* Crossfades in as the subheadline/CTA above fades out —
+                    fills the space that'd otherwise sit empty once the
+                    zoom finishes. On desktop this overlays the pitch
+                    box exactly (the mockup zooms in place, off to the
+                    side). On mobile the mockup's zoomed size visually
+                    balloons well past its reserved layout footprint
+                    (that's the point of the reserved-space technique —
+                    transforms don't affect layout), so an inset-0 overlay
+                    here would sit UNDER the zoomed mockup and get covered.
+                    The fixed top offset instead pushes it below the
+                    mockup's actual zoomed bottom edge — pure CSS, no
+                    scroll-linked measurement, so it's a hand-tuned
+                    constant like the other mobile sizing values here. */}
+                <div className="hero-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[162px] max-[1024px]:text-center lg:inset-y-0 lg:justify-start">
+                  {/* Full line on desktop, where there's room below the
+                      pitch box; a shorter one on mobile, where the
+                      zoomed mockup leaves only ~40px of clearance above
+                      the viewport's own edge. */}
+                  <p className="hidden max-w-[270px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft lg:block">
+                    Tastefully designed for a native, iOS-first experience.
+                  </p>
+                  <p className="max-w-[280px] font-[family-name:var(--font-display)] text-[15px] leading-[1.3] italic text-ink-soft lg:hidden">
+                    Tastefully designed, iOS-first.
+                  </p>
+                </div>
               </div>
             </div>
 
