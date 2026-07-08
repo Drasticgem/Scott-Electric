@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
@@ -10,22 +7,20 @@ import { Reveal } from "@/components/animations/Reveal";
  *
  * Two columns on desktop (copy left, phone mockup right), stacked on
  * mobile. The section pins for an extra scroll range while the copy
- * fades away and the whole mockup — bezel and all, no internal crop —
- * grows and pans: first centering on the top "Vault Insight" card,
- * then panning down into the "Recently Vaulted" list. It's one
- * continuous transform on a single static image, not a swap between
- * crops, and the phone is never clipped by an inner frame — only the
- * viewport's own edges limit what's visible, same as a camera moving
- * closer to a real object.
+ * fades away and the mockup — bezel and all, no internal crop — grows
+ * and pans in one continuous motion, centering on the top "Vault
+ * Insight" card. It's a single transform on a static image, not a
+ * swap between crops, and the phone is never clipped by an inner
+ * frame — only the viewport's own edges limit what's visible, same as
+ * a camera moving closer to a real object.
  *
- * Stage-triggered, not scroll-scrubbed: a scroll listener below only
- * tracks which third of the pin range you're in (0/1/2) and flips a
- * `data-stage` attribute — the actual motion is a plain CSS `transition`
- * (globals.css), so it always plays over the same fixed duration/easing
- * no matter how fast the scroll gesture was. That's deliberate — an
- * earlier scroll-scrubbed version (first a view-timeline, before that a
- * Framer Motion transform) hard-coupled visual speed to scroll speed,
- * which read as rushed/jarring on a fast flick.
+ * Scroll-linked (scrubbed), not stage-triggered: motion is tied
+ * directly to scroll position via a CSS view-timeline (globals.css),
+ * not a JS scroll listener — that's what keeps it calm under fast
+ * scrolling instead of stuttering, since the compositor evaluates it
+ * every frame regardless of main-thread load. A JS-driven version
+ * (Framer Motion) visibly stuttered on iOS Safari for exactly that
+ * reason.
  */
 // Extra scroll distance the section pins for, on top of the 100vh it
 // already occupies just being on screen. Kept short (well under one
@@ -47,53 +42,10 @@ const MAX_W = REST_W * ZOOM_FACTOR;
 const ASPECT = 4191 / 2048;
 const REST_H = Math.round(REST_W * ASPECT);
 
-// Boundaries (as a fraction of the pin's own extra scroll range) between
-// the three stages: 0 = rest, 1 = zoomed + centered on the top card,
-// 2 = panned down into the list.
-const STAGE_1_AT = 0.33;
-const STAGE_2_AT = 0.66;
-
 export function Hero() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [stage, setStage] = useState(0);
-
-  useEffect(() => {
-    const stageRef = { current: 0 };
-    let ticking = false;
-
-    function computeStage() {
-      ticking = false;
-      const el = wrapperRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      if (total <= 0) return;
-      const progress = Math.min(1, Math.max(0, -rect.top / total));
-      const next = progress < STAGE_1_AT ? 0 : progress < STAGE_2_AT ? 1 : 2;
-      if (next !== stageRef.current) {
-        stageRef.current = next;
-        setStage(next);
-      }
-    }
-
-    function onScrollOrResize() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(computeStage);
-    }
-
-    computeStage();
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
-    return () => {
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
-    };
-  }, []);
-
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
-      <div ref={wrapperRef} className="relative" style={{ height: SCROLL_RANGE }}>
+      <div className="hero-pin-wrapper relative" style={{ height: SCROLL_RANGE }}>
         <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:items-start max-[768px]:py-0 max-[768px]:pt-16">
           <div className="hero-grid container-1140 w-full">
             {/* Wraps hook+pitch: on mobile this is unwrapped (display:
@@ -104,10 +56,7 @@ export function Hero() {
             <div className="hero-copy-wrapper">
               {/* Eyebrow + headline — above the mockup on mobile, top of
                   the left column on desktop. */}
-              <div
-                className="hero-grid-hook hero-copy-stage"
-                data-stage={stage}
-              >
+              <div className="hero-grid-hook hero-copy-scrub">
                 <Reveal>
                   <div className="max-[768px]:text-center">
                     <p
@@ -133,10 +82,7 @@ export function Hero() {
 
               {/* Subheadline + CTA — below the mockup on mobile, bottom of
                   the left column on desktop. */}
-              <div
-                className="hero-grid-pitch hero-copy-stage"
-                data-stage={stage}
-              >
+              <div className="hero-grid-pitch hero-copy-scrub">
                 <Reveal>
                   <div className="max-[768px]:text-center">
                     <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-6 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
@@ -174,8 +120,7 @@ export function Hero() {
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-stage shrink-0 max-[1024px]:!w-[468px]"
-                  data-stage={stage}
+                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[468px]"
                   style={{ width: MAX_W }}
                 >
                   <Image

@@ -132,54 +132,85 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Hero scroll effect — stage-triggered, not scroll-scrubbed.
-   A tiny scroll listener (see Hero.tsx) just tracks which third
-   of the pin range you're in and flips a `data-stage` attribute
-   (0/1/2) — it does NOT drive the transform directly. The actual
-   motion is a plain CSS `transition`, so it always plays over the
-   same fixed duration/easing no matter how fast the scroll gesture
-   that triggered it was. That's what makes it feel calm at any
-   scroll speed instead of "faster flick = faster zoom."
+   Hero scroll effect — scroll-linked (scrubbed), driven by a CSS
+   view-timeline rather than a JS scroll listener. The mockup grows
+   and pans in ONE continuous motion tied directly to scroll position
+   (no discrete trigger points, no fixed-duration transition) — scroll
+   a little, it moves a little; scroll a lot, it moves a lot. It stays
+   calm because a view-timeline is evaluated by the compositor on every
+   frame regardless of main-thread load, unlike a JS scroll handler
+   (the earlier Framer Motion version), which visibly stuttered on iOS
+   Safari under momentum scrolling.
 
-   This replaced an earlier scroll-scrubbed version (view-timeline,
-   then before that a Framer Motion useScroll transform) — both hard-
-   coupled visual speed to scroll speed, which is the opposite of
-   what was wanted here.
+   Feature-gated: browsers without support (older Safari, Firefox
+   stable) just render the mockup at rest with no animation — a clean
+   fallback, not a broken one.
    ═══════════════════════════════════════════════════════════ */
-.hero-mockup-stage {
-  will-change: transform;
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hero-mockup-stage[data-stage="0"] {
-  transform: translate(0px, 0%) scale(0.3846); /* REST_SCALE = 1 / 2.6 */
-}
-.hero-mockup-stage[data-stage="1"] {
-  transform: translate(0px, 11%) scale(1);
-}
-.hero-mockup-stage[data-stage="2"] {
-  transform: translate(0px, -10%) scale(1);
+@supports (animation-timeline: view()) {
+  .hero-pin-wrapper {
+    view-timeline-name: --hero-scrub;
+    view-timeline-axis: block;
+  }
+
+  .hero-mockup-scrub {
+    animation-name: hero-zoom-mobile;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-mockup-scrub {
+      animation-name: hero-zoom-desktop;
+    }
+  }
+
+  .hero-copy-scrub {
+    animation-name: hero-copy-fade;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
 }
 
-@media (min-width: 1024px) {
-  /* Desktop mockup sits in the right grid column (off-center), so
-     stages 1-2 need the same flat -96px recentering shift as before. */
-  .hero-mockup-stage[data-stage="1"] {
+/* One continuous zoom: rest -> grown + panned to a single final
+   framing (centered on the top "Vault Insight" card). No intermediate
+   hold/second pan — just one smooth move. */
+@keyframes hero-zoom-mobile {
+  from {
+    transform: translate(0px, 0%) scale(0.3846); /* REST_SCALE = 1 / 2.6 */
+  }
+  to {
+    transform: translate(0px, 11%) scale(1);
+  }
+}
+
+@keyframes hero-zoom-desktop {
+  from {
+    transform: translate(0px, 0%) scale(0.3846);
+  }
+  to {
+    /* Desktop mockup sits in the right grid column (off-center), so
+       it needs the same flat -96px recentering shift as before. */
     transform: translate(-96px, 11%) scale(1);
   }
-  .hero-mockup-stage[data-stage="2"] {
-    transform: translate(-96px, -10%) scale(1);
-  }
 }
 
-.hero-copy-stage {
-  transition: opacity 0.5s ease-out;
-}
-.hero-copy-stage[data-stage="0"] {
-  opacity: 1;
-}
-.hero-copy-stage[data-stage="1"],
-.hero-copy-stage[data-stage="2"] {
-  opacity: 0;
+/* Copy fades out early to give the mockup room to grow. */
+@keyframes hero-copy-fade {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Hero grid — on mobile only the eyebrow+headline ("hook") sits above
