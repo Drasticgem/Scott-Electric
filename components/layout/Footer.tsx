@@ -18,7 +18,7 @@ export function Footer() {
   return (
     <footer
       id="footer"
-      className="relative bg-surface"
+      className="relative border-t border-border bg-paper"
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" className="sr-only">
@@ -48,7 +48,7 @@ function MobileFooter() {
         <h3 className="font-[family-name:var(--font-display)] text-[32px] font-bold leading-[1.05] text-ink">
           Let&apos;s build your vault.
         </h3>
-        <p className="mx-auto mt-5 max-w-[300px] text-[14px] leading-[1.75] text-muted">
+        <p className="mx-auto mt-5 max-w-[300px] text-[14px] leading-[1.75] text-ink-soft">
           {DISCVAULT.tagline}
         </p>
         <a
@@ -67,7 +67,7 @@ function MobileFooter() {
 
       <div className="mt-24 flex flex-col items-center">
         <Logo size="lg" />
-        <p className="mt-4 text-[11px] text-muted-light">
+        <p className="mt-4 text-[11px] text-ink-soft">
           Browse the catalog. No sign-in required.
         </p>
       </div>
@@ -78,15 +78,15 @@ function MobileFooter() {
       </div>
 
       <div className="mt-20 border-t border-border pt-8 text-center">
-        <p className="text-[11px] text-muted-light">
+        <p className="text-[11px] text-ink-soft">
           © {new Date().getFullYear()} DiscVault. All rights reserved.
         </p>
-        <p className="mt-2 text-[11px] text-muted-light">
-          <a href="#" className="hover:text-ink-soft">
+        <p className="mt-2 text-[11px] text-ink-soft">
+          <a href="#" className="hover:text-accent">
             Privacy Policy
           </a>{" "}
           ·{" "}
-          <a href="#" className="hover:text-ink-soft">
+          <a href="#" className="hover:text-accent">
             Terms of Service
           </a>
         </p>
@@ -104,7 +104,7 @@ function DesktopFooter() {
       <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-12">
         <div>
           <Logo size="sm" className="mb-3 inline-block" />
-          <p className="text-[12px] leading-[1.7] text-muted">
+          <p className="text-[12px] leading-[1.7] text-ink-soft">
             {DISCVAULT.tagline}
           </p>
         </div>
@@ -146,15 +146,15 @@ function DesktopFooter() {
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t border-border px-0 py-6">
-        <span className="text-[11px] text-muted-light">
+        <span className="text-[11px] text-ink-soft">
           © {new Date().getFullYear()} DiscVault. All rights reserved.
         </span>
-        <span className="text-[11px] text-muted-light">
-          <a href="#" className="hover:text-ink-soft">
+        <span className="text-[11px] text-ink-soft">
+          <a href="#" className="hover:text-accent">
             Privacy Policy
           </a>{" "}
           ·{" "}
-          <a href="#" className="hover:text-ink-soft">
+          <a href="#" className="hover:text-accent">
             Terms of Service
           </a>
         </span>
@@ -166,7 +166,7 @@ function DesktopFooter() {
 function ColumnHeading({ children }: { children: React.ReactNode }) {
   return (
     <p
-      className="mb-[14px] text-[10px] font-semibold uppercase text-muted-light"
+      className="mb-[14px] text-[10px] font-semibold uppercase text-ink-soft"
       style={{ letterSpacing: "0.14em" }}
     >
       {children}
@@ -184,7 +184,7 @@ function FooterLink({
   return (
     <a
       href={href}
-      className="block text-[13px] text-muted transition-colors hover:text-ink"
+      className="block text-[13px] text-ink transition-colors hover:text-accent"
     >
       {children}
     </a>
@@ -201,7 +201,7 @@ function FooterColumn({
   return (
     <div>
       <p
-        className="mb-5 text-[10px] font-semibold uppercase text-muted-light"
+        className="mb-5 text-[10px] font-semibold uppercase text-ink-soft"
         style={{ letterSpacing: "0.14em" }}
       >
         {heading}
