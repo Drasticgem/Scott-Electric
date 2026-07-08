@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { easeInOut, motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { DISCVAULT } from "@/lib/constants";
@@ -28,6 +28,20 @@ export function Hero() {
     offset: ["start start", "end end"],
   });
 
+  // The phone sits in the right column on desktop (offset from viewport
+  // center), so it needs a corrective shift toward center as it grows.
+  // On mobile it's already centered (single column), so no shift is
+  // needed there — applying the desktop shift on mobile would drag it
+  // off-center.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   // Smooth the raw scroll progress with a spring so the animation has
   // inertia and settles fluidly, instead of snapping 1:1 to every
   // mouse-wheel tick or trackpad judder.
@@ -54,7 +68,7 @@ export function Hero() {
   const x = useTransform(
     smoothProgress,
     [0, 0.15, 0.4, 1],
-    ["0%", "0%", "-32%", "-32%"],
+    isDesktop ? ["0%", "0%", "-32%", "-32%"] : ["0%", "0%", "0%", "0%"],
     easeOpts,
   );
   const y = useTransform(
@@ -67,21 +81,21 @@ export function Hero() {
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
       <div ref={scrollRef} className="relative" style={{ height: SCROLL_RANGE }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-3">
-          <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-2">
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-1">
+          <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-1">
             {/* Copy column */}
             <motion.div style={{ opacity: textOpacity }} className="order-2 lg:order-1">
               <Reveal>
                 <div className="max-[768px]:text-center">
                   <p
-                    className="mb-4 text-[11px] font-semibold uppercase text-accent"
+                    className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-2"
                     style={{ letterSpacing: "0.22em" }}
                   >
                     For Disc Golfers
                   </p>
 
                   <h1
-                    className="mb-6 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:mb-3"
+                    className="mb-6 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:mb-2"
                     style={{
                       fontSize: "clamp(34px, 4.4vw, 58px)",
                       lineHeight: 1.05,
@@ -91,7 +105,7 @@ export function Hero() {
                     Your collection matters.
                   </h1>
 
-                  <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-6">
+                  <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.5]">
                     Catalog discs, build smarter bags, track rounds, and
                     discover what to throw next.
                   </p>
@@ -117,17 +131,15 @@ export function Hero() {
             {/* Phone mockup column — shown first on mobile, right column on desktop */}
             <Reveal className="order-1 lg:order-2">
               <div className="flex justify-center">
-                <motion.div
-                  style={{ scale, x, y, willChange: "transform" }}
-                  className="drop-shadow-[0_30px_50px_rgba(0,0,0,0.18)]"
-                >
+                <motion.div style={{ scale, x, y, willChange: "transform" }}>
                   <Image
                     src="/images/hero-mockup.png"
                     alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
-                    width={260}
-                    height={532}
+                    width={2048}
+                    height={4191}
+                    quality={90}
                     priority
-                    className="h-auto w-[260px] max-[1024px]:w-[112px]"
+                    className="h-auto w-[300px] max-[1024px]:w-[160px]"
                   />
                 </motion.div>
               </div>
