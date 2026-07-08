@@ -3,42 +3,33 @@ import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ChatWidget } from "@/components/chat/ChatWidget";
-import { BUSINESS } from "@/lib/constants";
 import "./globals.css";
 
-const localBusinessJsonLd = {
+const softwareAppJsonLd = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: BUSINESS.name,
-  founder: BUSINESS.founder,
-  foundingDate: String(BUSINESS.founded),
-  telephone: BUSINESS.phone,
+  "@type": "SoftwareApplication",
+  name: "DiscVault",
+  applicationCategory: "SportsApplication",
+  operatingSystem: "iOS",
   description:
-    "Electrical, A/C, Telecom & Custom Woodworking for South Texas since 1920. Industrial, commercial, and residential.",
-  address: BUSINESS.locations.map((loc) => ({
-    "@type": "PostalAddress",
-    addressLocality: loc.name,
-    addressRegion: "TX",
-    addressCountry: "US",
-  })),
-  areaServed: "South Texas",
+    "DiscVault helps disc golfers catalog discs, build smarter bags, track rounds, and discover what to throw next.",
 };
 
 export const metadata: Metadata = {
-  title: "Scott Electric Group — Powering South Texas Since 1920",
+  title: "DiscVault — Your Disc Collection, Finally Organized",
   description:
-    "Scott Electric Group — Electrical, A/C, Telecom & Custom Woodworking for South Texas since 1920. Industrial, commercial, and residential services from Corpus Christi to San Antonio.",
+    "DiscVault is a disc golf app that helps you catalog your discs, build smarter bags, track rounds, and discover new molds. Browse the public disc catalog — no sign-in required.",
   openGraph: {
-    title: "Scott Electric Group — Powering South Texas Since 1920",
+    title: "DiscVault — Your Disc Collection, Finally Organized",
     description:
-      "Electrical, A/C, Telecom & Custom Woodworking. Four divisions, one standard. Serving South Texas for over a century.",
+      "Catalog discs, build smarter bags, track rounds, and discover what to throw next. Browse the public disc catalog — no sign-in required.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Scott Electric Group — Powering South Texas Since 1920",
+    title: "DiscVault — Your Disc Collection, Finally Organized",
     description:
-      "Electrical, A/C, Telecom & Custom Woodworking. Four divisions, one standard.",
+      "Catalog discs, build smarter bags, track rounds, and discover what to throw next.",
   },
 };
 
@@ -68,26 +59,11 @@ export default function RootLayout({
             __html: `try{if(window.location.hash){history.replaceState(null,"",window.location.pathname+window.location.search);}}catch(e){}`,
           }}
         />
-        {/*
-          Google Fonts loaded at runtime via <link> — the build environment
-          cannot reach fonts.googleapis.com for next/font/google's build-time
-          fetch, and the legacy static site already used this pattern.
-        */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessJsonLd),
+            __html: JSON.stringify(softwareAppJsonLd),
           }}
         />
       </head>

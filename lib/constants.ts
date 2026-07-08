@@ -1,22 +1,18 @@
 /**
- * Business info for Scott Electric Group.
+ * Product info for DiscVault.
  * Single source of truth — update here to update site-wide.
  */
-export const BUSINESS = {
-  name: "Scott Electric Group",
-  shortName: "Scott Electric",
-  founder: "Chubb Scott",
-  founded: 1920,
-  phone: "+13618846326",
-  phoneDisplay: "361-884-6326",
-  phoneHref: "tel:+13618846326",
-  // TODO: replace with the live customer payment portal URL
-  paymentUrl: "#payment",
-  locations: [
-    { name: "Corpus Christi", isHQ: true },
-    { name: "San Antonio", isHQ: false },
-    { name: "Alice", isHQ: false },
-    { name: "Weslaco", isHQ: false },
-  ],
-  // TODO: email / street address / hours not present in source HTML
+export const DISCVAULT = {
+  name: "DiscVault",
+  tagline: "Your disc collection, finally organized.",
+  email: "hello@discvault.app",
+  emailHref: "mailto:hello@discvault.app",
+  supportEmail: "support@discvault.app",
+  supportEmailHref: "mailto:support@discvault.app",
+  // TODO: replace with the live App Store link at launch
+  appStoreUrl: "#download",
+  socials: {
+    instagram: "https://instagram.com/discvaultapp",
+    twitter: "https://x.com/discvaultapp",
+  },
 } as const;
