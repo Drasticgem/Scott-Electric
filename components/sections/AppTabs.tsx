@@ -1,4 +1,4 @@
-import { Archive, Backpack, Compass, Route, type LucideIcon } from "lucide-react";
+import { Archive, Backpack, Route, Users, type LucideIcon } from "lucide-react";
 import { APP_TABS, type AppTab, type AppTabSlug } from "@/lib/data/appTabs";
 import { Reveal } from "@/components/animations/Reveal";
 import { ArrowRight } from "lucide-react";
@@ -7,15 +7,13 @@ const TAB_ICONS: Record<AppTabSlug, LucideIcon> = {
   vault: Archive,
   bags: Backpack,
   rounds: Route,
-  explore: Compass,
+  explore: Users,
 };
 
 /**
  * AppTabs — showcases the four tabs of the DiscVault app. Header
  * ("Everything in your bag. One tap away.") followed by four alternating
- * white/surface panels, one per tab. The final panel (Explore) doubles as
- * the public catalog anchor — id="catalog" is the nav + footer link target
- * until dedicated /catalog routes ship in a later phase.
+ * white/surface panels, one per tab.
  */
 export function AppTabs() {
   return (
@@ -57,11 +55,9 @@ export function AppTabs() {
 function TabPanel({ tab, index }: { tab: AppTab; index: number }) {
   const Icon = TAB_ICONS[tab.slug];
   const alt = index % 2 === 1;
-  const isLast = tab.slug === "explore";
 
   return (
     <article
-      id={isLast ? "catalog" : undefined}
       className={[
         "border-t border-border py-20 max-[768px]:py-14",
         alt ? "bg-surface" : "bg-paper",
@@ -101,7 +97,7 @@ function TabPanel({ tab, index }: { tab: AppTab; index: number }) {
             </p>
 
             <a
-              href={isLast ? "#catalog" : "#"}
+              href="#"
               className="group/cta mt-2 inline-flex items-center gap-[6px] text-[14px] font-semibold text-accent transition-[gap] duration-200 hover:gap-[10px]"
             >
               {tab.exploreLabel}
