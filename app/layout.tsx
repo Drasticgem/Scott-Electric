@@ -37,6 +37,14 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Colors the iOS/Android status bar + Safari's own chrome around the
+  // page — that bar is OS/browser UI, not page content, so CSS (even
+  // prefers-color-scheme) can't reach it. This is the one thing that
+  // can, and the browser picks light vs dark automatically, no JS.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
