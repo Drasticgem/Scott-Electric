@@ -60,12 +60,23 @@ export function Header() {
           "sticky top-0 z-[1000] flex items-center justify-between",
           "h-[64px] max-[768px]:h-[60px] max-[480px]:h-[56px]",
           "px-12 max-[768px]:px-5 max-[480px]:px-4",
-          "bg-paper/80 supports-[backdrop-filter]:bg-paper/70 backdrop-blur-md",
-          "border-b border-border",
           "transition-shadow duration-200",
           scrolled && "shadow-[0_2px_16px_rgba(0,0,0,0.06)]",
         )}
       >
+        {/* Frosted-glass fill lives on an `absolute` child, not the
+            `sticky` nav itself — Safari 26 samples the background-color
+            of fixed/sticky elements near the viewport edge to tint its
+            own status bar/toolbar (see #safari-chrome-tint in layout.tsx),
+            and having a second translucent candidate here caused it to
+            pick unpredictably between the two. `absolute` children are
+            explicitly excluded from that algorithm, so this keeps the
+            same visual look without competing with the dedicated swatch. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-paper/80 supports-[backdrop-filter]:bg-paper/70 backdrop-blur-md border-b border-border"
+        />
+
         <a href="#hero" aria-label="DiscVault — home">
           <Logo size="md" />
         </a>
