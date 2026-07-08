@@ -23,11 +23,11 @@ import { Reveal } from "@/components/animations/Reveal";
  * reason.
  */
 // Extra scroll distance the section pins for, on top of the 100vh it
-// already occupies just being on screen. Kept short (well under one
-// viewport) so a single natural scroll gesture carries all the way
-// through the animation — a long pin range feels "stuck" once a
-// gesture's momentum decays before the effect has finished.
-const SCROLL_RANGE = "160vh";
+// already occupies just being on screen. Since the zoom is one
+// continuous scrub with no hold/dead zones, a longer range just
+// stretches the same motion over more scrolling — it can't feel
+// "stuck" the way an earlier hold-based version did at 240vh.
+const SCROLL_RANGE = "220vh";
 
 // Rest-state (resting, un-zoomed) visual width of the mockup on desktop.
 // Mobile uses a 180px rest width (see the max-[1024px] overrides below).
