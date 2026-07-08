@@ -36,7 +36,7 @@ export function Hero() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Your collection <em className="not-italic text-accent">matters</em>.
+              Your collection matters.
             </h1>
 
             <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto">

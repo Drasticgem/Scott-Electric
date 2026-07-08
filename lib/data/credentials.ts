@@ -14,10 +14,10 @@ export interface Credential {
 
 export const CREDENTIALS: Credential[] = [
   {
-    value: "10K+",
+    value: "1K+",
     title: "Discs Cataloged",
     sub: "Growing every week",
-    shortLabel: "10,000+ Discs",
+    shortLabel: "1,000+ Discs",
   },
   {
     value: "Free",
