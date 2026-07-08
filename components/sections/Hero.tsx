@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { easeInOut, motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
 
@@ -28,25 +28,40 @@ export function Hero() {
     offset: ["start start", "end end"],
   });
 
+  // Smooth the raw scroll progress with a spring so the animation has
+  // inertia and settles fluidly, instead of snapping 1:1 to every
+  // mouse-wheel tick or trackpad judder.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 220,
+    damping: 32,
+    mass: 0.4,
+    restDelta: 0.0005,
+  });
+
   // Copy fades away early to give the mockup room to grow.
-  const textOpacity = useTransform(scrollYProgress, [0, 0.1, 0.22], [1, 1, 0]);
+  const textOpacity = useTransform(smoothProgress, [0, 0.1, 0.22], [1, 1, 0]);
 
   // Hold → grow + center on the top card → hold → pan down into the
-  // list → hold. Scale/x/y all animate together as one continuous move.
+  // list → hold. Scale/x/y all animate together as one continuous move,
+  // eased (not linear) at every keyframe so the motion feels organic.
+  const easeOpts = { ease: easeInOut };
   const scale = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 0.15, 0.4, 0.6, 0.8, 1],
     [1, 1, 2.6, 2.6, 2.6, 2.6],
+    easeOpts,
   );
   const x = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 0.15, 0.4, 1],
     ["0%", "0%", "-32%", "-32%"],
+    easeOpts,
   );
   const y = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 0.15, 0.4, 0.6, 0.8, 1],
     ["0%", "0%", "34%", "34%", "-30%", "-30%"],
+    easeOpts,
   );
 
   return (
@@ -103,7 +118,7 @@ export function Hero() {
             <Reveal className="order-1 lg:order-2">
               <div className="flex justify-center">
                 <motion.div
-                  style={{ scale, x, y }}
+                  style={{ scale, x, y, willChange: "transform" }}
                   className="drop-shadow-[0_30px_50px_rgba(0,0,0,0.18)]"
                 >
                   <Image
