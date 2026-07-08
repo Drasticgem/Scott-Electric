@@ -132,117 +132,52 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Hero scroll-scrub — driven entirely by the CSS scroll-driven
-   animations spec (view-timeline), not JavaScript. A JS scroll
-   listener (even a well-tuned one) can only update on the main
-   thread's own schedule, which visibly stutters on iOS Safari
-   during momentum scrolling — the exact "choppy" complaint this
-   replaces. A view-timeline is evaluated by the compositor on
-   every frame regardless of main-thread load, so it can't drop
-   frames the way the old Framer Motion version did.
+   Hero scroll effect — stage-triggered, not scroll-scrubbed.
+   A tiny scroll listener (see Hero.tsx) just tracks which third
+   of the pin range you're in and flips a `data-stage` attribute
+   (0/1/2) — it does NOT drive the transform directly. The actual
+   motion is a plain CSS `transition`, so it always plays over the
+   same fixed duration/easing no matter how fast the scroll gesture
+   that triggered it was. That's what makes it feel calm at any
+   scroll speed instead of "faster flick = faster zoom."
 
-   Feature-gated: browsers without support (older Safari, Firefox
-   stable) just render the mockup at its resting size/position with
-   no animation — a clean, deliberate fallback, not a broken one.
+   This replaced an earlier scroll-scrubbed version (view-timeline,
+   then before that a Framer Motion useScroll transform) — both hard-
+   coupled visual speed to scroll speed, which is the opposite of
+   what was wanted here.
    ═══════════════════════════════════════════════════════════ */
-@supports (animation-timeline: view()) {
-  .hero-pin-wrapper {
-    view-timeline-name: --hero-scrub;
-    view-timeline-axis: block;
-  }
-
-  .hero-mockup-scrub {
-    animation-name: hero-zoom-mobile;
-    animation-duration: 1s;
-    animation-timeline: --hero-scrub;
-    animation-range: contain 0% contain 100%;
-    animation-fill-mode: both;
-    will-change: transform;
-  }
-
-  @media (min-width: 1024px) {
-    .hero-mockup-scrub {
-      animation-name: hero-zoom-desktop;
-    }
-  }
-
-  .hero-copy-scrub {
-    animation-name: hero-copy-fade;
-    animation-duration: 1s;
-    animation-timeline: --hero-scrub;
-    animation-range: contain 0% contain 100%;
-    animation-fill-mode: both;
-  }
+.hero-mockup-stage {
+  will-change: transform;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero-mockup-stage[data-stage="0"] {
+  transform: translate(0px, 0%) scale(0.3846); /* REST_SCALE = 1 / 2.6 */
+}
+.hero-mockup-stage[data-stage="1"] {
+  transform: translate(0px, 11%) scale(1);
+}
+.hero-mockup-stage[data-stage="2"] {
+  transform: translate(0px, -10%) scale(1);
 }
 
-/* Rest → grow + center on the top card → hold → pan down into the
-   list → hold. translate()'s x is px (viewport-column recentering,
-   a flat pixel amount), y is % (of the mockup's own unscaled box, so
-   it stays proportional at any box size). REST_SCALE = 1 / 2.6. */
-@keyframes hero-zoom-mobile {
-  0% {
-    transform: translate(0px, 0%) scale(0.3846);
-    animation-timing-function: ease-in-out;
-  }
-  15% {
-    transform: translate(0px, 0%) scale(0.3846);
-    animation-timing-function: ease-in-out;
-  }
-  40% {
-    transform: translate(0px, 11%) scale(1);
-    animation-timing-function: ease-in-out;
-  }
-  60% {
-    transform: translate(0px, 11%) scale(1);
-    animation-timing-function: ease-in-out;
-  }
-  80% {
-    transform: translate(0px, -10%) scale(1);
-    animation-timing-function: ease-in-out;
-  }
-  100% {
-    transform: translate(0px, -10%) scale(1);
-  }
-}
-
-@keyframes hero-zoom-desktop {
-  0% {
-    transform: translate(0px, 0%) scale(0.3846);
-    animation-timing-function: ease-in-out;
-  }
-  15% {
-    transform: translate(0px, 0%) scale(0.3846);
-    animation-timing-function: ease-in-out;
-  }
-  40% {
+@media (min-width: 1024px) {
+  /* Desktop mockup sits in the right grid column (off-center), so
+     stages 1-2 need the same flat -96px recentering shift as before. */
+  .hero-mockup-stage[data-stage="1"] {
     transform: translate(-96px, 11%) scale(1);
-    animation-timing-function: ease-in-out;
   }
-  60% {
-    transform: translate(-96px, 11%) scale(1);
-    animation-timing-function: ease-in-out;
-  }
-  80% {
-    transform: translate(-96px, -10%) scale(1);
-    animation-timing-function: ease-in-out;
-  }
-  100% {
+  .hero-mockup-stage[data-stage="2"] {
     transform: translate(-96px, -10%) scale(1);
   }
 }
 
-/* Copy column fades out early to give the mockup room to grow. */
-@keyframes hero-copy-fade {
-  0% {
-    opacity: 1;
-  }
-  10% {
-    opacity: 1;
-  }
-  22% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
+.hero-copy-stage {
+  transition: opacity 0.5s ease-out;
+}
+.hero-copy-stage[data-stage="0"] {
+  opacity: 1;
+}
+.hero-copy-stage[data-stage="1"],
+.hero-copy-stage[data-stage="2"] {
+  opacity: 0;
 }

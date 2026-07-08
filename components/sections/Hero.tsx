@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
@@ -15,10 +18,14 @@ import { Reveal } from "@/components/animations/Reveal";
  * viewport's own edges limit what's visible, same as a camera moving
  * closer to a real object.
  *
- * The scrub itself (scale/x/y/opacity) is driven by a CSS view-timeline
- * (see globals.css) rather than a JS scroll listener — that keeps it
- * running on the compositor so it can't stutter under main-thread load,
- * which a Framer Motion version visibly did on iOS Safari.
+ * Stage-triggered, not scroll-scrubbed: a scroll listener below only
+ * tracks which third of the pin range you're in (0/1/2) and flips a
+ * `data-stage` attribute — the actual motion is a plain CSS `transition`
+ * (globals.css), so it always plays over the same fixed duration/easing
+ * no matter how fast the scroll gesture was. That's deliberate — an
+ * earlier scroll-scrubbed version (first a view-timeline, before that a
+ * Framer Motion transform) hard-coupled visual speed to scroll speed,
+ * which read as rushed/jarring on a fast flick.
  */
 // Extra scroll distance the section pins for, on top of the 100vh it
 // already occupies just being on screen. Kept short (well under one
@@ -40,14 +47,57 @@ const MAX_W = REST_W * ZOOM_FACTOR;
 const ASPECT = 4191 / 2048;
 const REST_H = Math.round(REST_W * ASPECT);
 
+// Boundaries (as a fraction of the pin's own extra scroll range) between
+// the three stages: 0 = rest, 1 = zoomed + centered on the top card,
+// 2 = panned down into the list.
+const STAGE_1_AT = 0.33;
+const STAGE_2_AT = 0.66;
+
 export function Hero() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const stageRef = { current: 0 };
+    let ticking = false;
+
+    function computeStage() {
+      ticking = false;
+      const el = wrapperRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) return;
+      const progress = Math.min(1, Math.max(0, -rect.top / total));
+      const next = progress < STAGE_1_AT ? 0 : progress < STAGE_2_AT ? 1 : 2;
+      if (next !== stageRef.current) {
+        stageRef.current = next;
+        setStage(next);
+      }
+    }
+
+    function onScrollOrResize() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(computeStage);
+    }
+
+    computeStage();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, []);
+
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
-      <div className="hero-pin-wrapper relative" style={{ height: SCROLL_RANGE }}>
+      <div ref={wrapperRef} className="relative" style={{ height: SCROLL_RANGE }}>
         <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-0">
           <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-0">
             {/* Copy column */}
-            <div className="hero-copy-scrub order-2 lg:order-1">
+            <div className="hero-copy-stage order-2 lg:order-1" data-stage={stage}>
               <Reveal>
                 <div className="max-[768px]:text-center">
                   <p
@@ -101,7 +151,8 @@ export function Hero() {
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[468px]"
+                  className="hero-mockup-stage shrink-0 max-[1024px]:!w-[468px]"
+                  data-stage={stage}
                   style={{ width: MAX_W }}
                 >
                   <Image
