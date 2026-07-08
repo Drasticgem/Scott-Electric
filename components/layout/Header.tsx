@@ -79,19 +79,8 @@ export function Header() {
           ))}
         </div>
 
-        {/* Desktop CTAs — outline "Browse Catalog" + solid accent "Download App" */}
+        {/* Desktop CTA — App Store badge */}
         <div className="flex shrink-0 items-center gap-3 max-[768px]:hidden">
-          <a
-            href="#catalog"
-            className={cn(
-              "rounded-full border border-border px-5 py-[9px]",
-              "text-[13px] font-semibold text-ink-soft",
-              "transition-[background,border-color,transform] duration-200",
-              "hover:-translate-y-px hover:border-ink-soft/40 hover:bg-surface",
-            )}
-          >
-            Browse Catalog
-          </a>
           <a
             href={DISCVAULT.appStoreUrl}
             className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
@@ -172,13 +161,6 @@ export function Header() {
                 width={161}
                 height={54}
               />
-            </a>
-            <a
-              href="#catalog"
-              onClick={() => setMenuOpen(false)}
-              className="mt-3 block w-full rounded-full border border-border px-6 py-4 text-center text-[15px] font-semibold text-ink-soft"
-            >
-              Browse Catalog
             </a>
           </motion.div>
         )}
