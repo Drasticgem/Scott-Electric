@@ -1,20 +1,20 @@
 import { Hero } from "@/components/sections/Hero";
-import { Services } from "@/components/sections/Services";
-import { WhyScottElectric } from "@/components/sections/WhyScottElectric";
+import { AppTabs } from "@/components/sections/AppTabs";
+import { QuickActions } from "@/components/sections/QuickActions";
+import { WhyDiscVault } from "@/components/sections/WhyDiscVault";
 import { About } from "@/components/sections/About";
-import { Clients } from "@/components/sections/Clients";
-import { Community } from "@/components/sections/Community";
+import { SecurityPrivacy } from "@/components/sections/SecurityPrivacy";
 import { CTA } from "@/components/sections/CTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Services />
-      <WhyScottElectric />
+      <AppTabs />
+      <QuickActions />
+      <WhyDiscVault />
       <About />
-      <Clients />
-      <Community />
+      <SecurityPrivacy />
       <CTA />
     </>
   );

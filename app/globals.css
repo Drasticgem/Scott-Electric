@@ -1,39 +1,31 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════
-   SCOTT ELECTRIC GROUP — Tailwind v4 Theme
-   Design tokens ported from legacy tokens.css
+   DISCVAULT — Tailwind v4 Theme
+   White, Apple-esque design language. System font stack so the
+   site renders in SF Pro on Apple devices (matching the app) and
+   the native UI font everywhere else.
    ═══════════════════════════════════════════════════════════ */
 
 @theme {
   /* ── Colors ── */
-  --color-navy: #0F2040;
-  --color-navy-mid: #1A3560;
-  --color-navy-light: #2A4A7A;
-  --color-navy-deep: #0a1830;
+  --color-ink: #000000;
+  --color-ink-soft: #1d1d1f;
+  --color-paper: #ffffff;
+  --color-surface: #f5f5f7;
+  --color-surface-mid: #e8e8ed;
+  --color-border: #d2d2d7;
+  --color-muted: #6e6e73;
+  --color-muted-light: #86868b;
 
-  --color-gold: #D4A83A;
-  --color-gold-light: #F0D48A;
-  --color-gold-pale: #FDF5DC;
-  --color-gold-dark: #9a7a28;
+  --color-accent: #5b4bda;
+  --color-accent-light: #8b7cf0;
+  --color-accent-dark: #4534af;
+  --color-accent-pale: #f1eefe;
 
-  --color-offwhite: #F4F2ED;
-  --color-warm-gray: #E8E4DC;
-  --color-mid-gray: #9a9690;
-  --color-charcoal: #2C2C2A;
-  --color-body-text: #3d3a34;
-  --color-muted: #7a7670;
-
-  --color-ac-blue: #4AA8C8;
-  --color-ac-pale: #E6F5FA;
-  --color-tele-green: #4AAF78;
-  --color-tele-pale: #E6F5EE;
-  --color-ck-terra: #C87A4A;
-  --color-ck-pale: #FAF0E8;
-
-  /* ── Fonts (loaded via <link> in layout.tsx) ── */
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
+  /* ── Fonts — Apple system stack (resolves to SF Pro on Apple devices) ── */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 
   /* Spacing scale: Tailwind v4 defaults to --spacing: 0.25rem (4px),
      which already matches the legacy 8px-baseline tokens exactly:
@@ -41,30 +33,18 @@
        p-12=48px, p-16=64px, p-20=80px. No overrides needed. */
 
   /* ── Radii ── */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
 
-  /* ── Shadows (matched to legacy rgba values) ── */
-  --shadow-sm: 0 1px 3px rgba(15, 32, 64, 0.06);
-  --shadow-md: 0 4px 16px rgba(15, 32, 64, 0.08);
-  --shadow-lg: 0 8px 32px rgba(15, 32, 64, 0.12);
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.10);
 
   /* ── Layout constant used via arbitrary values ── */
   --max-width-container: 1140px;
   --nav-height: 64px;
-
-  /* ── Hero-pulse keyframe (video indicator) ── */
-  --animate-hero-pulse: hero-pulse 2s ease-in-out infinite;
-
-  @keyframes hero-pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.35;
-    }
-  }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -77,36 +57,21 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Base / reset — mirrors legacy tokens.css base rules.
-   Wrapped in @layer base so Tailwind utilities (which live in
-   @layer utilities) can override these element rules.
-   Without the layer, the unlayered `a { color: inherit }` rule
-   beat `.text-white` on every <a>, causing all nav links to
-   inherit the muddy `--color-body-text` (#3d3a34).
+   Base / reset
    ═══════════════════════════════════════════════════════════ */
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    /* Paint the area behind <body> with the footer color so iOS overscroll
-       bounce past the footer matches the footer seamlessly (no lighter-navy
-       seam at the bottom of the page). Body bg stays `navy` so the sticky
-       nav's frosted glass still blends cleanly at scroll 0 — html is only
-       visible in the overscroll bounce regions. */
-    background: var(--color-navy-deep);
+    background: var(--color-paper);
   }
 
   body {
     font-family: var(--font-body);
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--color-body-text);
-    /* navy-deep matches the footer, so no lighter seam ever shows below it
-       (iOS dynamic viewport, fractional-DPR hairlines, overscroll bounce).
-       Safe to change because the Hero section has its own bg-navy on the
-       <section> element — that's what the sticky nav's frosted glass blends
-       against at scroll 0, not <body>. */
-    background: var(--color-navy-deep);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+    background: var(--color-paper);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -142,7 +107,7 @@
   border: 0;
 }
 
-/* Utility: 1140px content container with responsive padding (from legacy .container) */
+/* Utility: 1140px content container with responsive padding */
 .container-1140 {
   width: 100%;
   max-width: 1140px;
@@ -163,13 +128,5 @@
   .container-1140 {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-}
-
-/* Reduced-motion kill switch for the hero pulse indicator
-   (Framer Motion handles reveal animations via useReducedMotion) */
-@media (prefers-reduced-motion: reduce) {
-  .animate-hero-pulse {
-    animation: none !important;
   }
 }

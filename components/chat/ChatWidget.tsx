@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { ChatLauncher } from "./ChatLauncher";
 import { TawkLoader } from "./TawkLoader";
-import { BUSINESS } from "@/lib/constants";
+import { DISCVAULT } from "@/lib/constants";
 
 /**
  * Top-level chat widget. Composes:
  *   - <TawkLoader />  — lazy-loads Tawk.to and hides its default launcher
- *   - <ChatLauncher /> — our custom gold launcher + ripple animation
+ *   - <ChatLauncher /> — our custom accent launcher + ripple animation
  *
  * The launcher's onClick calls Tawk_API.maximize() to open the real
  * live chat panel. When the user minimizes the panel, TawkLoader
@@ -16,8 +16,8 @@ import { BUSINESS } from "@/lib/constants";
  * to false so the launcher re-animates in.
  *
  * If Tawk.to isn't configured yet (no env vars), clicking the launcher
- * pops a non-blocking confirm that offers to call the business phone
- * number instead — so the widget is never a dead end during setup.
+ * pops a non-blocking confirm that offers to email support instead —
+ * so the widget is never a dead end during setup.
  */
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,12 +41,12 @@ export function ChatWidget() {
     }
 
     // Fallback path: Tawk.to not configured / not yet loaded.
-    // Offer the phone number so the user still has a way to reach us.
+    // Offer support email so the user still has a way to reach us.
     const ok = window.confirm(
-      `Live chat isn't available right now. Call us at ${BUSINESS.phoneDisplay}?`
+      `Live chat isn't available right now. Email us at ${DISCVAULT.supportEmail}?`
     );
     if (ok) {
-      window.location.href = BUSINESS.phoneHref;
+      window.location.href = DISCVAULT.supportEmailHref;
     }
   }, []);
 

@@ -3,38 +3,33 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { BUSINESS } from "@/lib/constants";
+import { DISCVAULT } from "@/lib/constants";
 import { Logo } from "./Logo";
 
 /** Project-standard easing curve — matches Reveal component. */
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const LINKS = [
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#projects", label: "Projects" },
-  { href: "#careers", label: "Careers" },
+  { href: "#features", label: "Features" },
+  { href: "#catalog", label: "Catalog" },
+  { href: "#why", label: "Why DiscVault" },
+  { href: "#security", label: "Security" },
+  { href: "#contact", label: "Partner" },
 ] as const;
 
-const EMPLOYEE_LINK = { href: "#employee", label: "Employee" } as const;
-
 /**
- * Sticky top navigation.
- *
- * Mirrors the legacy nav:
- *   - navy background, 64px tall (60px <768, 56px <480)
- *   - desktop link row (About / Services / Projects / Careers · Employee)
- *     with animated gold underline on hover
- *   - gold "Get a Free Estimate" CTA
+ * Sticky top navigation — white, frosted-glass, Apple-style.
+ *   - white background, 64px tall (60px <768, 56px <480)
+ *   - desktop link row with animated accent underline on hover
+ *   - "Browse Catalog" secondary + accent "Download App" primary CTA
  *   - hamburger → full-height mobile overlay on <768
- *   - adds a soft drop-shadow once scrollY > 40 (matches main.js)
+ *   - adds a soft drop-shadow once scrollY > 40
  *   - Escape closes the mobile menu; body scroll is locked while open
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Scroll shadow — matches initNavShrink() in legacy main.js
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -42,7 +37,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Body scroll lock + Escape key — matches initMobileMenu() in legacy main.js
   useEffect(() => {
     if (!menuOpen) return;
     const prevOverflow = document.body.style.overflow;
@@ -66,18 +60,13 @@ export function Header() {
           "sticky top-0 z-[1000] flex items-center justify-between",
           "h-[64px] max-[768px]:h-[60px] max-[480px]:h-[56px]",
           "px-12 max-[768px]:px-5 max-[480px]:px-4",
-          // Frosted-glass nav: solid navy fallback, semi-transparent navy +
-          // backdrop blur where supported. Navy fill matches the credential
-          // cards in WhyScottElectric (bg-navy/75). The body background is
-          // navy, so at scroll 0 the glass blends cleanly against navy
-          // instead of bleeding cream.
-          "bg-navy supports-[backdrop-filter]:bg-navy/75 backdrop-blur-md",
-          "border-b border-white/10",
+          "bg-paper/80 supports-[backdrop-filter]:bg-paper/70 backdrop-blur-md",
+          "border-b border-border",
           "transition-shadow duration-200",
-          scrolled && "shadow-[0_2px_16px_rgba(15,32,64,0.25)]",
+          scrolled && "shadow-[0_2px_16px_rgba(0,0,0,0.06)]",
         )}
       >
-        <a href="#" aria-label="Scott Electric Group — home">
+        <a href="#hero" aria-label="DiscVault — home">
           <Logo size="md" />
         </a>
 
@@ -88,44 +77,35 @@ export function Header() {
               {link.label}
             </NavLink>
           ))}
-          <span
-            aria-hidden="true"
-            className="h-[3px] w-[3px] shrink-0 rounded-full bg-white/15"
-          />
-          <NavLink href={EMPLOYEE_LINK.href} variant="employee">
-            {EMPLOYEE_LINK.label}
-          </NavLink>
         </div>
 
-        {/* Desktop CTAs — secondary "Pay Bill" + primary "Get a Free Estimate" */}
+        {/* Desktop CTAs — outline "Browse Catalog" + solid accent "Download App" */}
         <div className="flex shrink-0 items-center gap-3 max-[768px]:hidden">
           <a
-            href={BUSINESS.paymentUrl}
+            href="#catalog"
             className={cn(
-              "rounded-[6px] border border-gold/60 px-5 py-[9px]",
-              "text-[13px] font-semibold text-gold",
-              "transition-[background,color,transform] duration-200",
-              "hover:-translate-y-px hover:border-gold hover:bg-gold/10 hover:text-gold-light",
+              "rounded-full border border-border px-5 py-[9px]",
+              "text-[13px] font-semibold text-ink-soft",
+              "transition-[background,border-color,transform] duration-200",
+              "hover:-translate-y-px hover:border-ink-soft/40 hover:bg-surface",
             )}
-            style={{ letterSpacing: "0.04em" }}
           >
-            Pay Bill
+            Browse Catalog
           </a>
           <a
-            href="#contact"
+            href={DISCVAULT.appStoreUrl}
             className={cn(
-              "rounded-[6px] bg-gold px-6 py-[10px]",
-              "text-[13px] font-bold text-navy",
+              "rounded-full bg-accent px-6 py-[10px]",
+              "text-[13px] font-semibold text-white",
               "transition-[background,transform] duration-200",
-              "hover:-translate-y-px hover:bg-gold-light",
+              "hover:-translate-y-px hover:bg-accent-dark",
             )}
-            style={{ letterSpacing: "0.04em" }}
           >
-            Get a Free Estimate
+            Download App
           </a>
         </div>
 
-        {/* Hamburger (mobile only) — Framer Motion for smooth iOS animation */}
+        {/* Hamburger (mobile only) */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -135,24 +115,24 @@ export function Header() {
           className="hidden flex-col gap-[5px] p-1 max-[768px]:flex"
         >
           <motion.span
-            className="block h-[2px] w-[22px] rounded-sm bg-white origin-center"
+            className="block h-[2px] w-[22px] rounded-sm bg-ink origin-center"
             animate={menuOpen ? { y: 7, rotate: 45 } : { y: 0, rotate: 0 }}
             transition={{ duration: 0.3, ease: EASE }}
           />
           <motion.span
-            className="block h-[2px] w-[22px] rounded-sm bg-white"
+            className="block h-[2px] w-[22px] rounded-sm bg-ink"
             animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
           />
           <motion.span
-            className="block h-[2px] w-[22px] rounded-sm bg-white origin-center"
+            className="block h-[2px] w-[22px] rounded-sm bg-ink origin-center"
             animate={menuOpen ? { y: -7, rotate: -45 } : { y: 0, rotate: 0 }}
             transition={{ duration: 0.3, ease: EASE }}
           />
         </button>
       </nav>
 
-      {/* Mobile menu overlay — AnimatePresence for smooth open/close */}
+      {/* Mobile menu overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -160,7 +140,7 @@ export function Header() {
             role="dialog"
             aria-label="Mobile navigation"
             className={cn(
-              "fixed left-0 right-0 bottom-0 z-[999] flex flex-col overflow-y-auto bg-navy",
+              "fixed left-0 right-0 bottom-0 z-[999] flex flex-col overflow-y-auto bg-paper",
               "top-[64px] max-[768px]:top-[60px] max-[480px]:top-[56px]",
               "px-8 py-6 max-[480px]:px-5",
             )}
@@ -179,27 +159,19 @@ export function Header() {
                 {link.label}
               </MobileLink>
             ))}
-            <MobileLink
-              href={EMPLOYEE_LINK.href}
-              variant="employee"
-              onNavigate={() => setMenuOpen(false)}
-            >
-              Employee Portal
-            </MobileLink>
             <a
-              href={BUSINESS.paymentUrl}
+              href={DISCVAULT.appStoreUrl}
               onClick={() => setMenuOpen(false)}
-              className="mt-6 block w-full rounded-[6px] border border-gold/60 px-6 py-4 text-center text-[15px] font-semibold text-gold"
-              style={{ letterSpacing: "0.04em" }}
+              className="mt-6 block w-full rounded-full bg-accent px-6 py-4 text-center text-[15px] font-semibold text-white"
             >
-              Pay Bill
+              Download App
             </a>
             <a
-              href="#contact"
+              href="#catalog"
               onClick={() => setMenuOpen(false)}
-              className="mt-3 block w-full rounded-[6px] bg-gold px-6 py-4 text-center text-[15px] font-bold text-navy"
+              className="mt-3 block w-full rounded-full border border-border px-6 py-4 text-center text-[15px] font-semibold text-ink-soft"
             >
-              Get a Free Estimate
+              Browse Catalog
             </a>
           </motion.div>
         )}
@@ -212,32 +184,19 @@ export function Header() {
 function NavLink({
   href,
   children,
-  variant = "default",
 }: {
   href: string;
   children: React.ReactNode;
-  variant?: "default" | "employee";
 }) {
   return (
     <a
       href={href}
-      className={cn(
-        "group relative py-1 text-[13px] transition-colors duration-200",
-        variant === "default" && "font-normal text-white hover:text-gold-light",
-        variant === "employee" &&
-          "font-medium text-gold hover:text-gold-light",
-      )}
-      style={{ letterSpacing: "0.03em" }}
+      className="group relative py-1 text-[13px] font-medium text-ink-soft transition-colors duration-200 hover:text-ink"
     >
       {children}
       <span
         aria-hidden="true"
-        className={cn(
-          "absolute -bottom-[2px] left-0 h-[1.5px] w-0 transition-[width] duration-[250ms]",
-          "group-hover:w-full",
-          variant === "default" && "bg-gold",
-          variant === "employee" && "bg-gold-light",
-        )}
+        className="absolute -bottom-[2px] left-0 h-[1.5px] w-0 bg-accent transition-[width] duration-[250ms] group-hover:w-full"
         style={{
           transitionTimingFunction: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
@@ -250,23 +209,17 @@ function NavLink({
 function MobileLink({
   href,
   children,
-  variant = "default",
   onNavigate,
 }: {
   href: string;
   children: React.ReactNode;
-  variant?: "default" | "employee";
   onNavigate: () => void;
 }) {
   return (
     <a
       href={href}
       onClick={onNavigate}
-      className={cn(
-        "block border-b border-white/[0.06] py-4 text-[18px] transition-colors",
-        variant === "default" && "font-normal text-white hover:text-gold-light",
-        variant === "employee" && "font-medium text-gold",
-      )}
+      className="block border-b border-border py-4 text-[18px] font-medium text-ink-soft transition-colors hover:text-ink"
     >
       {children}
     </a>

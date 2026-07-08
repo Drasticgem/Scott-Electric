@@ -12,7 +12,7 @@ import { useState } from "react";
  *   1. Pulse ring — infinitely looping scale+fade ring behind the
  *      button, drawing attention (skipped under reduced motion).
  *   2. Icon hover — gentle scale + rotate spring on hover.
- *   3. Open ripple — on click, a gold radial ripple scales outward
+ *   3. Open ripple — on click, an accent-colored radial ripple scales outward
  *      and fades, masking the mount gap before the Tawk.to panel
  *      fully appears. This is the flourish that makes the open feel
  *      intentional rather than "a third-party widget appeared."
@@ -67,7 +67,7 @@ export function ChatLauncher({
         {!reduceMotion && (
           <motion.span
             aria-hidden="true"
-            className="absolute inset-0 rounded-full bg-gold"
+            className="absolute inset-0 rounded-full bg-accent"
             initial={{ scale: 1, opacity: 0.55 }}
             animate={{ scale: 1.6, opacity: 0 }}
             transition={{
@@ -88,7 +88,7 @@ export function ChatLauncher({
               className="pointer-events-none absolute inset-0 rounded-full"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(212,168,58,0.9) 0%, rgba(212,168,58,0) 70%)",
+                  "radial-gradient(circle, rgba(91,75,218,0.9) 0%, rgba(91,75,218,0) 70%)",
               }}
               initial={{ scale: 1, opacity: 1 }}
               animate={{ scale: 14, opacity: 0 }}
@@ -103,7 +103,7 @@ export function ChatLauncher({
           type="button"
           onClick={handleClick}
           aria-label="Open chat"
-          className="relative flex h-[60px] w-[60px] items-center justify-center rounded-full bg-gold text-navy shadow-[0_12px_40px_rgba(212,168,58,0.35),0_4px_12px_rgba(15,32,64,0.4)] outline-none transition-shadow duration-300 hover:shadow-[0_16px_48px_rgba(212,168,58,0.5),0_6px_16px_rgba(15,32,64,0.5)] focus-visible:ring-4 focus-visible:ring-gold-light/60 max-[480px]:h-[56px] max-[480px]:w-[56px]"
+          className="relative flex h-[60px] w-[60px] items-center justify-center rounded-full bg-accent text-white shadow-[0_12px_40px_rgba(91,75,218,0.35),0_4px_12px_rgba(0,0,0,0.2)] outline-none transition-shadow duration-300 hover:shadow-[0_16px_48px_rgba(91,75,218,0.5),0_6px_16px_rgba(0,0,0,0.25)] focus-visible:ring-4 focus-visible:ring-accent-light/60 max-[480px]:h-[56px] max-[480px]:w-[56px]"
           whileHover={reduceMotion ? undefined : { scale: 1.06 }}
           whileTap={reduceMotion ? undefined : { scale: 0.94 }}
           transition={{ type: "spring", damping: 18, stiffness: 320 }}

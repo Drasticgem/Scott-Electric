@@ -1,10 +1,10 @@
 /**
- * Trust / safety credentials.
- * Shared between the hero trust row and the About section badges.
+ * Trust badges. Shared between the hero trust row and the WhyDiscVault
+ * section badges.
  */
 export interface Credential {
   value: string;
-  /** Display the value slightly smaller (used for multi-line "OSHA Star"). */
+  /** Display the value slightly smaller (used for multi-line values). */
   smallValue?: boolean;
   title: string;
   sub: string;
@@ -14,22 +14,21 @@ export interface Credential {
 
 export const CREDENTIALS: Credential[] = [
   {
-    value: ".46",
-    title: "Experience Modification Rate",
-    sub: "Industry-leading safety record",
-    shortLabel: "EMR .46",
+    value: "10K+",
+    title: "Discs Cataloged",
+    sub: "Growing every week",
+    shortLabel: "10,000+ Discs",
   },
   {
-    value: "OSHA\nStar",
-    smallValue: true,
-    title: "VPP Certified Worksite",
-    sub: "Valero Corpus Christi & Three Rivers",
-    shortLabel: "OSHA VPP Star",
+    value: "Free",
+    title: "Browse Without an Account",
+    sub: "No sign-in required to explore",
+    shortLabel: "No Sign-In Required",
   },
   {
-    value: "4",
-    title: "Corpus Christi, SA, Alice, Weslaco",
-    sub: "Serving all of South Texas",
-    shortLabel: "4 Regional Offices",
+    value: "iOS",
+    title: "Built for iPhone",
+    sub: "Designed for on-course use",
+    shortLabel: "Built for iPhone",
   },
 ];
