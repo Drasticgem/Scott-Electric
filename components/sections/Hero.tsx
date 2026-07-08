@@ -19,13 +19,15 @@ import { Reveal } from "@/components/animations/Reveal";
  * viewport's own edges limit what's visible, same as a camera moving
  * closer to a real object.
  */
-const SCROLL_RANGE = "240vh";
+// Extra scroll distance the section pins for, on top of the 100vh it
+// already occupies just being on screen. Kept short (well under one
+// viewport) so a single natural scroll gesture carries all the way
+// through the animation — a long pin range feels "stuck" once a
+// gesture's momentum decays before the effect has finished.
+const SCROLL_RANGE = "160vh";
 
 // Rest-state (resting, un-zoomed) visual width of the mockup on desktop.
-// Mobile keeps a smaller 160px rest width (see the max-[1024px] overrides
-// below) — the CTA badge sits beneath the mockup in the single-column
-// mobile layout, so its size is capped by available vertical space above
-// the fold, not by this constant.
+// Mobile uses a 200px rest width (see the max-[1024px] overrides below).
 const REST_W = 340;
 // The mockup's actual CSS layout width — fixed at the full zoomed-in size
 // so the browser always rasterizes at high resolution; scale() shrinks it
@@ -59,14 +61,13 @@ export function Hero() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // Smooth the raw scroll progress with a critically-damped spring
-  // (bounce: 0 — no overshoot) so the motion settles like it has real
-  // inertia instead of tracking the scrollbar 1:1. Duration governs how
-  // "thick" the fluid feels; kept short enough to still feel connected
-  // to the scroll gesture.
+  // Smooth the raw scroll progress with a lightly-damped spring so the
+  // motion has a touch of real inertia instead of tracking the scrollbar
+  // 1:1. Kept short/snappy — with SCROLL_RANGE now shorter, a sluggish
+  // spring would visibly lag behind a normal scroll gesture.
   const smoothProgress = useSpring(scrollYProgress, {
-    duration: 0.35,
-    bounce: 0,
+    duration: 0.22,
+    bounce: 0.08,
     restDelta: 0.0005,
   });
 
@@ -106,21 +107,21 @@ export function Hero() {
   return (
     <section id="hero" aria-label="Hero" className="relative bg-paper">
       <div ref={scrollRef} className="relative" style={{ height: SCROLL_RANGE }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-1">
-          <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-1">
+        <div className="sticky top-0 flex h-screen items-center overflow-hidden py-8 max-[768px]:py-0">
+          <div className="container-1140 grid w-full grid-cols-1 items-center gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] max-[768px]:gap-0">
             {/* Copy column */}
             <motion.div style={{ opacity: textOpacity }} className="order-2 lg:order-1">
               <Reveal>
                 <div className="max-[768px]:text-center">
                   <p
-                    className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-2"
+                    className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:mb-0"
                     style={{ letterSpacing: "0.22em" }}
                   >
                     For Disc Golfers
                   </p>
 
                   <h1
-                    className="mb-6 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:mb-2"
+                    className="mb-6 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:mb-1"
                     style={{
                       fontSize: "clamp(34px, 4.4vw, 58px)",
                       lineHeight: 1.05,
@@ -130,7 +131,7 @@ export function Hero() {
                     Your collection matters.
                   </h1>
 
-                  <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.5]">
+                  <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-1 max-[768px]:text-[13px] max-[768px]:leading-[1.4]">
                     Catalog discs, build smarter bags, track rounds, and
                     discover what to throw next.
                   </p>
@@ -159,12 +160,12 @@ export function Hero() {
                   the larger, always-max-size mockup inside doesn't disturb
                   surrounding layout (overflow is visible, not clipped). */}
               <div
-                className="mx-auto flex items-center justify-center max-[1024px]:!w-[160px] max-[1024px]:!h-[327px]"
+                className="mx-auto flex items-center justify-center max-[1024px]:!w-[180px] max-[1024px]:!h-[368px]"
                 style={{ width: REST_W, height: REST_H }}
               >
                 <motion.div
                   style={{ scale, x, y, width: MAX_W, willChange: "transform" }}
-                  className="shrink-0 max-[1024px]:!w-[416px]"
+                  className="shrink-0 max-[1024px]:!w-[468px]"
                 >
                   <Image
                     src="/images/hero-mockup.png"
