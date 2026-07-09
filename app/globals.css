@@ -288,6 +288,72 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   Vault showcase scroll effect — same scroll-linked view-timeline
+   technique as the Hero's, tuned for the opposite framing goal: the
+   Hero's mockup deliberately overflows the viewport at full zoom (a
+   camera moving closer); this one must stay fully inside the
+   viewport at every point, bezel included, just much bigger than its
+   resting size. So its full-zoom width is capped by BOTH viewport
+   axes (86% of whichever is tighter, worked back from the screenshot's
+   2818:5760 aspect ratio) instead of a fixed pixel value — that keeps
+   the whole phone in view at any window size or aspect ratio.
+   ═══════════════════════════════════════════════════════════ */
+@supports (animation-timeline: view()) {
+  .vault-pin-wrapper {
+    view-timeline-name: --vault-scrub;
+    view-timeline-axis: block;
+  }
+
+  .vault-mockup-scrub {
+    animation-name: vault-zoom;
+    animation-duration: 1s;
+    animation-timeline: --vault-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .vault-copy-scrub,
+  .vault-tagline-scrub {
+    animation-name: hero-copy-fade;
+    animation-duration: 1s;
+    animation-timeline: --vault-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+}
+
+/* Full-zoom target size: bounded by both viewport axes (86% of
+   whichever is tighter), so the whole phone — bezel and all — always
+   lands inside the viewport with margin, never cropped by its edges. */
+.vault-mockup-scrub {
+  width: min(86vw, 42vh);
+}
+
+/* Reserved-space rest box: a constant fraction (0.42) of the same
+   viewport-relative full-zoom size, not a fixed pixel value — so the
+   "grows on scroll" ratio holds at any viewport size, the same way
+   the Hero's fixed-px REST_W/MAX_W pair does at its fixed breakpoints.
+   Height is set explicitly too (from the screenshot's own 2818:5760
+   aspect ratio) — without it the box would stretch to match its
+   child's true (much larger) layout height, since the child is scaled
+   down only visually via transform, which never affects layout. */
+.vault-mockup-rest-box {
+  width: calc(min(86vw, 42vh) * 0.42);
+  height: calc(min(86vw, 42vh) * 0.42 * 2.0439);
+}
+
+@keyframes vault-zoom {
+  from {
+    transform: scale(0.42);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 /* Hero grid — on mobile only the eyebrow+headline ("hook") sits above
    the mockup; the subheadline+CTA ("pitch") comes after it. On desktop
    "hook" and "pitch" stack together in the left column, mockup on the
