@@ -10,6 +10,46 @@ interface VideoPair {
 }
 
 /**
+ * The source recordings have no alpha channel (confirmed by inspecting
+ * the raw decoded pixels — plain opaque HEVC, black baked into the
+ * backdrop) and can't get one after the fact, so instead of true
+ * transparency this crops the black margin away with CSS: the wrapper
+ * clips to the phone's actual content box, and the video inside is
+ * scaled/offset so that box fills the wrapper exactly. All values are
+ * percentages (not px) so the crop holds at any of the carousel's
+ * responsive display widths.
+ *
+ * NATIVE_W/H is the recorded frame size. CROP_* is the bounding box of
+ * the actual phone content within that frame, inset a further 6px past
+ * the measured edge as a safety margin. CORNER_R is the bezel's fitted
+ * corner radius (~177.5px) plus a 14px safety pad — oversized on
+ * purpose so it crops slightly into the bezel rather than risk any
+ * black sliver showing; verified corner-by-corner against a bright
+ * magenta test background with zero leakage before shipping.
+ */
+const NATIVE_W = 938;
+const NATIVE_H = 1920;
+const CROP_L = 20;
+const CROP_T = 25;
+const CROP_R = 917;
+const CROP_B = 1893;
+const CROP_W = CROP_R - CROP_L;
+const CROP_H = CROP_B - CROP_T;
+const CORNER_R = 191.5;
+
+const cropWrapperStyle = {
+  aspectRatio: `${CROP_W} / ${CROP_H}`,
+  borderRadius: `${(CORNER_R / CROP_W) * 100}% / ${(CORNER_R / CROP_H) * 100}%`,
+};
+
+const cropVideoStyle = {
+  width: `${(NATIVE_W / CROP_W) * 100}%`,
+  height: `${(NATIVE_H / CROP_H) * 100}%`,
+  left: `${-(CROP_L / CROP_W) * 100}%`,
+  top: `${-(CROP_T / CROP_H) * 100}%`,
+};
+
+/**
  * Full-phone swipeable video demo — one short auto-playing clip per
  * step (bezel baked into the footage, matching every other mockup on
  * the site), native horizontal scroll-snap for touch swipe, dots +
@@ -90,8 +130,8 @@ export function FlightMatrixDemo() {
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
             <div
-              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
-              style={{ aspectRatio: "2818 / 5760" }}
+              className="relative w-[280px] overflow-hidden drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
+              style={cropWrapperStyle}
             >
               <video
                 ref={(el) => {
@@ -103,7 +143,8 @@ export function FlightMatrixDemo() {
                 loop
                 playsInline
                 preload="metadata"
-                className="theme-video-light absolute inset-0 h-full w-full"
+                className="theme-video-light absolute max-w-none"
+                style={cropVideoStyle}
               />
               <video
                 ref={(el) => {
@@ -115,7 +156,8 @@ export function FlightMatrixDemo() {
                 loop
                 playsInline
                 preload="metadata"
-                className="theme-video-dark absolute inset-0 h-full w-full"
+                className="theme-video-dark absolute max-w-none"
+                style={cropVideoStyle}
               />
             </div>
             <p className="mt-6 max-w-[280px] text-center text-[14px] font-medium text-muted">
