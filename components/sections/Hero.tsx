@@ -61,7 +61,7 @@ export function Hero() {
                   the left column on desktop. */}
               <div className="hero-grid-hook hero-copy-scrub">
                 <Reveal>
-                  <div className="max-[768px]:text-center">
+                  <div>
                     <p
                       className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:hidden"
                       style={{ letterSpacing: "0.22em" }}
@@ -93,13 +93,13 @@ export function Hero() {
               <div className="hero-grid-pitch relative">
                 <div className="hero-copy-scrub">
                   <Reveal>
-                    <div className="max-[768px]:text-center">
-                      <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mx-auto max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
+                    <div>
+                      <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
                         Catalog discs, build smarter bags, track rounds, and
                         discover what to throw next.
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-4 max-[768px]:justify-center">
+                      <div className="flex flex-wrap items-center gap-4">
                         <a
                           href={DISCVAULT.appStoreUrl}
                           className="inline-flex shrink-0 transition-transform duration-200 hover:-translate-y-px"
