@@ -127,11 +127,10 @@ export function Hero() {
                     transforms don't affect layout), so an inset-0 overlay
                     here would sit UNDER the zoomed mockup and get covered.
                     The fixed top offset instead pushes it below the
-                    mockup's actual zoomed bottom edge, with a clear gap
-                    so it doesn't crowd the bezel — pure CSS, no
+                    mockup's actual zoomed bottom edge — pure CSS, no
                     scroll-linked measurement, so it's a hand-tuned
                     constant like the other mobile sizing values here. */}
-                <div className="hero-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[200px] max-[1024px]:text-center lg:inset-y-0 lg:justify-start">
+                <div className="hero-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[162px] max-[1024px]:text-center lg:inset-y-0 lg:justify-start">
                   {/* Full line on desktop, where there's room below the
                       pitch box; a shorter one on mobile, where the
                       zoomed mockup leaves only ~40px of clearance above
@@ -172,9 +171,9 @@ export function Hero() {
                     {/* eslint-disable-next-line @next/next/no-img-element -- picture/source needs a plain img fallback, next/image can't do media-conditional sources */}
                     <img
                       src="/images/hero-mockup-light.webp"
-                      alt="The DiscVault app's launch screen, showing the DiscVault mark and the tagline 'Your collection matters.'"
-                      width={2736}
-                      height={5678}
+                      alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
+                      width={2818}
+                      height={5760}
                       fetchPriority="high"
                       decoding="async"
                       className="h-auto w-full"
