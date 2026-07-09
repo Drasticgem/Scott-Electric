@@ -129,8 +129,8 @@ function VaultShowcase({ tab }: { tab: AppTab }) {
             </Reveal>
 
             <Reveal className="flex flex-1 items-center justify-center">
-              <div className="vault-mockup-rest-box flex items-center justify-center">
-                <div className="vault-mockup-scrub shrink-0">
+              <div className="vault-mockup-rest-box flex items-center justify-center max-[1024px]:!w-[216px] max-[1024px]:!h-[442px]">
+                <div className="vault-mockup-scrub shrink-0 max-[1024px]:!w-[330px]">
                   {/* Hand-rolled <picture> (not next/image) so the browser
                       picks light/dark by media query and only ever fetches
                       one variant. */}

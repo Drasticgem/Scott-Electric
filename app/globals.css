@@ -286,12 +286,16 @@
 
 /* ═══════════════════════════════════════════════════════════
    Vault showcase scroll effect — same scroll-linked view-timeline
-   technique as the Hero's, tuned for the opposite framing goal: the
-   Hero's mockup deliberately overflows the viewport at full zoom (a
-   camera moving closer); this one must stay fully inside the
-   viewport at every point, bezel included, just much bigger than its
-   resting size. So its full-zoom width is capped by BOTH viewport
-   axes (86% of whichever is tighter, worked back from the screenshot's
+   technique as the Hero's. On mobile it's now literally the Hero's
+   mobile transition (same 216/330px rest/max geometry, same
+   hero-zoom-mobile keyframe) — see the max-[1024px] overrides on
+   .vault-mockup-rest-box/.vault-mockup-scrub in AppTabs.tsx. Desktop
+   keeps its own framing goal, the opposite of the Hero's: the Hero's
+   mockup deliberately overflows the viewport at full zoom (a camera
+   moving closer); this one must stay fully inside the viewport at
+   every point, bezel included, just much bigger than its resting
+   size. So desktop's full-zoom width is capped by BOTH viewport axes
+   (86% of whichever is tighter, worked back from the screenshot's
    2818:5760 aspect ratio) instead of a fixed pixel value — that keeps
    the whole phone in view at any window size or aspect ratio.
    ═══════════════════════════════════════════════════════════ */
@@ -302,13 +306,23 @@
   }
 
   .vault-mockup-scrub {
-    animation-name: vault-zoom;
+    /* Mobile reuses the Hero's mobile keyframe/geometry verbatim (same
+       216/330px rest/max sizing below, same image dimensions) so the
+       two sections feel identical on phone-width viewports. Desktop
+       switches back to vault-zoom's own viewport-relative sizing. */
+    animation-name: hero-zoom-mobile;
     animation-duration: 1s;
     animation-timeline: --vault-scrub;
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
+  }
+
+  @media (min-width: 1024px) {
+    .vault-mockup-scrub {
+      animation-name: vault-zoom;
+    }
   }
 
   .vault-copy-scrub,
