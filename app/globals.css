@@ -244,15 +244,19 @@
    Mobile uses its own (smaller) zoom ratio than desktop — at
    REST_SCALE=1/2.6 the fully-zoomed mockup is wider than a mobile
    viewport, so the bezel gets clipped by the viewport's own edges at
-   full zoom. REST_SCALE here (0.7082) keeps the final zoomed width at
-   305px (see the max-[1024px] override in Hero.tsx), narrow enough
-   that the bezel stays fully visible on any phone-width viewport. */
+   full zoom. REST_SCALE here (0.6545) keeps the final zoomed width at
+   330px (see the max-[1024px] override in Hero.tsx), narrow enough
+   that the bezel stays fully visible on any phone-width viewport.
+   The final translateY adds a flat +25px (on top of the existing 11%)
+   to drop the fully-zoomed mockup — and the tagline anchored below it
+   (see .hero-tagline-scrub's top offset in Hero.tsx) — 25px further
+   down the viewport. */
 @keyframes hero-zoom-mobile {
   from {
-    transform: translate(0px, 0%) scale(0.7082); /* 216 / 305 */
+    transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
-    transform: translate(0px, 11%) scale(1);
+    transform: translate(0px, calc(11% + 25px)) scale(1);
   }
 }
 

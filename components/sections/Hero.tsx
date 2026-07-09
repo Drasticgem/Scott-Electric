@@ -130,10 +130,10 @@ export function Hero() {
                     mockup's actual zoomed bottom edge — pure CSS, no
                     scroll-linked measurement, so it's a hand-tuned
                     constant like the other mobile sizing values here. */}
-                <div className="hero-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[162px] max-[1024px]:text-center lg:inset-y-0 lg:justify-start">
+                <div className="hero-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[187px] max-[1024px]:text-center lg:inset-y-0 lg:justify-start">
                   {/* Full line on desktop, where there's room below the
                       pitch box; a shorter one on mobile, where the
-                      zoomed mockup leaves only ~40px of clearance above
+                      zoomed mockup leaves only ~15px of clearance above
                       the viewport's own edge. */}
                   <p className="hidden max-w-[270px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft lg:block">
                     Tastefully designed for a native, iOS-first experience.
@@ -156,7 +156,7 @@ export function Hero() {
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[305px]"
+                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[330px]"
                   style={{ width: MAX_W }}
                 >
                   {/* Hand-rolled <picture> (not next/image) so the browser
