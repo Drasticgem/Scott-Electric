@@ -285,36 +285,44 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Vault showcase scroll effect — same scroll-linked view-timeline
-   technique as the Hero's. On mobile it's now literally the Hero's
-   mobile transition (same 216/330px rest/max geometry, same
-   hero-zoom-mobile keyframe) — see the max-[1024px] overrides on
-   .vault-mockup-rest-box/.vault-mockup-scrub in AppTabs.tsx. Desktop
+   Tab showcase scroll effect — same scroll-linked view-timeline
+   technique as the Hero's, shared by all four AppTabs sections
+   (Vault, Bags, Rounds, Explore). Each section has its own
+   .tab-pin-wrapper, so `view-timeline-name: --tab-scrub` is scoped
+   per-instance even though the name is reused across all four —
+   animation-timeline lookups bind to the nearest ancestor with that
+   name, not a global singleton.
+
+   On mobile it's literally the Hero's mobile transition (same
+   216/330px rest/max geometry, same hero-zoom-mobile-derived
+   keyframe) — see the max-[1024px] overrides on
+   .tab-mockup-rest-box/.tab-mockup-scrub in AppTabs.tsx. Desktop
    keeps its own framing goal, the opposite of the Hero's: the Hero's
    mockup deliberately overflows the viewport at full zoom (a camera
    moving closer); this one must stay fully inside the viewport at
    every point, bezel included, just much bigger than its resting
    size. So desktop's full-zoom width is capped by BOTH viewport axes
-   (86% of whichever is tighter, worked back from the screenshot's
-   2818:5760 aspect ratio) instead of a fixed pixel value — that keeps
-   the whole phone in view at any window size or aspect ratio.
+   (86% of whichever is tighter, worked back from the screenshots'
+   shared 2818:5760 aspect ratio) instead of a fixed pixel value —
+   that keeps the whole phone in view at any window size or aspect
+   ratio.
    ═══════════════════════════════════════════════════════════ */
 @supports (animation-timeline: view()) {
-  .vault-pin-wrapper {
-    view-timeline-name: --vault-scrub;
+  .tab-pin-wrapper {
+    view-timeline-name: --tab-scrub;
     view-timeline-axis: block;
   }
 
-  .vault-mockup-scrub {
+  .tab-mockup-scrub {
     /* Mobile reuses the Hero's mobile geometry (same 216/330px
        rest/max sizing below, same image dimensions) via its own
-       vault-zoom-mobile keyframe — a copy of hero-zoom-mobile shifted
-       70px further up, so the two sections can be nudged
-       independently. Desktop switches back to vault-zoom's own
-       viewport-relative sizing. */
-    animation-name: vault-zoom-mobile;
+       tab-zoom-mobile keyframe — a copy of hero-zoom-mobile shifted
+       further up, so these sections can be nudged independently of
+       the Hero's own mobile framing. Desktop switches back to
+       tab-zoom's own viewport-relative sizing. */
+    animation-name: tab-zoom-mobile;
     animation-duration: 1s;
-    animation-timeline: --vault-scrub;
+    animation-timeline: --tab-scrub;
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
@@ -322,25 +330,25 @@
   }
 
   @media (min-width: 1024px) {
-    .vault-mockup-scrub {
-      animation-name: vault-zoom;
+    .tab-mockup-scrub {
+      animation-name: tab-zoom;
     }
   }
 
-  .vault-copy-scrub {
+  .tab-copy-scrub {
     animation-name: hero-copy-fade;
     animation-duration: 1s;
-    animation-timeline: --vault-scrub;
+    animation-timeline: --tab-scrub;
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
   }
 
   /* Fades IN (not out) as the copy above fades out — same curve as the
-     Hero's tagline, just on the Vault's own --vault-scrub timeline. */
-  .vault-tagline-scrub {
+     Hero's tagline, just on each section's own --tab-scrub timeline. */
+  .tab-tagline-scrub {
     animation-name: hero-tagline-fade;
     animation-duration: 1s;
-    animation-timeline: --vault-scrub;
+    animation-timeline: --tab-scrub;
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
   }
@@ -349,14 +357,14 @@
 /* Hidden by default — only revealed by the animation above, so browsers
    without view-timeline support don't show it permanently overlapping
    the copy/mockup (same fallback as .hero-tagline-scrub). */
-.vault-tagline-scrub {
+.tab-tagline-scrub {
   opacity: 0;
 }
 
 /* Full-zoom target size: bounded by both viewport axes (86% of
    whichever is tighter), so the whole phone — bezel and all — always
    lands inside the viewport with margin, never cropped by its edges. */
-.vault-mockup-scrub {
+.tab-mockup-scrub {
   width: min(86vw, 42vh);
 }
 
@@ -364,18 +372,18 @@
    30%) of the same viewport-relative full-zoom size, not a fixed pixel
    value — so the "grows on scroll" ratio holds at any viewport size,
    the same way the Hero's fixed-px REST_W/MAX_W pair does at its fixed
-   breakpoints. Height is set explicitly too (from the screenshot's own
-   2818:5760 aspect ratio) — without it the box would stretch to match
-   its child's true (much larger) layout height, since the child is
-   scaled down only visually via transform, which never affects
+   breakpoints. Height is set explicitly too (from the screenshots'
+   shared 2818:5760 aspect ratio) — without it the box would stretch to
+   match its child's true (much larger) layout height, since the child
+   is scaled down only visually via transform, which never affects
    layout. Mobile overrides both to fixed pixels (see AppTabs.tsx), so
    this only governs desktop. */
-.vault-mockup-rest-box {
+.tab-mockup-rest-box {
   width: calc(min(86vw, 42vh) * 0.546);
   height: calc(min(86vw, 42vh) * 0.546 * 2.0439);
 }
 
-@keyframes vault-zoom {
+@keyframes tab-zoom {
   from {
     transform: translateY(-55px) scale(0.546);
   }
@@ -385,12 +393,12 @@
 }
 
 /* Copy of hero-zoom-mobile (same 216/330px rest/max geometry). Only the
-   final (fully-zoomed) state is shifted up, by a flat 145px — the rest
-   (pre-zoom) state stays exactly where hero-zoom-mobile's does, so the
-   Vault showcase can move its zoomed-in resting position independently
-   of the Hero's own mobile framing without touching the pre-scroll
-   frame at all. */
-@keyframes vault-zoom-mobile {
+   final (fully-zoomed) state is shifted up, by a flat 167px — the rest
+   (pre-zoom) state stays exactly where hero-zoom-mobile's does, so
+   these showcases can move their zoomed-in resting position
+   independently of the Hero's own mobile framing without touching the
+   pre-scroll frame at all. */
+@keyframes tab-zoom-mobile {
   from {
     transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
