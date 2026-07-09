@@ -158,6 +158,16 @@
   }
 }
 
+/* Utility: hides the scrollbar on a scrollable element (e.g. the Flight
+   Matrix swipe carousel) without disabling scroll/swipe itself. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ═══════════════════════════════════════════════════════════
    Hero scroll effect — scroll-linked (scrubbed), driven by a CSS
    view-timeline rather than a JS scroll listener. The mockup grows

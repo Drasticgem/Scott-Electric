@@ -1,5 +1,5 @@
-import { FLIGHT_DOTS, FLIGHT_FILTERS } from "@/lib/data/flightMatrix";
 import { Reveal } from "@/components/animations/Reveal";
+import { FlightMatrixDemo } from "@/components/sections/FlightMatrixDemo";
 
 /**
  * FlightMatrix — spotlight section for the app's disc scatter-plot
@@ -7,8 +7,12 @@ import { Reveal } from "@/components/animations/Reveal";
  * distinctive screen in the app, so it gets its own dedicated section
  * rather than being buried inside the Bags tab panel.
  *
- * The chart below is a placeholder mockup (fixed dot positions, no real
- * disc images) standing in until a real device-mockup export replaces it.
+ * Demo is a full-phone, swipeable, autoplaying video sequence (see
+ * FlightMatrixDemo) instead of the Hero/Vault-style scroll-pinned
+ * zoom — a deliberately different, more App-Store-preview-like
+ * interaction for this section. Section height isn't fixed to the
+ * viewport, so it's free to grow taller than a standard py-24 section
+ * to fit the full phone comfortably.
  */
 export function FlightMatrix() {
   return (
@@ -43,70 +47,7 @@ export function FlightMatrix() {
         </Reveal>
 
         <Reveal>
-          <div className="mx-auto max-w-[520px] rounded-[28px] border border-border bg-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
-            {/* Filter pills */}
-            <div className="mb-5 flex flex-wrap gap-2">
-              {FLIGHT_FILTERS.map((label) => (
-                <span
-                  key={label}
-                  className={[
-                    "rounded-full px-4 py-[7px] text-[12px] font-semibold",
-                    label === "Putter"
-                      ? "bg-ink text-white"
-                      : "bg-paper text-ink-soft border border-border",
-                  ].join(" ")}
-                >
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            {/* Chart */}
-            <div className="flex gap-2">
-              <span
-                className="mb-6 flex shrink-0 items-center text-[10px] font-semibold uppercase text-muted-light"
-                style={{ writingMode: "vertical-rl", letterSpacing: "0.18em" }}
-                aria-hidden="true"
-              >
-                Speed
-              </span>
-
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-paper">
-                {/* Grid lines */}
-                <div className="absolute inset-0" aria-hidden="true">
-                  {[20, 40, 60, 80].map((top) => (
-                    <div
-                      key={top}
-                      className="absolute left-0 right-0 border-t border-dashed border-border"
-                      style={{ top: `${top}%` }}
-                    />
-                  ))}
-                  <div className="absolute inset-y-0 left-1/2 w-px bg-border" />
-                </div>
-
-                {/* Dots */}
-                {FLIGHT_DOTS.map((dot, i) => (
-                  <span
-                    key={i}
-                    aria-hidden="true"
-                    className="absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_2px_6px_rgba(0,0,0,0.18)]"
-                    style={{
-                      left: `${dot.x}%`,
-                      top: `${100 - dot.y}%`,
-                      backgroundColor: dot.color,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Bottom legend */}
-            <div className="mt-3 flex items-center justify-between pl-6 text-[10px] font-semibold uppercase text-muted-light" style={{ letterSpacing: "0.14em" }}>
-              <span className="text-accent-dark">Overstable</span>
-              <span>Stable</span>
-              <span className="text-accent">Understable</span>
-            </div>
-          </div>
+          <FlightMatrixDemo />
         </Reveal>
       </div>
     </section>
