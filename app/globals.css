@@ -57,6 +57,33 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Dark mode — system-preference only (no manual toggle). Every
+   component already reads color through these tokens (bg-paper,
+   text-ink, bg-surface, border-border, text-muted, bg-accent, ...),
+   so redefining them here re-themes the whole site with no
+   per-component changes needed. Apple-dark-mode-inspired: near-black
+   page background, charcoal card surfaces, brightened accent purple
+   for contrast against black.
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #ffffff;
+    --color-ink-soft: #f5f5f7;
+    --color-paper: #000000;
+    --color-surface: #1c1c1e;
+    --color-surface-mid: #2c2c2e;
+    --color-border: #38383a;
+    --color-muted: #98989d;
+    --color-muted-light: #6e6e73;
+
+    --color-accent: #7c6cf0;
+    --color-accent-light: #9c8ff5;
+    --color-accent-dark: #5b4bda;
+    --color-accent-pale: #2b2560;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
    Base / reset
    ═══════════════════════════════════════════════════════════ */
 @layer base {
@@ -128,5 +155,253 @@
   .container-1140 {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Hero scroll effect — scroll-linked (scrubbed), driven by a CSS
+   view-timeline rather than a JS scroll listener. The mockup grows
+   and pans in ONE continuous motion tied directly to scroll position
+   (no discrete trigger points, no fixed-duration transition) — scroll
+   a little, it moves a little; scroll a lot, it moves a lot. It stays
+   calm because a view-timeline is evaluated by the compositor on every
+   frame regardless of main-thread load, unlike a JS scroll handler
+   (the earlier Framer Motion version), which visibly stuttered on iOS
+   Safari under momentum scrolling.
+
+   Feature-gated: browsers without support (older Safari, Firefox
+   stable) just render the mockup at rest with no animation — a clean
+   fallback, not a broken one.
+   ═══════════════════════════════════════════════════════════ */
+@supports (animation-timeline: view()) {
+  .hero-pin-wrapper {
+    view-timeline-name: --hero-scrub;
+    view-timeline-axis: block;
+  }
+
+  .hero-mockup-scrub {
+    animation-name: hero-zoom-mobile;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-mockup-scrub {
+      animation-name: hero-zoom-desktop;
+    }
+  }
+
+  .hero-copy-scrub {
+    animation-name: hero-copy-fade;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+
+  .hero-tagline-scrub {
+    animation-name: hero-tagline-fade;
+    animation-duration: 1s;
+    animation-timeline: --hero-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+}
+
+/* Hidden by default — only revealed by the animation above, so browsers
+   without view-timeline support (where hero-copy-scrub also never
+   animates, leaving the subheadline/CTA visible throughout) don't end
+   up with the tagline permanently overlapping them. */
+.hero-tagline-scrub {
+  opacity: 0;
+}
+
+/* Crossfades in as hero-copy-fade fades the subheadline/CTA out, so the
+   space they occupied doesn't just sit empty once the zoom finishes. */
+@keyframes hero-tagline-fade {
+  0% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* One continuous zoom: rest -> grown + panned to a single final
+   framing (centered on the top "Vault Insight" card). No intermediate
+   hold/second pan — just one smooth move.
+
+   Mobile uses its own (smaller) zoom ratio than desktop — at
+   REST_SCALE=1/2.6 the fully-zoomed mockup is wider than a mobile
+   viewport, so the bezel gets clipped by the viewport's own edges at
+   full zoom. REST_SCALE here (0.6545) keeps the final zoomed width at
+   330px (see the max-[1024px] override in Hero.tsx), narrow enough
+   that the bezel stays fully visible on any phone-width viewport. */
+@keyframes hero-zoom-mobile {
+  from {
+    transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
+  }
+  to {
+    transform: translate(0px, 11%) scale(1);
+  }
+}
+
+@keyframes hero-zoom-desktop {
+  from {
+    transform: translate(0px, 0%) scale(0.3846);
+  }
+  to {
+    /* Desktop mockup sits in the right grid column (off-center), so
+       it needs the same flat -96px recentering shift as before. */
+    transform: translate(-96px, 11%) scale(1);
+  }
+}
+
+/* Copy fades out early to give the mockup room to grow. */
+@keyframes hero-copy-fade {
+  0% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Vault showcase scroll effect — same scroll-linked view-timeline
+   technique as the Hero's, tuned for the opposite framing goal: the
+   Hero's mockup deliberately overflows the viewport at full zoom (a
+   camera moving closer); this one must stay fully inside the
+   viewport at every point, bezel included, just much bigger than its
+   resting size. So its full-zoom width is capped by BOTH viewport
+   axes (86% of whichever is tighter, worked back from the screenshot's
+   2818:5760 aspect ratio) instead of a fixed pixel value — that keeps
+   the whole phone in view at any window size or aspect ratio.
+   ═══════════════════════════════════════════════════════════ */
+@supports (animation-timeline: view()) {
+  .vault-pin-wrapper {
+    view-timeline-name: --vault-scrub;
+    view-timeline-axis: block;
+  }
+
+  .vault-mockup-scrub {
+    animation-name: vault-zoom;
+    animation-duration: 1s;
+    animation-timeline: --vault-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .vault-copy-scrub,
+  .vault-tagline-scrub {
+    animation-name: hero-copy-fade;
+    animation-duration: 1s;
+    animation-timeline: --vault-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+}
+
+/* Full-zoom target size: bounded by both viewport axes (86% of
+   whichever is tighter), so the whole phone — bezel and all — always
+   lands inside the viewport with margin, never cropped by its edges. */
+.vault-mockup-scrub {
+  width: min(86vw, 42vh);
+}
+
+/* Reserved-space rest box: a constant fraction (0.42) of the same
+   viewport-relative full-zoom size, not a fixed pixel value — so the
+   "grows on scroll" ratio holds at any viewport size, the same way
+   the Hero's fixed-px REST_W/MAX_W pair does at its fixed breakpoints.
+   Height is set explicitly too (from the screenshot's own 2818:5760
+   aspect ratio) — without it the box would stretch to match its
+   child's true (much larger) layout height, since the child is scaled
+   down only visually via transform, which never affects layout. */
+.vault-mockup-rest-box {
+  width: calc(min(86vw, 42vh) * 0.42);
+  height: calc(min(86vw, 42vh) * 0.42 * 2.0439);
+}
+
+@keyframes vault-zoom {
+  from {
+    transform: scale(0.42);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Hero grid — on mobile only the eyebrow+headline ("hook") sits above
+   the mockup; the subheadline+CTA ("pitch") comes after it. On desktop
+   "hook" and "pitch" stack together in the left column, mockup on the
+   right, spanning both rows. Named areas (not `order`) drive placement
+   so the same markup can split apart on mobile and regroup on desktop. */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "hook"
+    "phone"
+    "pitch";
+  row-gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .hero-grid {
+    row-gap: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    column-gap: 4rem;
+    row-gap: 0;
+    grid-template-areas: "copy phone";
+  }
+}
+
+.hero-grid-hook {
+  grid-area: hook;
+}
+.hero-grid-phone {
+  grid-area: phone;
+}
+.hero-grid-pitch {
+  grid-area: pitch;
+}
+
+/* On mobile this wrapper generates no box of its own, so "hook" and
+   "pitch" act as independent grid items (letting the mockup sit
+   between them). On desktop it becomes a real flex column occupying
+   a single "copy" grid area, regrouping them the way a spanning
+   multi-row grid item can't do without CSS Grid unevenly distributing
+   the phone's extra height across the two auto rows. */
+.hero-copy-wrapper {
+  display: contents;
+}
+
+@media (min-width: 1024px) {
+  .hero-copy-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    grid-area: copy;
   }
 }

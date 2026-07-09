@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ChatWidget } from "@/components/chat/ChatWidget";
+// Chat widget disabled for now — not deleted, may come back later.
+// import { ChatWidget } from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 const softwareAppJsonLd = {
@@ -36,6 +37,18 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Still honored by Chrome/Android and pre-26 Safari, so kept — but
+  // Safari 26 (current as of this build) ignores theme-color entirely
+  // and derives its status bar / toolbar tint by sampling background
+  // colors instead. See the comment on #safari-chrome-tint below for
+  // how that's handled.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  // Required for Safari to extend its chrome-tinting/safe-area handling
+  // under the status bar at all (see #safari-chrome-tint).
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -68,10 +81,24 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* Safari 26 dropped theme-color support and instead colors its
+            status bar / toolbar by sampling the background-color of a
+            fixed or sticky element pinned at the viewport edge — solid
+            colors only; our actual header is intentionally translucent
+            (frosted-glass blur), which Safari reported reads as an
+            unpredictable/inconsistent tint. This element exists purely
+            to give Safari something solid and correctly-themed to read;
+            it's fully hidden behind the real header (lower z-index, same
+            top offset) and never visible or interactive itself. */}
+        <div
+          id="safari-chrome-tint"
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-x-0 top-0 z-0 h-3 bg-paper"
+        />
         <Header />
         <main>{children}</main>
         <Footer />
-        <ChatWidget />
+        {/* <ChatWidget /> */}
         <Analytics />
       </body>
     </html>
