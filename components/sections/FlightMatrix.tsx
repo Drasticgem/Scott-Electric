@@ -18,7 +18,7 @@ export function FlightMatrix() {
     >
       <div className="container-1140">
         <Reveal>
-          <div className="mx-auto mb-12 max-w-[560px] text-center">
+          <div className="mb-12 max-w-[560px] text-left">
             <p
               className="mb-3 text-[10px] font-semibold uppercase text-accent"
               style={{ letterSpacing: "0.22em" }}
@@ -33,7 +33,7 @@ export function FlightMatrix() {
                 letterSpacing: "-0.015em",
               }}
             >
-              See your whole bag on one flight map.
+              See your whole bag on one interactive flight map.
             </h2>
             <p className="text-[15px] leading-[1.7] text-muted">
               Every disc in your vault, plotted by speed, turn, and fade.

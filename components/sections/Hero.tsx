@@ -1,6 +1,5 @@
 import { DISCVAULT } from "@/lib/constants";
 import { Reveal } from "@/components/animations/Reveal";
-import { CascadeText } from "@/components/animations/CascadeText";
 
 /**
  * Hero — white, Apple-esque product intro.
@@ -61,32 +60,27 @@ export function Hero() {
               {/* Eyebrow + headline — above the mockup on mobile, top of
                   the left column on desktop. */}
               <div className="hero-grid-hook hero-copy-scrub">
-                <div className="max-[768px]:text-center">
-                  <Reveal>
+                <Reveal>
+                  <div className="max-[768px]:text-center">
                     <p
                       className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:hidden"
                       style={{ letterSpacing: "0.22em" }}
                     >
                       For Disc Golfers
                     </p>
-                  </Reveal>
 
-                  {/* Word-by-word cascade instead of Reveal's single
-                      fade-up — this is the page's opening line, worth
-                      the extra beat. Self-contained (own whileInView),
-                      so it's not also wrapped in <Reveal>. */}
-                  <CascadeText
-                    as="h1"
-                    text="Your collection matters."
-                    className="font-[family-name:var(--font-display)] font-black text-ink"
-                    style={{
-                      fontSize: "clamp(34px, 4.4vw, 58px)",
-                      lineHeight: 1.05,
-                      letterSpacing: "-0.02em",
-                    }}
-                    delay={0.15}
-                  />
-                </div>
+                    <h1
+                      className="font-[family-name:var(--font-display)] font-black text-ink"
+                      style={{
+                        fontSize: "clamp(34px, 4.4vw, 58px)",
+                        lineHeight: 1.05,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      Your collection matters.
+                    </h1>
+                  </div>
+                </Reveal>
               </div>
 
               {/* Subheadline + CTA — below the mockup on mobile, bottom of
