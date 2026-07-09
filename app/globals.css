@@ -344,22 +344,24 @@
   width: min(86vw, 42vh);
 }
 
-/* Reserved-space rest box: a constant fraction (0.42) of the same
-   viewport-relative full-zoom size, not a fixed pixel value — so the
-   "grows on scroll" ratio holds at any viewport size, the same way
-   the Hero's fixed-px REST_W/MAX_W pair does at its fixed breakpoints.
-   Height is set explicitly too (from the screenshot's own 2818:5760
-   aspect ratio) — without it the box would stretch to match its
-   child's true (much larger) layout height, since the child is scaled
-   down only visually via transform, which never affects layout. */
+/* Reserved-space rest box: a constant fraction (0.546 — 0.42 bumped up
+   30%) of the same viewport-relative full-zoom size, not a fixed pixel
+   value — so the "grows on scroll" ratio holds at any viewport size,
+   the same way the Hero's fixed-px REST_W/MAX_W pair does at its fixed
+   breakpoints. Height is set explicitly too (from the screenshot's own
+   2818:5760 aspect ratio) — without it the box would stretch to match
+   its child's true (much larger) layout height, since the child is
+   scaled down only visually via transform, which never affects
+   layout. Mobile overrides both to fixed pixels (see AppTabs.tsx), so
+   this only governs desktop. */
 .vault-mockup-rest-box {
-  width: calc(min(86vw, 42vh) * 0.42);
-  height: calc(min(86vw, 42vh) * 0.42 * 2.0439);
+  width: calc(min(86vw, 42vh) * 0.546);
+  height: calc(min(86vw, 42vh) * 0.546 * 2.0439);
 }
 
 @keyframes vault-zoom {
   from {
-    transform: translateY(-35px) scale(0.42);
+    transform: translateY(-35px) scale(0.546);
   }
   to {
     transform: translateY(-35px) scale(1);
