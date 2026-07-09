@@ -160,7 +160,7 @@ function VaultShowcase({ tab }: { tab: AppTab }) {
                 zoomed mockup's bottom edge, hand-tuned like the Hero's
                 own top-[Npx] constant. Desktop: overlays the left copy
                 column instead, matching the Hero's desktop placement. */}
-            <div className="vault-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[770px] max-[1024px]:text-center lg:inset-y-0 lg:left-0 lg:max-w-[560px] lg:justify-start lg:text-left">
+            <div className="vault-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[764px] max-[1024px]:text-center lg:inset-y-0 lg:left-0 lg:max-w-[560px] lg:justify-start lg:text-left">
               <p className="max-w-[420px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft max-[768px]:text-[16px]">
                 {tab.tagline}
               </p>
