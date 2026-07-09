@@ -6,9 +6,9 @@ import { Reveal } from "@/components/animations/Reveal";
  *
  * Two columns on desktop (copy left, phone mockup right), stacked on
  * mobile. The section pins for an extra scroll range while the copy
- * fades away and the mockup — the app's launch screen (DiscVault mark
- * + tagline), bezel and all, no internal crop — grows in one
- * continuous motion. It's a single transform on a static image, not a
+ * fades away and the mockup — bezel and all, no internal crop — grows
+ * and pans in one continuous motion, centering on the top "Vault
+ * Insight" card. It's a single transform on a static image, not a
  * swap between crops, and the phone is never clipped by an inner
  * frame — only the viewport's own edges limit what's visible, same as
  * a camera moving closer to a real object.
@@ -40,9 +40,9 @@ const REST_W = 340;
 // desktop viewports are wide enough that 2.6x doesn't have that problem.
 const ZOOM_FACTOR = 2.6;
 const MAX_W = REST_W * ZOOM_FACTOR;
-// Mockup image aspect ratio (2736 x 5678), used to size the reserved-space
+// Mockup image aspect ratio (2048 x 4191), used to size the reserved-space
 // wrapper so it never has to wait on the image to know its own height.
-const ASPECT = 5678 / 2736;
+const ASPECT = 4191 / 2048;
 const REST_H = Math.round(REST_W * ASPECT);
 
 export function Hero() {
