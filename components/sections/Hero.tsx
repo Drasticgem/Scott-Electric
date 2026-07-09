@@ -156,7 +156,7 @@ export function Hero() {
                 style={{ width: REST_W, height: REST_H }}
               >
                 <div
-                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[330px]"
+                  className="hero-mockup-scrub shrink-0 max-[1024px]:!w-[305px]"
                   style={{ width: MAX_W }}
                 >
                   {/* Hand-rolled <picture> (not next/image) so the browser
