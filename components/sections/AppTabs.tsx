@@ -154,12 +154,13 @@ function VaultShowcase({ tab }: { tab: AppTab }) {
               </div>
             </Reveal>
 
-            {/* Mobile: stays in normal flow, right below the mockup —
-                fades in there as the copy above fades out. Desktop:
-                pulled out of flow (absolute) to sit over the copy
-                column on the left instead of centered under the
-                mockup, matching the Hero's desktop tagline placement. */}
-            <div className="vault-tagline-scrub shrink-0 text-left lg:pointer-events-none lg:absolute lg:inset-y-0 lg:left-0 lg:flex lg:max-w-[560px] lg:items-center">
+            {/* Same technique as the Hero's tagline: absolutely
+                positioned (not in flow), fading in as the copy above
+                fades out. Mobile: fixed top offset tuned to clear the
+                zoomed mockup's bottom edge, hand-tuned like the Hero's
+                own top-[Npx] constant. Desktop: overlays the left copy
+                column instead, matching the Hero's desktop placement. */}
+            <div className="vault-tagline-scrub pointer-events-none absolute inset-x-0 flex items-center justify-center max-[1024px]:top-[770px] max-[1024px]:text-center lg:inset-y-0 lg:left-0 lg:max-w-[560px] lg:justify-start lg:text-left">
               <p className="max-w-[420px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft max-[768px]:text-[16px]">
                 {tab.tagline}
               </p>
