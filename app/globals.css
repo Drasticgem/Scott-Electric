@@ -366,15 +366,18 @@
   }
 }
 
-/* Copy of hero-zoom-mobile (same 216/330px rest/max geometry), shifted
-   a flat 70px further up so the Vault showcase can move independently
-   of the Hero's own mobile framing. */
+/* Copy of hero-zoom-mobile (same 216/330px rest/max geometry). Only the
+   final (fully-zoomed) state is shifted up, by a flat 110px — the rest
+   (pre-zoom) state stays exactly where hero-zoom-mobile's does, so the
+   Vault showcase can move its zoomed-in resting position independently
+   of the Hero's own mobile framing without touching the pre-scroll
+   frame at all. */
 @keyframes vault-zoom-mobile {
   from {
-    transform: translate(0px, -70px) scale(0.6545); /* 216 / 330 */
+    transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
-    transform: translate(0px, calc(11% + 25px - 70px)) scale(1);
+    transform: translate(0px, calc(11% + 25px - 110px)) scale(1);
   }
 }
 
