@@ -306,11 +306,13 @@
   }
 
   .vault-mockup-scrub {
-    /* Mobile reuses the Hero's mobile keyframe/geometry verbatim (same
-       216/330px rest/max sizing below, same image dimensions) so the
-       two sections feel identical on phone-width viewports. Desktop
-       switches back to vault-zoom's own viewport-relative sizing. */
-    animation-name: hero-zoom-mobile;
+    /* Mobile reuses the Hero's mobile geometry (same 216/330px
+       rest/max sizing below, same image dimensions) via its own
+       vault-zoom-mobile keyframe — a copy of hero-zoom-mobile shifted
+       70px further up, so the two sections can be nudged
+       independently. Desktop switches back to vault-zoom's own
+       viewport-relative sizing. */
+    animation-name: vault-zoom-mobile;
     animation-duration: 1s;
     animation-timeline: --vault-scrub;
     animation-range: contain 0% contain 100%;
@@ -357,10 +359,22 @@
 
 @keyframes vault-zoom {
   from {
-    transform: scale(0.42);
+    transform: translateY(-35px) scale(0.42);
   }
   to {
-    transform: scale(1);
+    transform: translateY(-35px) scale(1);
+  }
+}
+
+/* Copy of hero-zoom-mobile (same 216/330px rest/max geometry), shifted
+   a flat 70px further up so the Vault showcase can move independently
+   of the Hero's own mobile framing. */
+@keyframes vault-zoom-mobile {
+  from {
+    transform: translate(0px, -70px) scale(0.6545); /* 216 / 330 */
+  }
+  to {
+    transform: translate(0px, calc(11% + 25px - 70px)) scale(1);
   }
 }
 
