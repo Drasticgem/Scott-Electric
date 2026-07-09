@@ -252,7 +252,9 @@
     transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
-    transform: translate(0px, 11%) scale(1);
+    /* 8% (down from 11%) leaves a clean gap above the tagline instead
+       of the phone's bezel crowding right up against it. */
+    transform: translate(0px, 8%) scale(1);
   }
 }
 
