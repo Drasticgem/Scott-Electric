@@ -89,7 +89,7 @@ function VaultShowcase({ tab }: { tab: AppTab }) {
         style={{ height: VAULT_SCROLL_RANGE }}
       >
         <div className="sticky top-0 flex h-screen flex-col overflow-hidden py-14 max-[768px]:py-10">
-          <div className="container-1140 flex h-full w-full flex-col">
+          <div className="container-1140 relative flex h-full w-full flex-col">
             <Reveal>
               <div className="vault-copy-scrub max-w-[560px] shrink-0 text-left">
                 <p
@@ -154,7 +154,12 @@ function VaultShowcase({ tab }: { tab: AppTab }) {
               </div>
             </Reveal>
 
-            <div className="vault-tagline-scrub shrink-0 text-left">
+            {/* Mobile: stays in normal flow, right below the mockup —
+                fades in there as the copy above fades out. Desktop:
+                pulled out of flow (absolute) to sit over the copy
+                column on the left instead of centered under the
+                mockup, matching the Hero's desktop tagline placement. */}
+            <div className="vault-tagline-scrub shrink-0 text-left lg:pointer-events-none lg:absolute lg:inset-y-0 lg:left-0 lg:flex lg:max-w-[560px] lg:items-center">
               <p className="max-w-[420px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft max-[768px]:text-[16px]">
                 {tab.tagline}
               </p>

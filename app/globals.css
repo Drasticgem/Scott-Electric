@@ -327,14 +327,30 @@
     }
   }
 
-  .vault-copy-scrub,
-  .vault-tagline-scrub {
+  .vault-copy-scrub {
     animation-name: hero-copy-fade;
     animation-duration: 1s;
     animation-timeline: --vault-scrub;
     animation-range: contain 0% contain 100%;
     animation-fill-mode: both;
   }
+
+  /* Fades IN (not out) as the copy above fades out — same curve as the
+     Hero's tagline, just on the Vault's own --vault-scrub timeline. */
+  .vault-tagline-scrub {
+    animation-name: hero-tagline-fade;
+    animation-duration: 1s;
+    animation-timeline: --vault-scrub;
+    animation-range: contain 0% contain 100%;
+    animation-fill-mode: both;
+  }
+}
+
+/* Hidden by default — only revealed by the animation above, so browsers
+   without view-timeline support don't show it permanently overlapping
+   the copy/mockup (same fallback as .hero-tagline-scrub). */
+.vault-tagline-scrub {
+  opacity: 0;
 }
 
 /* Full-zoom target size: bounded by both viewport axes (86% of
@@ -361,15 +377,15 @@
 
 @keyframes vault-zoom {
   from {
-    transform: translateY(-35px) scale(0.546);
+    transform: translateY(-55px) scale(0.546);
   }
   to {
-    transform: translateY(-35px) scale(1);
+    transform: translateY(-55px) scale(1);
   }
 }
 
 /* Copy of hero-zoom-mobile (same 216/330px rest/max geometry). Only the
-   final (fully-zoomed) state is shifted up, by a flat 110px — the rest
+   final (fully-zoomed) state is shifted up, by a flat 145px — the rest
    (pre-zoom) state stays exactly where hero-zoom-mobile's does, so the
    Vault showcase can move its zoomed-in resting position independently
    of the Hero's own mobile framing without touching the pre-scroll
@@ -379,7 +395,7 @@
     transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
-    transform: translate(0px, calc(11% + 25px - 110px)) scale(1);
+    transform: translate(0px, calc(11% + 25px - 195px)) scale(1);
   }
 }
 
