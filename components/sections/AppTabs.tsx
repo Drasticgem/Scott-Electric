@@ -14,8 +14,8 @@ const TAB_ICONS: Record<AppTabSlug, LucideIcon> = {
  * AppTabs — showcases the four tabs of the DiscVault app. Header
  * ("Everything in your bag. One tap away.") followed by four alternating
  * white/surface panels, one per tab. Each panel pairs copy with a phone
- * mockup slot — currently a placeholder frame, swapped for a real
- * screenshot per tab once exports are ready.
+ * mockup slot — Vault has a real screenshot, the rest are still a
+ * placeholder frame until exports are ready for them too.
  */
 export function AppTabs() {
   return (
@@ -74,7 +74,11 @@ function TabPanel({ tab, index }: { tab: AppTab; index: number }) {
             ].join(" ")}
           >
             <div className="shrink-0">
-              <TabMockup icon={Icon} name={tab.name} />
+              {tab.slug === "vault" ? (
+                <VaultMockup />
+              ) : (
+                <TabMockup icon={Icon} name={tab.name} />
+              )}
             </div>
 
             <div className="flex max-w-[520px] flex-col items-center gap-5 text-center lg:items-start lg:text-left">
@@ -116,6 +120,33 @@ function TabPanel({ tab, index }: { tab: AppTab; index: number }) {
         </Reveal>
       </div>
     </article>
+  );
+}
+
+/**
+ * Real Vault-tab screenshot — the mockup that used to live in the Hero
+ * before it was swapped for the app's launch screen there. Already a
+ * full phone-mockup render (bezel included), so it's just an <img>, no
+ * CSS-drawn frame like the placeholder below.
+ */
+function VaultMockup() {
+  return (
+    <picture>
+      <source
+        srcSet="/images/vault-tab-dark.webp"
+        media="(prefers-color-scheme: dark)"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element -- picture/source needs a plain img fallback, next/image can't do media-conditional sources */}
+      <img
+        src="/images/vault-tab-light.webp"
+        alt="The DiscVault app's Vault tab, showing an AI-powered collection insight, disc categories, and recently added discs"
+        width={2818}
+        height={5760}
+        loading="lazy"
+        decoding="async"
+        className="h-auto w-[230px]"
+      />
+    </picture>
   );
 }
 

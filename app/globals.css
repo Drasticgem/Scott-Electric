@@ -237,9 +237,13 @@
   }
 }
 
-/* One continuous zoom: rest -> grown + panned to a single final
-   framing (centered on the top "Vault Insight" card). No intermediate
-   hold/second pan — just one smooth move.
+/* One continuous zoom: rest -> grown, framed on the launch screen's
+   logo+tagline.
+
+   Mobile's fully-zoomed mockup (330px, see REST_SCALE below) is narrow
+   enough that the WHOLE phone — bezel, notch and all — still fits
+   inside a phone-width viewport, so no vertical pan is needed: it's
+   never a tight camera-style crop the way desktop's is.
 
    Mobile uses its own (smaller) zoom ratio than desktop — at
    REST_SCALE=1/2.6 the fully-zoomed mockup is wider than a mobile
@@ -252,7 +256,7 @@
     transform: translate(0px, 0%) scale(0.6545); /* 216 / 330 */
   }
   to {
-    transform: translate(0px, 11%) scale(1);
+    transform: translate(0px, 0%) scale(1);
   }
 }
 
@@ -261,9 +265,13 @@
     transform: translate(0px, 0%) scale(0.3846);
   }
   to {
-    /* Desktop mockup sits in the right grid column (off-center), so
-       it needs the same flat -96px recentering shift as before. */
-    transform: translate(-96px, 11%) scale(1);
+    /* Desktop's zoom is a tight crop (mockup wider than the viewport
+       can show in full), so unlike mobile it needs a deliberate pan:
+       -96px recenters horizontally (the mockup sits off-center in the
+       right grid column) and +15% shifts down just enough that the
+       notch/status bar scrolls out of frame, landing the logo+tagline
+       centered in the visible crop instead of pinned near the top. */
+    transform: translate(-96px, 15%) scale(1);
   }
 }
 
