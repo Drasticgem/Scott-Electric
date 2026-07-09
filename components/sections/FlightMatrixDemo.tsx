@@ -4,21 +4,34 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FLIGHT_MATRIX_CLIPS } from "@/lib/data/flightMatrixDemo";
 
+interface VideoPair {
+  light: HTMLVideoElement | null;
+  dark: HTMLVideoElement | null;
+}
+
 /**
  * Full-phone swipeable video demo — one short auto-playing clip per
  * step (bezel baked into the footage, matching every other mockup on
  * the site), native horizontal scroll-snap for touch swipe, dots +
  * arrow buttons for discoverability on non-touch devices.
  *
- * Only the active (>=60% visible) slide's video plays — the rest stay
- * paused so four autoplaying 60fps clips don't fight for bandwidth/
- * battery at once. Restarts from frame 0 each time a slide becomes
- * active so re-swiping back to a step always replays it clean.
+ * Each step is actually a light/dark PAIR of videos, absolutely
+ * stacked and both playing in lockstep — CSS (.theme-video-light/dark
+ * in globals.css) hides whichever doesn't match prefers-color-scheme.
+ * Swapping a <source> on theme change would restart/flash the clip;
+ * keeping both running and just toggling visibility switches instantly
+ * with zero desync.
+ *
+ * Only the active (>=60% visible) slide's pair plays — every other
+ * slide's pair stays paused, so at most 2 of the 8 clips are ever
+ * decoding at once.
  */
 export function FlightMatrixDemo() {
   const trackRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const videoRefs = useRef<VideoPair[]>(
+    FLIGHT_MATRIX_CLIPS.map(() => ({ light: null, dark: null })),
+  );
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -30,16 +43,18 @@ export function FlightMatrixDemo() {
         for (const entry of entries) {
           const index = slideRefs.current.findIndex((el) => el === entry.target);
           if (index === -1) continue;
-          const video = videoRefs.current[index];
+          const pair = videoRefs.current[index];
 
           if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
             setActiveIndex(index);
-            if (video) {
+            for (const video of [pair.light, pair.dark]) {
+              if (!video) continue;
               video.currentTime = 0;
               void video.play().catch(() => {});
             }
           } else {
-            video?.pause();
+            pair.light?.pause();
+            pair.dark?.pause();
           }
         }
       },
@@ -68,26 +83,41 @@ export function FlightMatrixDemo() {
       >
         {FLIGHT_MATRIX_CLIPS.map((clip, i) => (
           <div
-            key={clip.src}
+            key={clip.caption}
             ref={(el) => {
               slideRefs.current[i] = el;
             }}
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
-            <video
-              ref={(el) => {
-                videoRefs.current[i] = el;
-              }}
-              src={clip.src}
-              poster={clip.poster}
-              width={2818}
-              height={5760}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="h-auto w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
-            />
+            <div
+              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
+              style={{ aspectRatio: "2818 / 5760" }}
+            >
+              <video
+                ref={(el) => {
+                  videoRefs.current[i].light = el;
+                }}
+                src={clip.srcLight}
+                poster={clip.posterLight}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="theme-video-light absolute inset-0 h-full w-full"
+              />
+              <video
+                ref={(el) => {
+                  videoRefs.current[i].dark = el;
+                }}
+                src={clip.srcDark}
+                poster={clip.posterDark}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="theme-video-dark absolute inset-0 h-full w-full"
+              />
+            </div>
             <p className="mt-6 max-w-[280px] text-center text-[14px] font-medium text-muted">
               {clip.caption}
             </p>
@@ -99,7 +129,7 @@ export function FlightMatrixDemo() {
       <div className="mt-6 flex items-center justify-center gap-2">
         {FLIGHT_MATRIX_CLIPS.map((clip, i) => (
           <button
-            key={clip.src}
+            key={clip.caption}
             type="button"
             aria-label={`Go to step ${i + 1}: ${clip.caption}`}
             onClick={() => scrollToIndex(i)}
