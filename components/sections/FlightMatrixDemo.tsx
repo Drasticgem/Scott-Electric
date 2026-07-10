@@ -10,56 +10,62 @@ interface VideoPair {
 }
 
 /**
- * The source recordings have no alpha channel (confirmed by inspecting
- * the raw decoded pixels) and their outer edge is a soft anti-aliased
- * gradient, not a crisp line — there's no pixel position where a CSS
- * crop lands cleanly against the page's white background. An earlier
- * version cropped to the silhouette with CSS border-radius, which got
- * the shape close but always left a faint gray sliver of that gradient
- * showing against white.
+ * The source recordings have no alpha channel and their own baked-in
+ * bezel has a soft anti-aliased outer edge — no CSS crop of the raw
+ * footage ever lands cleanly against the page's white background (an
+ * earlier version tried; always left a faint gray sliver).
  *
- * Instead, /public/images/flight-matrix-frame.webp is a real bezel
- * image with genuine alpha — transparent outside the phone, opaque
- * bezel ring, and a transparent hole where the screen goes — built by
- * masking a captured frame with a precisely fit rounded-rect (ellipse
- * corners, not circular: measuring all four corners showed the
- * horizontal radius, ~181px native, is consistently larger than the
- * vertical, ~160px). It's laid over the video so only the screen
- * content shows through; the frame's own crisp, anti-aliased alpha
- * defines the visible corner, not a runtime CSS approximation of the
- * footage's fuzzy edge. Same frame image works for both light and
- * dark clips — it's the same physical device in both recordings.
+ * /public/images/flight-matrix-frame.webp sidesteps that: it's a real
+ * device-frame photo with genuine alpha (transparent outside the
+ * phone, opaque bezel + buttons, transparent hole where the screen
+ * goes), laid over the video. The video itself is cropped down to
+ * JUST its screen content (SCREEN_* — no bezel, no background) and
+ * scaled to exactly fill the frame image's hole, so there's no
+ * dependency on the video's own bezel lining up with the frame's ring
+ * — the video never shows any bezel of its own for the frame to hide.
+ * Same frame image works for both light and dark clips since it's a
+ * generic device photo, not tied to either recording.
  *
- * NATIVE_W/H is the recorded frame size; CROP_* is the outer bounding
- * box the frame image was built from, used to position the video
- * beneath it at matching scale (percentages, not px, so it holds at
- * any of the carousel's responsive display widths).
+ * NATIVE_W/H is the recorded frame size. SCREEN_* is the video's own
+ * screen-content bounding box (measured from decoded frame pixels).
+ * CANVAS_* and HOLE_* describe the frame image's own geometry
+ * (measured the same way, via its alpha channel). scaleX/Y map screen
+ * pixels to hole pixels; percentages (not px) so it holds at any of
+ * the carousel's responsive display widths.
  */
 const NATIVE_W = 938;
 const NATIVE_H = 1920;
-const CROP_L = 20;
-const CROP_T = 19;
-const CROP_R = 917;
-const CROP_B = 1899;
-const CROP_W = CROP_R - CROP_L;
-const CROP_H = CROP_B - CROP_T;
+const SCREEN_L = 50;
+const SCREEN_T = 49;
+const SCREEN_R = 888;
+const SCREEN_B = 1871;
+
+const CANVAS_W = 2886;
+const CANVAS_H = 5965;
+const HOLE_L = 111;
+const HOLE_T = 92;
+const HOLE_R = 2773;
+const HOLE_B = 5876;
+
+const scaleX = (HOLE_R - HOLE_L) / (SCREEN_R - SCREEN_L);
+const scaleY = (HOLE_B - HOLE_T) / (SCREEN_B - SCREEN_T);
 
 const cropWrapperStyle = {
-  aspectRatio: `${CROP_W} / ${CROP_H}`,
+  aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
 };
 
 const cropVideoStyle = {
-  width: `${(NATIVE_W / CROP_W) * 100}%`,
-  height: `${(NATIVE_H / CROP_H) * 100}%`,
-  left: `${-(CROP_L / CROP_W) * 100}%`,
-  top: `${-(CROP_T / CROP_H) * 100}%`,
+  width: `${((NATIVE_W * scaleX) / CANVAS_W) * 100}%`,
+  height: `${((NATIVE_H * scaleY) / CANVAS_H) * 100}%`,
+  left: `${((HOLE_L - SCREEN_L * scaleX) / CANVAS_W) * 100}%`,
+  top: `${((HOLE_T - SCREEN_T * scaleY) / CANVAS_H) * 100}%`,
 };
 
 /**
  * Full-phone swipeable video demo — one short auto-playing clip per
- * step (bezel baked into the footage, matching every other mockup on
- * the site), native horizontal scroll-snap for touch swipe, dots +
- * arrow buttons for discoverability on non-touch devices.
+ * step (screen content only; the device frame is a separate overlay
+ * image, see above), native horizontal scroll-snap for touch swipe,
+ * dots + arrow buttons for discoverability on non-touch devices.
  *
  * Each step is actually a light/dark PAIR of videos, absolutely
  * stacked and both playing in lockstep — CSS (.theme-video-light/dark
