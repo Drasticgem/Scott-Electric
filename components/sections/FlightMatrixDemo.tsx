@@ -10,50 +10,98 @@ interface VideoPair {
 }
 
 /**
- * The source recordings have no alpha channel (confirmed by inspecting
- * the raw decoded pixels — plain opaque HEVC, black baked into the
- * backdrop) and can't get one after the fact, so instead of true
- * transparency this crops the black margin away with CSS: the wrapper
- * clips to the phone's actual content box, and the video inside is
- * scaled/offset so that box fills the wrapper exactly. All values are
- * percentages (not px) so the crop holds at any of the carousel's
- * responsive display widths.
+ * The source recordings have no alpha channel and their own baked-in
+ * bezel has a soft anti-aliased outer edge — no CSS crop of the raw
+ * footage ever lands cleanly against the page's white background (an
+ * earlier version tried; always left a faint gray sliver).
  *
- * NATIVE_W/H is the recorded frame size. CROP_* is the bounding box of
- * the actual phone content within that frame, inset a further 6px past
- * the measured edge as a safety margin. CORNER_R is the bezel's fitted
- * corner radius (~177.5px) plus a 14px safety pad — oversized on
- * purpose so it crops slightly into the bezel rather than risk any
- * black sliver showing; verified corner-by-corner against a bright
- * magenta test background with zero leakage before shipping.
+ * /public/images/flight-matrix-frame.webp sidesteps that: it's a real
+ * device-frame photo with genuine alpha (transparent outside the
+ * phone, opaque bezel + buttons, transparent hole where the screen
+ * goes), laid over the video. The video itself is cropped down to
+ * JUST its screen content (SCREEN_* — no bezel, no background) and
+ * scaled to exactly fill the frame image's hole, so there's no
+ * dependency on the video's own bezel lining up with the frame's ring
+ * — the video never shows any bezel of its own for the frame to hide.
+ * Same frame image works for both light and dark clips since it's a
+ * generic device photo, not tied to either recording.
+ *
+ * NATIVE_W/H is the recorded frame size. SCREEN_* is the video's own
+ * screen-content bounding box (measured from decoded frame pixels).
+ * CANVAS_* and HOLE_* describe the frame image's own geometry
+ * (measured the same way, via its alpha channel); HOLE_RADIUS is the
+ * hole's own (roughly circular) corner radius.
+ *
+ * The video is scaled up ~3x to fill the hole, which means as a plain
+ * rectangle it also covers the wrapper's four actual corners — outside
+ * the phone's rounded silhouette, where the frame image is correctly
+ * transparent, that let the video's own black recording background
+ * show through as hard black squares. So the two videos live inside
+ * their own screenClipStyle wrapper, sized and positioned to exactly
+ * match the hole's rounded-rect bounds (not the full canvas), with
+ * overflow hidden — that's what actually keeps the video's edges
+ * inside the hole; the frame image on top is polish, not the clip.
+ * Percentages throughout (not px) so it holds at any of the carousel's
+ * responsive display widths.
  */
 const NATIVE_W = 938;
 const NATIVE_H = 1920;
-const CROP_L = 20;
-const CROP_T = 25;
-const CROP_R = 917;
-const CROP_B = 1893;
-const CROP_W = CROP_R - CROP_L;
-const CROP_H = CROP_B - CROP_T;
-const CORNER_R = 191.5;
+const SCREEN_L = 50;
+const SCREEN_T = 49;
+const SCREEN_R = 888;
+const SCREEN_B = 1871;
+const SCREEN_W = SCREEN_R - SCREEN_L;
+const SCREEN_H = SCREEN_B - SCREEN_T;
 
+const CANVAS_W = 2886;
+const CANVAS_H = 5965;
+const HOLE_L = 111;
+const HOLE_T = 92;
+const HOLE_R = 2773;
+const HOLE_B = 5876;
+const HOLE_W = HOLE_R - HOLE_L;
+const HOLE_H = HOLE_B - HOLE_T;
+const HOLE_RADIUS = 107;
+// Outer bezel's own corner radius, measured the same way — the
+// wrapper is also clipped to this (belt-and-suspenders on top of the
+// hole clip below), so the composite's silhouette is a clean CSS
+// rounded-rect rather than depending solely on the frame image's own
+// alpha edge.
+const OUTER_RADIUS_H = 485;
+const OUTER_RADIUS_V = 481;
+
+// clip-path (not overflow-hidden + border-radius) on both layers: Safari
+// has a long-documented bug where overflow-hidden + border-radius doesn't
+// reliably clip <video> children — a sliver of the video's own rectangular
+// content (its native black background, in this case) can leak past the
+// rounded corner that Chrome clips correctly. clip-path's inset()...round
+// doesn't have that failure mode, so it's used everywhere here, including
+// on the outer wrapper (an <img>, not a video) for consistency.
 const cropWrapperStyle = {
-  aspectRatio: `${CROP_W} / ${CROP_H}`,
-  borderRadius: `${(CORNER_R / CROP_W) * 100}% / ${(CORNER_R / CROP_H) * 100}%`,
+  aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
+  clipPath: `inset(0 round ${(OUTER_RADIUS_H / CANVAS_W) * 100}% / ${(OUTER_RADIUS_V / CANVAS_H) * 100}%)`,
+};
+
+const screenClipStyle = {
+  left: `${(HOLE_L / CANVAS_W) * 100}%`,
+  top: `${(HOLE_T / CANVAS_H) * 100}%`,
+  width: `${(HOLE_W / CANVAS_W) * 100}%`,
+  height: `${(HOLE_H / CANVAS_H) * 100}%`,
+  clipPath: `inset(0 round ${(HOLE_RADIUS / HOLE_W) * 100}% / ${(HOLE_RADIUS / HOLE_H) * 100}%)`,
 };
 
 const cropVideoStyle = {
-  width: `${(NATIVE_W / CROP_W) * 100}%`,
-  height: `${(NATIVE_H / CROP_H) * 100}%`,
-  left: `${-(CROP_L / CROP_W) * 100}%`,
-  top: `${-(CROP_T / CROP_H) * 100}%`,
+  width: `${(NATIVE_W / SCREEN_W) * 100}%`,
+  height: `${(NATIVE_H / SCREEN_H) * 100}%`,
+  left: `${-(SCREEN_L / SCREEN_W) * 100}%`,
+  top: `${-(SCREEN_T / SCREEN_H) * 100}%`,
 };
 
 /**
  * Full-phone swipeable video demo — one short auto-playing clip per
- * step (bezel baked into the footage, matching every other mockup on
- * the site), native horizontal scroll-snap for touch swipe, dots +
- * arrow buttons for discoverability on non-touch devices.
+ * step (screen content only; the device frame is a separate overlay
+ * image, see above), native horizontal scroll-snap for touch swipe,
+ * dots + arrow buttons for discoverability on non-touch devices.
  *
  * Each step is actually a light/dark PAIR of videos, absolutely
  * stacked and both playing in lockstep — CSS (.theme-video-light/dark
@@ -130,41 +178,38 @@ export function FlightMatrixDemo() {
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
             <div
-              className="relative w-[280px] overflow-hidden drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[300px]"
+              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[300px]"
               style={cropWrapperStyle}
             >
-              <video
-                ref={(el) => {
-                  videoRefs.current[i].light = el;
-                }}
-                src={clip.srcLight}
-                poster={clip.posterLight}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="theme-video-light absolute max-w-none"
-                style={cropVideoStyle}
-              />
-              <video
-                ref={(el) => {
-                  videoRefs.current[i].dark = el;
-                }}
-                src={clip.srcDark}
-                poster={clip.posterDark}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="theme-video-dark absolute max-w-none"
-                style={cropVideoStyle}
-              />
-              {/* Real device-frame photo laid over the CSS-cropped video —
-                  its own alpha edge visually cleans up the video crop's
-                  soft anti-aliased boundary and adds the real side
-                  buttons; the video's own crop above (CROP_L/T/R/B and
-                  CORNER_R) still does the actual clipping, unchanged. */}
-              {/* eslint-disable-next-line @next/next/no-img-element -- decorative overlay, not content; no meaningful alt */}
+              <div className="absolute" style={screenClipStyle}>
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i].light = el;
+                  }}
+                  src={clip.srcLight}
+                  poster={clip.posterLight}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="theme-video-light absolute max-w-none"
+                  style={cropVideoStyle}
+                />
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i].dark = el;
+                  }}
+                  src={clip.srcDark}
+                  poster={clip.posterDark}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="theme-video-dark absolute max-w-none"
+                  style={cropVideoStyle}
+                />
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element -- decorative bezel overlay, not content; no meaningful alt */}
               <img
                 src="/images/flight-matrix-frame.webp"
                 alt=""
