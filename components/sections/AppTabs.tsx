@@ -1,6 +1,7 @@
 import { APP_TABS, type AppTab } from "@/lib/data/appTabs";
 import { Reveal } from "@/components/animations/Reveal";
 import { ArrowRight } from "lucide-react";
+import { DISCVAULT } from "@/lib/constants";
 
 // Extra scroll distance each tab showcase pins for — shorter than the
 // Hero's (these are secondary moments, not the page's opening beat),
@@ -109,7 +110,7 @@ function TabShowcase({ tab, index }: { tab: AppTab; index: number }) {
                 </p>
 
                 <a
-                  href="#"
+                  href={DISCVAULT.appStoreUrl}
                   className="group/cta inline-flex items-center gap-[6px] text-[14px] font-semibold text-accent transition-[gap] duration-200 hover:gap-[10px]"
                 >
                   {tab.exploreLabel}
