@@ -11,28 +11,29 @@ interface VideoPair {
 
 /**
  * The source recordings have no alpha channel (confirmed by inspecting
- * the raw decoded pixels — plain opaque HEVC, black baked into the
- * backdrop) and can't get one after the fact, so instead of true
- * transparency this crops the black margin away with CSS: the wrapper
- * clips to the phone's actual content box, and the video inside is
- * scaled/offset so that box fills the wrapper exactly. All values are
- * percentages (not px) so the crop holds at any of the carousel's
- * responsive display widths.
+ * the raw decoded pixels) and their outer edge is a soft anti-aliased
+ * gradient, not a crisp line — there's no pixel position where a CSS
+ * crop lands cleanly against the page's white background. An earlier
+ * version cropped to the silhouette with CSS border-radius, which got
+ * the shape close but always left a faint gray sliver of that gradient
+ * showing against white.
  *
- * NATIVE_W/H is the recorded frame size. CROP_* is the true outer
- * bounding box of the phone silhouette, measured directly from decoded
- * frame pixels (sub-pixel edge threshold, not eyeballed).
+ * Instead, /public/images/flight-matrix-frame.webp is a real bezel
+ * image with genuine alpha — transparent outside the phone, opaque
+ * bezel ring, and a transparent hole where the screen goes — built by
+ * masking a captured frame with a precisely fit rounded-rect (ellipse
+ * corners, not circular: measuring all four corners showed the
+ * horizontal radius, ~181px native, is consistently larger than the
+ * vertical, ~160px). It's laid over the video so only the screen
+ * content shows through; the frame's own crisp, anti-aliased alpha
+ * defines the visible corner, not a runtime CSS approximation of the
+ * footage's fuzzy edge. Same frame image works for both light and
+ * dark clips — it's the same physical device in both recordings.
  *
- * The corner is NOT a circle — measuring all four corners separately
- * showed the horizontal radius (~181px) is consistently larger than
- * the vertical radius (~160px) in native pixels, so CORNER_RH/RV are
- * fit independently per axis instead of forcing one radius both ways.
- * An earlier version used a single oversized radius (191.5px, padded
- * "for safety") for both axes — since the box isn't square, that
- * padding bent the rendered arc away from the source bezel's actual
- * curve, which is what made the corners look flattened/uneven instead
- * of matching the phone in the footage. Verified corner-by-corner
- * against a bright magenta test background with zero leakage.
+ * NATIVE_W/H is the recorded frame size; CROP_* is the outer bounding
+ * box the frame image was built from, used to position the video
+ * beneath it at matching scale (percentages, not px, so it holds at
+ * any of the carousel's responsive display widths).
  */
 const NATIVE_W = 938;
 const NATIVE_H = 1920;
@@ -42,12 +43,9 @@ const CROP_R = 917;
 const CROP_B = 1899;
 const CROP_W = CROP_R - CROP_L;
 const CROP_H = CROP_B - CROP_T;
-const CORNER_RH = 181;
-const CORNER_RV = 160;
 
 const cropWrapperStyle = {
   aspectRatio: `${CROP_W} / ${CROP_H}`,
-  borderRadius: `${(CORNER_RH / CROP_W) * 100}% / ${(CORNER_RV / CROP_H) * 100}%`,
 };
 
 const cropVideoStyle = {
@@ -166,6 +164,13 @@ export function FlightMatrixDemo() {
                 preload="metadata"
                 className="theme-video-dark absolute max-w-none"
                 style={cropVideoStyle}
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element -- decorative bezel overlay, not content; no meaningful alt */}
+              <img
+                src="/images/flight-matrix-frame.webp"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 h-full w-full"
               />
             </div>
             <p className="mt-6 max-w-[280px] text-center text-[14px] font-medium text-muted">
