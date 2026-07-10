@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
+import { ChevronDown } from "lucide-react";
 import { DISCVAULT } from "@/lib/constants";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -45,7 +46,7 @@ export function PartnerForm() {
     return (
       <div
         role="status"
-        className="rounded-[18px] bg-white p-8 text-center shadow-[0_12px_40px_rgba(0,0,0,0.08)] ring-1 ring-ink/5"
+        className="rounded-[18px] bg-surface p-8 text-center shadow-[0_12px_40px_rgba(0,0,0,0.08)] ring-1 ring-ink/5"
       >
         <div
           className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent-pale text-accent"
@@ -89,7 +90,7 @@ export function PartnerForm() {
     <form
       onSubmit={handleSubmit}
       aria-labelledby="partner-form-heading"
-      className="rounded-[18px] bg-white p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] ring-1 ring-ink/5 sm:p-8"
+      className="rounded-[18px] bg-surface p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] ring-1 ring-ink/5 sm:p-8"
     >
       <p
         className="mb-2 text-[11px] font-semibold uppercase text-accent"
@@ -116,28 +117,29 @@ export function PartnerForm() {
           >
             Reason
           </label>
-          <select
-            id={reasonId}
-            name="reason"
-            defaultValue=""
-            required
-            className="block w-full appearance-none rounded-lg border border-border bg-white px-4 py-[11px] pr-10 text-[14px] text-ink transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23000000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\")",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 14px center",
-            }}
-          >
-            <option value="" disabled>
-              Select a reason…
-            </option>
-            {REASONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
+          <div className="relative">
+            <select
+              id={reasonId}
+              name="reason"
+              defaultValue=""
+              required
+              className="block w-full appearance-none rounded-lg border border-border bg-paper px-4 py-[11px] pr-10 text-[14px] text-ink transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+            >
+              <option value="" disabled>
+                Select a reason…
               </option>
-            ))}
-          </select>
+              {REASONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute right-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-soft/60"
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+          </div>
         </div>
         <div className="sm:col-span-2">
           <label
@@ -152,7 +154,7 @@ export function PartnerForm() {
             name="message"
             rows={3}
             placeholder="Tell us a bit more…"
-            className="block w-full resize-y rounded-lg border border-border bg-white px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+            className="block w-full resize-y rounded-lg border border-border bg-paper px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
           />
         </div>
       </div>
@@ -160,7 +162,7 @@ export function PartnerForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-ink px-7 py-[14px] text-[14px] font-bold text-white transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
+        className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-ink px-7 py-[14px] text-[14px] font-bold text-paper transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
       >
         {status === "submitting" ? (
           <>
@@ -217,7 +219,7 @@ function Field({ id, label, name, type, autoComplete, required }: FieldProps) {
         type={type}
         autoComplete={autoComplete}
         required={required}
-        className="block w-full rounded-lg border border-border bg-white px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+        className="block w-full rounded-lg border border-border bg-paper px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
       />
     </div>
   );
@@ -226,7 +228,7 @@ function Field({ id, label, name, type, autoComplete, required }: FieldProps) {
 function Spinner() {
   return (
     <svg
-      className="h-4 w-4 animate-spin text-white"
+      className="h-4 w-4 animate-spin text-paper"
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
