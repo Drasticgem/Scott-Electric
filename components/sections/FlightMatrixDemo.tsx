@@ -62,9 +62,17 @@ const HOLE_B = 5876;
 const HOLE_W = HOLE_R - HOLE_L;
 const HOLE_H = HOLE_B - HOLE_T;
 const HOLE_RADIUS = 107;
+// Outer bezel's own corner radius, measured the same way — the
+// wrapper is also clipped to this (belt-and-suspenders on top of the
+// hole clip below), so the composite's silhouette is a clean CSS
+// rounded-rect rather than depending solely on the frame image's own
+// alpha edge.
+const OUTER_RADIUS_H = 485;
+const OUTER_RADIUS_V = 481;
 
 const cropWrapperStyle = {
   aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
+  borderRadius: `${(OUTER_RADIUS_H / CANVAS_W) * 100}% / ${(OUTER_RADIUS_V / CANVAS_H) * 100}%`,
 };
 
 const screenClipStyle = {
@@ -163,7 +171,7 @@ export function FlightMatrixDemo() {
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
             <div
-              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
+              className="relative w-[280px] overflow-hidden drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
               style={cropWrapperStyle}
             >
               <div className="absolute overflow-hidden" style={screenClipStyle}>
