@@ -1,26 +1,19 @@
 "use client";
 
-import { useId, useState, type FormEvent } from "react";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown } from "lucide-react";
 import { DISCVAULT } from "@/lib/constants";
+import { contactFormSchema, REASONS, type ContactFormValues } from "@/lib/schemas/contact";
+import { submitContactForm } from "@/app/actions/contact";
 
-type Status = "idle" | "submitting" | "success" | "error";
-
-const REASONS = [
-  "I'm a player",
-  "I'm a retailer",
-  "I'm a disc brand",
-  "I need support",
-  "I want to partner",
-  "I found incorrect disc data",
-] as const;
+type Status = "idle" | "success" | "error";
 
 /**
- * Partner / support form embedded in the closing CTA.
- *
- * Submission is stubbed until a server action + Resend are wired up —
- * the UX (loading state, success screen, error fallback to email) is
- * production-shaped so swapping in a real handler is a one-line change.
+ * Partner / support form embedded in the closing CTA. Client-side validation
+ * (React Hook Form + the shared Zod schema) is a UX nicety only — the server
+ * action re-validates the same schema before ever calling Resend.
  */
 export function PartnerForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -29,17 +22,23 @@ export function PartnerForm() {
   const reasonId = useId();
   const messageId = useId();
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (status === "submitting") return;
-    setStatus("submitting");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+  });
 
-    try {
-      await new Promise((r) => setTimeout(r, 650));
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+  async function onSubmit(values: ContactFormValues) {
+    const formData = new FormData();
+    formData.set("name", values.name);
+    formData.set("email", values.email);
+    formData.set("reason", values.reason);
+    formData.set("message", values.message ?? "");
+
+    const result = await submitContactForm(formData);
+    setStatus(result.ok ? "success" : "error");
   }
 
   if (status === "success") {
@@ -88,7 +87,7 @@ export function PartnerForm() {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       aria-labelledby="partner-form-heading"
       className="rounded-[18px] bg-surface p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] ring-1 ring-ink/5 sm:p-8"
     >
@@ -107,8 +106,22 @@ export function PartnerForm() {
       </h3>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field id={nameId} label="Name" name="name" type="text" autoComplete="name" required />
-        <Field id={emailId} label="Email" name="email" type="email" autoComplete="email" required />
+        <Field
+          id={nameId}
+          label="Name"
+          type="text"
+          autoComplete="name"
+          error={errors.name?.message}
+          {...register("name")}
+        />
+        <Field
+          id={emailId}
+          label="Email"
+          type="email"
+          autoComplete="email"
+          error={errors.email?.message}
+          {...register("email")}
+        />
         <div className="sm:col-span-2">
           <label
             htmlFor={reasonId}
@@ -120,10 +133,9 @@ export function PartnerForm() {
           <div className="relative">
             <select
               id={reasonId}
-              name="reason"
               defaultValue=""
-              required
               className="block w-full appearance-none rounded-lg border border-border bg-paper px-4 py-[11px] pr-10 text-[14px] text-ink transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+              {...register("reason")}
             >
               <option value="" disabled>
                 Select a reason…
@@ -140,6 +152,9 @@ export function PartnerForm() {
               aria-hidden="true"
             />
           </div>
+          {errors.reason && (
+            <p className="mt-1 text-[12px] text-red-600">{errors.reason.message}</p>
+          )}
         </div>
         <div className="sm:col-span-2">
           <label
@@ -151,20 +166,20 @@ export function PartnerForm() {
           </label>
           <textarea
             id={messageId}
-            name="message"
             rows={3}
             placeholder="Tell us a bit more…"
             className="block w-full resize-y rounded-lg border border-border bg-paper px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+            {...register("message")}
           />
         </div>
       </div>
 
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={isSubmitting}
         className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-ink px-7 py-[14px] text-[14px] font-bold text-paper transition-[background,transform] duration-200 hover:-translate-y-px hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
       >
-        {status === "submitting" ? (
+        {isSubmitting ? (
           <>
             <Spinner />
             <span className="ml-2">Sending…</span>
@@ -197,13 +212,16 @@ export function PartnerForm() {
 type FieldProps = {
   id: string;
   label: string;
-  name: string;
   type: "text" | "email";
   autoComplete: string;
-  required?: boolean;
+  error?: string;
+  name: string;
+  onChange: React.ChangeEventHandler;
+  onBlur: React.ChangeEventHandler;
+  ref: React.Ref<HTMLInputElement>;
 };
 
-function Field({ id, label, name, type, autoComplete, required }: FieldProps) {
+function Field({ id, label, type, autoComplete, error, ...field }: FieldProps) {
   return (
     <div>
       <label
@@ -215,12 +233,12 @@ function Field({ id, label, name, type, autoComplete, required }: FieldProps) {
       </label>
       <input
         id={id}
-        name={name}
         type={type}
         autoComplete={autoComplete}
-        required={required}
         className="block w-full rounded-lg border border-border bg-paper px-4 py-[11px] text-[14px] text-ink placeholder:text-ink/30 transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
+        {...field}
       />
+      {error && <p className="mt-1 text-[12px] text-red-600">{error}</p>}
     </div>
   );
 }

@@ -5,6 +5,8 @@
 export const DISCVAULT = {
   name: "DiscVault",
   tagline: "Your collection matters.",
+  // Must be a domain verified in Resend before contact-form emails can send.
+  emailDomain: "discvault.app",
   email: "hello@discvault.app",
   emailHref: "mailto:hello@discvault.app",
   supportEmail: "support@discvault.app",
