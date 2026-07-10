@@ -159,18 +159,6 @@ export function FlightMatrixDemo() {
                 className="theme-video-dark absolute max-w-none"
                 style={cropVideoStyle}
               />
-              {/* Real device-frame photo laid over the CSS-cropped video —
-                  its own alpha edge visually cleans up the video crop's
-                  soft anti-aliased boundary and adds the real side
-                  buttons; the video's own crop above (CROP_L/T/R/B and
-                  CORNER_R) still does the actual clipping, unchanged. */}
-              {/* eslint-disable-next-line @next/next/no-img-element -- decorative overlay, not content; no meaningful alt */}
-              <img
-                src="/images/flight-matrix-frame.webp"
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 h-full w-full"
-              />
             </div>
             <p className="mt-6 max-w-[280px] text-center text-[14px] font-medium text-muted">
               {clip.caption}
