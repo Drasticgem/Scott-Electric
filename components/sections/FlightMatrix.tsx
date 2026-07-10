@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/animations/Reveal";
-import { FlightMatrixDemo } from "@/components/sections/FlightMatrixDemo";
+import { VideoDemoCarousel } from "@/components/sections/VideoDemoCarousel";
+import { FLIGHT_MATRIX_CLIPS } from "@/lib/data/flightMatrixDemo";
 
 /**
  * FlightMatrix — spotlight section for the app's disc scatter-plot
@@ -8,11 +9,12 @@ import { FlightMatrixDemo } from "@/components/sections/FlightMatrixDemo";
  * rather than being buried inside the Bags tab panel.
  *
  * Demo is a full-phone, swipeable, autoplaying video sequence (see
- * FlightMatrixDemo) instead of the Hero/Vault-style scroll-pinned
- * zoom — a deliberately different, more App-Store-preview-like
- * interaction for this section. Section height isn't fixed to the
- * viewport, so it's free to grow taller than a standard py-24 section
- * to fit the full phone comfortably.
+ * VideoDemoCarousel, shared with the Quick Actions section) instead
+ * of the Hero/Vault-style scroll-pinned zoom — a deliberately
+ * different, more App-Store-preview-like interaction for this
+ * section. Section height isn't fixed to the viewport, so it's free
+ * to grow taller than a standard py-24 section to fit the full phone
+ * comfortably.
  */
 export function FlightMatrix() {
   return (
@@ -47,7 +49,7 @@ export function FlightMatrix() {
         </Reveal>
 
         <Reveal>
-          <FlightMatrixDemo />
+          <VideoDemoCarousel clips={FLIGHT_MATRIX_CLIPS} />
         </Reveal>
       </div>
     </section>

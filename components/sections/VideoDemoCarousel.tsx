@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { FLIGHT_MATRIX_CLIPS } from "@/lib/data/flightMatrixDemo";
+import type { VideoDemoClip } from "@/lib/data/videoDemo";
 
 interface VideoPair {
   light: HTMLVideoElement | null;
@@ -15,22 +15,27 @@ const NATIVE_W = 938;
 const NATIVE_H = 1920;
 
 /**
- * No crop, no frame overlay, no clip-path. The recordings' own backdrop
- * is now exported as a flat, exact match for the page background —
- * #FFFFFF behind the light clip, #000000 behind the dark clip, the same
- * hex values as --color-paper in both themes (see globals.css) — so the
- * video's rectangular edge is literally indistinguishable from the page
- * around it. Every earlier version of this component existed to paper
- * over a mismatched backdrop (soft gray anti-aliasing, a black margin,
- * Safari clip bugs); with a matching backdrop there's nothing left to
- * paper over.
+ * Full-phone swipeable video demo — one short auto-playing clip per
+ * step, native horizontal scroll-snap for touch swipe, dots + arrow
+ * buttons for discoverability on non-touch devices. Shared between the
+ * Flight Matrix and Quick Actions sections (see VideoDemoClip for the
+ * backdrop-matching requirement that keeps this crop/mask-free).
+ *
+ * Each step is actually a light/dark PAIR of videos, absolutely
+ * stacked and both playing in lockstep — CSS (.theme-video-light/dark
+ * in globals.css) hides whichever doesn't match prefers-color-scheme.
+ * Swapping a <source> on theme change would restart/flash the clip;
+ * keeping both running and just toggling visibility switches instantly
+ * with zero desync.
+ *
+ * Only the active (>=60% visible) slide's pair plays — every other
+ * slide's pair stays paused, so at most 2 clips are ever decoding at
+ * once regardless of how many steps there are.
  */
-export function FlightMatrixDemo() {
+export function VideoDemoCarousel({ clips }: { clips: VideoDemoClip[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const videoRefs = useRef<VideoPair[]>(
-    FLIGHT_MATRIX_CLIPS.map(() => ({ light: null, dark: null })),
-  );
+  const videoRefs = useRef<VideoPair[]>(clips.map(() => ({ light: null, dark: null })));
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -80,7 +85,7 @@ export function FlightMatrixDemo() {
         ref={trackRef}
         className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
       >
-        {FLIGHT_MATRIX_CLIPS.map((clip, i) => (
+        {clips.map((clip, i) => (
           <div
             key={clip.caption}
             ref={(el) => {
@@ -126,7 +131,7 @@ export function FlightMatrixDemo() {
 
       {/* Dots */}
       <div className="mt-6 flex items-center justify-center gap-2">
-        {FLIGHT_MATRIX_CLIPS.map((clip, i) => (
+        {clips.map((clip, i) => (
           <button
             key={clip.caption}
             type="button"
@@ -153,10 +158,8 @@ export function FlightMatrixDemo() {
       <button
         type="button"
         aria-label="Next step"
-        onClick={() =>
-          scrollToIndex(Math.min(FLIGHT_MATRIX_CLIPS.length - 1, activeIndex + 1))
-        }
-        disabled={activeIndex === FLIGHT_MATRIX_CLIPS.length - 1}
+        onClick={() => scrollToIndex(Math.min(clips.length - 1, activeIndex + 1))}
+        disabled={activeIndex === clips.length - 1}
         className="absolute right-2 top-1/2 hidden -translate-y-1/2 rounded-full border border-border bg-paper p-2 shadow-md transition-opacity duration-200 hover:bg-surface disabled:opacity-30 lg:flex"
       >
         <ChevronRight className="h-5 w-5 text-ink" strokeWidth={2} aria-hidden="true" />
