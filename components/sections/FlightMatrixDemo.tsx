@@ -29,9 +29,20 @@ interface VideoPair {
  * NATIVE_W/H is the recorded frame size. SCREEN_* is the video's own
  * screen-content bounding box (measured from decoded frame pixels).
  * CANVAS_* and HOLE_* describe the frame image's own geometry
- * (measured the same way, via its alpha channel). scaleX/Y map screen
- * pixels to hole pixels; percentages (not px) so it holds at any of
- * the carousel's responsive display widths.
+ * (measured the same way, via its alpha channel); HOLE_RADIUS is the
+ * hole's own (roughly circular) corner radius.
+ *
+ * The video is scaled up ~3x to fill the hole, which means as a plain
+ * rectangle it also covers the wrapper's four actual corners — outside
+ * the phone's rounded silhouette, where the frame image is correctly
+ * transparent, that let the video's own black recording background
+ * show through as hard black squares. So the two videos live inside
+ * their own screenClipStyle wrapper, sized and positioned to exactly
+ * match the hole's rounded-rect bounds (not the full canvas), with
+ * overflow hidden — that's what actually keeps the video's edges
+ * inside the hole; the frame image on top is polish, not the clip.
+ * Percentages throughout (not px) so it holds at any of the carousel's
+ * responsive display widths.
  */
 const NATIVE_W = 938;
 const NATIVE_H = 1920;
@@ -39,6 +50,8 @@ const SCREEN_L = 50;
 const SCREEN_T = 49;
 const SCREEN_R = 888;
 const SCREEN_B = 1871;
+const SCREEN_W = SCREEN_R - SCREEN_L;
+const SCREEN_H = SCREEN_B - SCREEN_T;
 
 const CANVAS_W = 2886;
 const CANVAS_H = 5965;
@@ -46,19 +59,27 @@ const HOLE_L = 111;
 const HOLE_T = 92;
 const HOLE_R = 2773;
 const HOLE_B = 5876;
-
-const scaleX = (HOLE_R - HOLE_L) / (SCREEN_R - SCREEN_L);
-const scaleY = (HOLE_B - HOLE_T) / (SCREEN_B - SCREEN_T);
+const HOLE_W = HOLE_R - HOLE_L;
+const HOLE_H = HOLE_B - HOLE_T;
+const HOLE_RADIUS = 107;
 
 const cropWrapperStyle = {
   aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
 };
 
+const screenClipStyle = {
+  left: `${(HOLE_L / CANVAS_W) * 100}%`,
+  top: `${(HOLE_T / CANVAS_H) * 100}%`,
+  width: `${(HOLE_W / CANVAS_W) * 100}%`,
+  height: `${(HOLE_H / CANVAS_H) * 100}%`,
+  borderRadius: `${(HOLE_RADIUS / HOLE_W) * 100}% / ${(HOLE_RADIUS / HOLE_H) * 100}%`,
+};
+
 const cropVideoStyle = {
-  width: `${((NATIVE_W * scaleX) / CANVAS_W) * 100}%`,
-  height: `${((NATIVE_H * scaleY) / CANVAS_H) * 100}%`,
-  left: `${((HOLE_L - SCREEN_L * scaleX) / CANVAS_W) * 100}%`,
-  top: `${((HOLE_T - SCREEN_T * scaleY) / CANVAS_H) * 100}%`,
+  width: `${(NATIVE_W / SCREEN_W) * 100}%`,
+  height: `${(NATIVE_H / SCREEN_H) * 100}%`,
+  left: `${-(SCREEN_L / SCREEN_W) * 100}%`,
+  top: `${-(SCREEN_T / SCREEN_H) * 100}%`,
 };
 
 /**
@@ -142,35 +163,37 @@ export function FlightMatrixDemo() {
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
             <div
-              className="relative w-[280px] overflow-hidden drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
+              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
               style={cropWrapperStyle}
             >
-              <video
-                ref={(el) => {
-                  videoRefs.current[i].light = el;
-                }}
-                src={clip.srcLight}
-                poster={clip.posterLight}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="theme-video-light absolute max-w-none"
-                style={cropVideoStyle}
-              />
-              <video
-                ref={(el) => {
-                  videoRefs.current[i].dark = el;
-                }}
-                src={clip.srcDark}
-                poster={clip.posterDark}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="theme-video-dark absolute max-w-none"
-                style={cropVideoStyle}
-              />
+              <div className="absolute overflow-hidden" style={screenClipStyle}>
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i].light = el;
+                  }}
+                  src={clip.srcLight}
+                  poster={clip.posterLight}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="theme-video-light absolute max-w-none"
+                  style={cropVideoStyle}
+                />
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i].dark = el;
+                  }}
+                  src={clip.srcDark}
+                  poster={clip.posterDark}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="theme-video-dark absolute max-w-none"
+                  style={cropVideoStyle}
+                />
+              </div>
               {/* eslint-disable-next-line @next/next/no-img-element -- decorative bezel overlay, not content; no meaningful alt */}
               <img
                 src="/images/flight-matrix-frame.webp"
