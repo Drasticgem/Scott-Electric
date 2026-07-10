@@ -20,9 +20,9 @@ export function FlightMatrix() {
       aria-label="Flight matrix"
       className="border-t border-border bg-paper py-24 max-[768px]:py-16"
     >
-      <div className="container-1140">
+      <div className="container-1140 grid grid-cols-1 items-center lg:grid-cols-2 lg:gap-16">
         <Reveal>
-          <div className="mb-12 max-w-[560px] text-left">
+          <div className="mb-12 max-w-[560px] text-left lg:mb-0">
             <p
               className="mb-3 text-[10px] font-semibold uppercase text-accent"
               style={{ letterSpacing: "0.22em" }}

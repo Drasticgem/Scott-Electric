@@ -70,9 +70,16 @@ const HOLE_RADIUS = 107;
 const OUTER_RADIUS_H = 485;
 const OUTER_RADIUS_V = 481;
 
+// clip-path (not overflow-hidden + border-radius) on both layers: Safari
+// has a long-documented bug where overflow-hidden + border-radius doesn't
+// reliably clip <video> children — a sliver of the video's own rectangular
+// content (its native black background, in this case) can leak past the
+// rounded corner that Chrome clips correctly. clip-path's inset()...round
+// doesn't have that failure mode, so it's used everywhere here, including
+// on the outer wrapper (an <img>, not a video) for consistency.
 const cropWrapperStyle = {
   aspectRatio: `${CANVAS_W} / ${CANVAS_H}`,
-  borderRadius: `${(OUTER_RADIUS_H / CANVAS_W) * 100}% / ${(OUTER_RADIUS_V / CANVAS_H) * 100}%`,
+  clipPath: `inset(0 round ${(OUTER_RADIUS_H / CANVAS_W) * 100}% / ${(OUTER_RADIUS_V / CANVAS_H) * 100}%)`,
 };
 
 const screenClipStyle = {
@@ -80,7 +87,7 @@ const screenClipStyle = {
   top: `${(HOLE_T / CANVAS_H) * 100}%`,
   width: `${(HOLE_W / CANVAS_W) * 100}%`,
   height: `${(HOLE_H / CANVAS_H) * 100}%`,
-  borderRadius: `${(HOLE_RADIUS / HOLE_W) * 100}% / ${(HOLE_RADIUS / HOLE_H) * 100}%`,
+  clipPath: `inset(0 round ${(HOLE_RADIUS / HOLE_W) * 100}% / ${(HOLE_RADIUS / HOLE_H) * 100}%)`,
 };
 
 const cropVideoStyle = {
@@ -171,10 +178,10 @@ export function FlightMatrixDemo() {
             className="flex w-full shrink-0 snap-center flex-col items-center justify-center px-6"
           >
             <div
-              className="relative w-[280px] overflow-hidden drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
+              className="relative w-[280px] drop-shadow-[0_30px_60px_rgba(0,0,0,0.18)] max-[480px]:w-[240px] sm:w-[320px] lg:w-[400px]"
               style={cropWrapperStyle}
             >
-              <div className="absolute overflow-hidden" style={screenClipStyle}>
+              <div className="absolute" style={screenClipStyle}>
                 <video
                   ref={(el) => {
                     videoRefs.current[i].light = el;
