@@ -19,27 +19,35 @@ interface VideoPair {
  * percentages (not px) so the crop holds at any of the carousel's
  * responsive display widths.
  *
- * NATIVE_W/H is the recorded frame size. CROP_* is the bounding box of
- * the actual phone content within that frame, inset a further 6px past
- * the measured edge as a safety margin. CORNER_R is the bezel's fitted
- * corner radius (~177.5px) plus a 14px safety pad — oversized on
- * purpose so it crops slightly into the bezel rather than risk any
- * black sliver showing; verified corner-by-corner against a bright
- * magenta test background with zero leakage before shipping.
+ * NATIVE_W/H is the recorded frame size. CROP_* is the true outer
+ * bounding box of the phone silhouette, measured directly from decoded
+ * frame pixels (sub-pixel edge threshold, not eyeballed).
+ *
+ * The corner is NOT a circle — measuring all four corners separately
+ * showed the horizontal radius (~181px) is consistently larger than
+ * the vertical radius (~160px) in native pixels, so CORNER_RH/RV are
+ * fit independently per axis instead of forcing one radius both ways.
+ * An earlier version used a single oversized radius (191.5px, padded
+ * "for safety") for both axes — since the box isn't square, that
+ * padding bent the rendered arc away from the source bezel's actual
+ * curve, which is what made the corners look flattened/uneven instead
+ * of matching the phone in the footage. Verified corner-by-corner
+ * against a bright magenta test background with zero leakage.
  */
 const NATIVE_W = 938;
 const NATIVE_H = 1920;
 const CROP_L = 20;
-const CROP_T = 25;
+const CROP_T = 19;
 const CROP_R = 917;
-const CROP_B = 1893;
+const CROP_B = 1899;
 const CROP_W = CROP_R - CROP_L;
 const CROP_H = CROP_B - CROP_T;
-const CORNER_R = 191.5;
+const CORNER_RH = 181;
+const CORNER_RV = 160;
 
 const cropWrapperStyle = {
   aspectRatio: `${CROP_W} / ${CROP_H}`,
-  borderRadius: `${(CORNER_R / CROP_W) * 100}% / ${(CORNER_R / CROP_H) * 100}%`,
+  borderRadius: `${(CORNER_RH / CROP_W) * 100}% / ${(CORNER_RV / CROP_H) * 100}%`,
 };
 
 const cropVideoStyle = {
