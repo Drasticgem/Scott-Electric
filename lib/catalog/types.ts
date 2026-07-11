@@ -10,6 +10,7 @@ export interface PublicCatalogDisc {
   flightNumbers: FlightNumbers;
   imageUrl?: string | null;
   brandLogoUrl?: string | null;
+  flightChartImage?: string | null;
   color: string;
   flightSummary?: string | null;
   whatToExpect?: string | null;
