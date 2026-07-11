@@ -78,6 +78,18 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
             <InfoCard title="Flight Summary" body={flightSummary} />
             <InfoCard title="What to Expect" body={whatToExpect} />
             <InfoCard title="Brand Context" body={brandContext} />
+
+            {disc.flightChartImage && (
+              <div className="rounded-[30px] bg-paper p-7 shadow-sm max-[480px]:p-6">
+                <h2 className="mb-4 text-[20px] font-black text-ink">Flight Chart</h2>
+                {/* eslint-disable-next-line @next/next/no-img-element -- catalog flight chart images are remote Supabase/public URLs with unknown domains. */}
+                <img
+                  src={disc.flightChartImage}
+                  alt={`${disc.mold} flight chart`}
+                  className="mx-auto h-auto w-full max-w-[320px]"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -9,6 +9,11 @@ const TABLE_NAME = process.env.SUPABASE_CATALOG_TABLE || "discs";
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 60;
 
+// Only the columns the catalog UI actually renders — not a full `select("*")`.
+// Extend this list deliberately as new fields get wired into the UI.
+const SELECT_COLUMNS =
+  "id,brand,brand_slug,mold_name,category,speed,glide,turn,fade,image_url,color,flight_chart_image";
+
 function asString(row: CatalogRow, keys: string[], fallback = "") {
   for (const key of keys) {
     const value = row[key];
@@ -58,6 +63,7 @@ function normalizeDisc(row: CatalogRow, index: number): PublicCatalogDisc {
     flightNumbers,
     imageUrl: asNullableString(row, ["image_url", "disc_image_url", "image", "photo_url"]),
     brandLogoUrl: asNullableString(row, ["brand_logo_url", "logo_url", "manufacturer_logo_url"]),
+    flightChartImage: asNullableString(row, ["flight_chart_image"]),
     color,
     flightSummary: asNullableString(row, ["flight_summary", "summary", "description"]),
     whatToExpect: asNullableString(row, ["what_to_expect", "flight_notes", "expectations"]),
@@ -82,14 +88,12 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
   const supabase = getSupabaseServerClient();
   if (!supabase) return filterFallback(query, boundedLimit);
 
-  let request = supabase.from(TABLE_NAME).select("*").limit(boundedLimit);
+  let request = supabase.from(TABLE_NAME).select(SELECT_COLUMNS).limit(boundedLimit);
   const term = query?.trim();
 
   if (term) {
     const escaped = term.replaceAll("%", "\\%").replaceAll("_", "\\_");
-    request = request.or(
-      `brand.ilike.%${escaped}%,brand_name.ilike.%${escaped}%,mold.ilike.%${escaped}%,mold_name.ilike.%${escaped}%,name.ilike.%${escaped}%`,
-    );
+    request = request.or(`brand.ilike.%${escaped}%,mold_name.ilike.%${escaped}%`);
   }
 
   const { data, error } = await request;
@@ -106,7 +110,7 @@ export async function getCatalogDiscBySlug(slug: string) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback ?? null;
 
-  const { data, error } = await supabase.from(TABLE_NAME).select("*").eq("id", slug).limit(1).maybeSingle();
+  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle();
   if (error || !data) return fallback ?? null;
   return normalizeDisc(data, 0);
 }
