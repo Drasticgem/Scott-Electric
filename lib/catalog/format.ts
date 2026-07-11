@@ -7,12 +7,6 @@ export function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function titleFromQuery(value?: string) {
-  const query = value?.trim();
-  if (!query) return "Catalog";
-  return query.toUpperCase();
-}
-
 export function colorFromString(value: string) {
   const palette = [
     "#5b4bda",
