@@ -1,0 +1,22 @@
+export type FlightNumbers = [number, number, number, number];
+
+export interface PublicCatalogDisc {
+  id: string;
+  slug: string;
+  brand: string;
+  brandSlug: string;
+  mold: string;
+  category: string;
+  flightNumbers: FlightNumbers;
+  imageUrl?: string | null;
+  brandLogoUrl?: string | null;
+  color: string;
+  flightSummary?: string | null;
+  whatToExpect?: string | null;
+  brandContext?: string | null;
+}
+
+export interface CatalogSearchParams {
+  query?: string;
+  limit?: number;
+}

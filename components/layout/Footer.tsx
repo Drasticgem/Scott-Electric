@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 
 const PRODUCT = [
   { href: "#features", label: "Features" },
-  { href: "#catalog", label: "Catalog" },
+  { href: "/catalog", label: "Catalog" },
   { href: DISCVAULT.appStoreUrl, label: "Download" },
 ];
 
