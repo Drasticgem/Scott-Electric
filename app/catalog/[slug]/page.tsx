@@ -32,6 +32,9 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
   if (!disc) notFound();
 
   const [speed, glide, turn, fade] = disc.flightNumbers;
+  const hasRightColumn = Boolean(
+    disc.flightChartImage || disc.flightSummary || disc.whatToExpect || disc.brandContext,
+  );
 
   return (
     <section className="min-h-screen bg-surface py-14 max-[768px]:py-8">
@@ -40,7 +43,7 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
           ← Back to catalog
         </a>
 
-        <div className={disc.flightChartImage ? "grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch" : ""}>
+        <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start" : ""}>
           <div className="space-y-6">
             <div className="rounded-[38px] bg-paper p-10 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-6">
               <div className="mb-6 flex min-h-10 items-center justify-center">
@@ -75,20 +78,39 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
             <FlightNumbersCard flightNumbers={[speed, glide, turn, fade]} />
           </div>
 
-          {disc.flightChartImage && (
-            <div className="flex flex-col rounded-[30px] bg-paper p-8 shadow-sm max-[480px]:p-6">
-              <h2 className="mb-4 text-[20px] font-black text-ink">Flight Chart</h2>
-              {/* eslint-disable-next-line @next/next/no-img-element -- catalog flight chart images are remote Supabase/public URLs with unknown domains. */}
-              <img
-                src={disc.flightChartImage}
-                alt={`${disc.mold} flight chart`}
-                className="mx-auto h-auto w-full max-w-[360px] flex-1 rounded-[22px] object-contain"
-              />
+          {hasRightColumn && (
+            <div className="space-y-6">
+              {disc.flightSummary && <InfoCard title="Flight Summary" body={disc.flightSummary} />}
+              {disc.whatToExpect && <InfoCard title="What to Expect" body={disc.whatToExpect} />}
+              {disc.brandContext && <InfoCard title="Brand Context" body={disc.brandContext} />}
+
+              {disc.flightChartImage && (
+                <div className="flex flex-col rounded-[30px] bg-paper p-8 shadow-sm max-[480px]:p-6">
+                  <h2 className="mb-4 text-[20px] font-black text-ink">Flight Chart</h2>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- catalog flight chart images are remote Supabase/public URLs with unknown domains. */}
+                  <img
+                    src={disc.flightChartImage}
+                    alt={`${disc.mold} flight chart`}
+                    className="mx-auto h-auto w-full max-w-[360px] rounded-[22px] object-contain"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
     </section>
+  );
+}
+
+function InfoCard({ title, body }: { title: string; body: string }) {
+  return (
+    <article className="rounded-[30px] bg-paper p-7 shadow-sm max-[480px]:p-6">
+      <h2 className="mb-4 text-[20px] font-black text-ink">{title}</h2>
+      <p className="text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-ink-soft max-[768px]:text-[18px]">
+        {body}
+      </p>
+    </article>
   );
 }
 

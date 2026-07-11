@@ -9,6 +9,8 @@ type BrandLogoMap = Record<string, string>;
 
 const TABLE_NAME = process.env.SUPABASE_CATALOG_TABLE || "discs";
 const BRANDS_TABLE_NAME = process.env.SUPABASE_BRANDS_TABLE || "brands";
+const DISC_CONTEXTS_TABLE_NAME = process.env.SUPABASE_DISC_CONTEXTS_TABLE || "disc_contexts";
+const BRAND_CONTEXTS_TABLE_NAME = process.env.SUPABASE_BRAND_CONTEXTS_TABLE || "brand_contexts";
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 60;
 
@@ -56,6 +58,35 @@ async function getBrandLogoMap(supabase: SupabaseClient): Promise<BrandLogoMap> 
     if (slug && logoUrl) map[slug] = logoUrl;
   }
   return map;
+}
+
+// Detail-page-only content — a disc's write-up (disc_contexts) and its
+// brand's write-up (brand_contexts). Not fetched for list/search results,
+// which never render this text. Each has several rotating content
+// variations per disc/brand (a "version" column) — always take the lowest
+// version present so the public page reads the same copy on every visit
+// instead of a random variant.
+async function getDiscContext(supabase: SupabaseClient, brand: string, mold: string) {
+  const { data } = await supabase
+    .from(DISC_CONTEXTS_TABLE_NAME)
+    .select("disc_summary,what_to_expect,brand_context")
+    .eq("brand", brand)
+    .eq("mold_name", mold)
+    .order("version", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  return (data as CatalogRow | null) ?? null;
+}
+
+async function getBrandContext(supabase: SupabaseClient, brand: string) {
+  const { data } = await supabase
+    .from(BRAND_CONTEXTS_TABLE_NAME)
+    .select("brand_context")
+    .eq("brand", brand)
+    .order("version", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  return (data as CatalogRow | null) ?? null;
 }
 
 function normalizeDisc(row: CatalogRow, index: number, brandLogos: BrandLogoMap): PublicCatalogDisc {
@@ -113,13 +144,14 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
     request = request.or(`brand.ilike.%${escaped}%,mold_name.ilike.%${escaped}%`);
   }
 
-  const [{ data, error }, brandLogos] = await Promise.all([request, getBrandLogoMap(supabase)]);
+  const { data, error } = await request;
   if (error || !data) {
     console.warn("Catalog Supabase query failed; using fallback catalog preview.", error?.message);
     return filterFallback(query, boundedLimit);
   }
 
-  return data.map((row, index) => normalizeDisc(row, index, brandLogos));
+  // List/grid results never render a brand logo, so skip that lookup here.
+  return data.map((row, index) => normalizeDisc(row, index, {}));
 }
 
 export async function getCatalogDiscBySlug(slug: string) {
@@ -127,10 +159,21 @@ export async function getCatalogDiscBySlug(slug: string) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback ?? null;
 
-  const [{ data, error }, brandLogos] = await Promise.all([
-    supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle(),
-    getBrandLogoMap(supabase),
-  ]);
+  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle();
   if (error || !data) return fallback ?? null;
-  return normalizeDisc(data, 0, brandLogos);
+
+  const disc = normalizeDisc(data, 0, {});
+  const [brandLogos, discContext, brandContext] = await Promise.all([
+    getBrandLogoMap(supabase),
+    getDiscContext(supabase, disc.brand, disc.mold),
+    getBrandContext(supabase, disc.brand),
+  ]);
+
+  return {
+    ...disc,
+    brandLogoUrl: brandLogos[disc.brandSlug] ?? null,
+    flightSummary: asNullableString(discContext ?? {}, ["disc_summary"]),
+    whatToExpect: asNullableString(discContext ?? {}, ["what_to_expect"]),
+    brandContext: asNullableString(brandContext ?? {}, ["brand_context"]) ?? asNullableString(discContext ?? {}, ["brand_context"]),
+  };
 }
