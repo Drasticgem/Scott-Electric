@@ -18,21 +18,20 @@ export async function generateMetadata({ params }: DiscDetailPageProps): Promise
   };
 }
 
+// Long mold names (e.g. "Time-Lapse (Retooled)") need to shrink to stay
+// legible on one or two lines instead of overflowing the card at full size.
+function moldTitleSizeClass(mold: string) {
+  if (mold.length > 22) return "text-[clamp(22px,4vw,40px)]";
+  if (mold.length > 14) return "text-[clamp(28px,4.5vw,52px)]";
+  return "text-[clamp(38px,5vw,72px)]";
+}
+
 export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
   const { slug } = await params;
   const disc = await getCatalogDiscBySlug(slug);
   if (!disc) notFound();
 
   const [speed, glide, turn, fade] = disc.flightNumbers;
-  const flightSummary =
-    disc.flightSummary ||
-    `${disc.mold} is a ${disc.category.toLowerCase()} with a ${speed}-speed profile, ${glide} glide, ${turn} turn, and ${fade} fade.`;
-  const whatToExpect =
-    disc.whatToExpect ||
-    "Use the flight numbers as a quick read on speed, carry, high-speed turn, and finishing fade before comparing it against other molds in the DiscVault catalog.";
-  const brandContext =
-    disc.brandContext ||
-    `${disc.brand} is represented in the public DiscVault catalog so players can compare molds, flight numbers, and disc classes before deciding what belongs in the bag.`;
 
   return (
     <section className="min-h-screen bg-surface py-14 max-[768px]:py-8">
@@ -41,10 +40,10 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
           ← Back to catalog
         </a>
 
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div className={disc.flightChartImage ? "grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch" : ""}>
           <div className="space-y-6">
-            <div className="rounded-[38px] bg-paper p-8 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-6">
-              <div className="mb-8 flex min-h-10 items-center">
+            <div className="rounded-[38px] bg-paper p-10 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-6">
+              <div className="mb-6 flex min-h-10 items-center justify-center">
                 {disc.brandLogoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
                   <img src={disc.brandLogoUrl} alt={`${disc.brand} logo`} className="max-h-12 max-w-[180px] object-contain" />
@@ -55,59 +54,49 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
                 )}
               </div>
 
-              <div className="grid items-center gap-8 sm:grid-cols-[1fr_0.92fr] lg:grid-cols-1 xl:grid-cols-[1fr_0.92fr]">
+              <div className="flex flex-col items-center gap-6 py-4 text-center">
+                <DiscImage
+                  src={disc.imageUrl}
+                  color={disc.color}
+                  alt={`${disc.brand} ${disc.mold}`}
+                  className="h-[240px] w-[240px] max-[480px]:h-[190px] max-[480px]:w-[190px]"
+                />
                 <div>
-                  <h1 className="font-[family-name:var(--font-display)] text-[clamp(38px,5vw,72px)] font-black leading-[0.98] tracking-[-0.055em] text-ink">
+                  <h1
+                    className={`font-[family-name:var(--font-display)] font-black leading-[0.98] tracking-[-0.05em] text-ink ${moldTitleSizeClass(disc.mold)}`}
+                  >
                     {disc.mold}
                   </h1>
-                  <p className="mt-4 text-[22px] text-muted">{disc.category}</p>
-                </div>
-                <div className="flex justify-center">
-                  <DiscImage src={disc.imageUrl} color={disc.color} alt={`${disc.brand} ${disc.mold}`} className="h-[220px] w-[220px] max-[480px]:h-[180px] max-[480px]:w-[180px]" />
+                  <p className="mt-3 text-[20px] text-muted">{disc.category}</p>
                 </div>
               </div>
             </div>
 
-            <FlightNumbersCard
-              flightNumbers={[speed, glide, turn, fade]}
-              className="lg:max-w-none"
-            />
+            <FlightNumbersCard flightNumbers={[speed, glide, turn, fade]} />
           </div>
 
-          <div className="space-y-6">
-            <InfoCard title="Flight Summary" body={flightSummary} />
-            <InfoCard title="What to Expect" body={whatToExpect} />
-            <InfoCard title="Brand Context" body={brandContext} />
-
-            {disc.flightChartImage && (
-              <div className="rounded-[30px] bg-paper p-7 shadow-sm max-[480px]:p-6">
-                <h2 className="mb-4 text-[20px] font-black text-ink">Flight Chart</h2>
-                {/* eslint-disable-next-line @next/next/no-img-element -- catalog flight chart images are remote Supabase/public URLs with unknown domains. */}
-                <img
-                  src={disc.flightChartImage}
-                  alt={`${disc.mold} flight chart`}
-                  className="mx-auto h-auto w-full max-w-[320px]"
-                />
-              </div>
-            )}
-          </div>
+          {disc.flightChartImage && (
+            <div className="flex flex-col rounded-[30px] bg-paper p-8 shadow-sm max-[480px]:p-6">
+              <h2 className="mb-4 text-[20px] font-black text-ink">Flight Chart</h2>
+              {/* eslint-disable-next-line @next/next/no-img-element -- catalog flight chart images are remote Supabase/public URLs with unknown domains. */}
+              <img
+                src={disc.flightChartImage}
+                alt={`${disc.mold} flight chart`}
+                className="mx-auto h-auto w-full max-w-[360px] flex-1 rounded-[22px] object-contain"
+              />
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function FlightNumbersCard({
-  flightNumbers,
-  className = "",
-}: {
-  flightNumbers: [number, number, number, number];
-  className?: string;
-}) {
+function FlightNumbersCard({ flightNumbers }: { flightNumbers: [number, number, number, number] }) {
   const labels = ["Speed", "Glide", "Turn", "Fade"] as const;
 
   return (
-    <div className={`grid grid-cols-4 rounded-[28px] bg-paper p-5 text-center shadow-sm ${className}`}>
+    <div className="grid grid-cols-4 rounded-[28px] bg-paper p-5 text-center shadow-sm">
       {flightNumbers.map((value, index) => (
         <div key={labels[index]} className={index === 0 ? "" : "border-l border-border"}>
           <div className="text-[32px] font-black leading-none text-ink">{value}</div>
@@ -115,16 +104,5 @@ function FlightNumbersCard({
         </div>
       ))}
     </div>
-  );
-}
-
-function InfoCard({ title, body }: { title: string; body: string }) {
-  return (
-    <article className="rounded-[30px] bg-paper p-7 shadow-sm max-[480px]:p-6">
-      <h2 className="mb-4 text-[20px] font-black text-ink">{title}</h2>
-      <p className="text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-ink-soft max-[768px]:text-[18px]">
-        {body}
-      </p>
-    </article>
   );
 }

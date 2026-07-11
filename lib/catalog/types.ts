@@ -12,9 +12,6 @@ export interface PublicCatalogDisc {
   brandLogoUrl?: string | null;
   flightChartImage?: string | null;
   color: string;
-  flightSummary?: string | null;
-  whatToExpect?: string | null;
-  brandContext?: string | null;
 }
 
 export interface CatalogSearchParams {

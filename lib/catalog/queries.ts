@@ -4,8 +4,11 @@ import { buildDiscSlug, colorFromString, slugify } from "./format";
 import type { CatalogSearchParams, FlightNumbers, PublicCatalogDisc } from "./types";
 
 type CatalogRow = Record<string, unknown>;
+type SupabaseClient = NonNullable<ReturnType<typeof getSupabaseServerClient>>;
+type BrandLogoMap = Record<string, string>;
 
 const TABLE_NAME = process.env.SUPABASE_CATALOG_TABLE || "discs";
+const BRANDS_TABLE_NAME = process.env.SUPABASE_BRANDS_TABLE || "brands";
 const DEFAULT_LIMIT = 24;
 const MAX_LIMIT = 60;
 
@@ -39,7 +42,23 @@ function asNullableString(row: CatalogRow, keys: string[]) {
   return value || null;
 }
 
-function normalizeDisc(row: CatalogRow, index: number): PublicCatalogDisc {
+// discs.brand_slug has no formal foreign key to brands.slug, so PostgREST
+// can't embed the join — fetch the small brands table once per request and
+// look logos up by slug instead.
+async function getBrandLogoMap(supabase: SupabaseClient): Promise<BrandLogoMap> {
+  const { data, error } = await supabase.from(BRANDS_TABLE_NAME).select("slug,logo_url");
+  if (error || !data) return {};
+
+  const map: BrandLogoMap = {};
+  for (const row of data as CatalogRow[]) {
+    const slug = asString(row, ["slug"]);
+    const logoUrl = asString(row, ["logo_url"]);
+    if (slug && logoUrl) map[slug] = logoUrl;
+  }
+  return map;
+}
+
+function normalizeDisc(row: CatalogRow, index: number, brandLogos: BrandLogoMap): PublicCatalogDisc {
   const id = asString(row, ["id", "disc_id", "uuid"], `disc-${index + 1}`);
   const brand = asString(row, ["brand", "brand_name", "manufacturer", "manufacturer_name"], "Unknown Brand");
   const mold = asString(row, ["mold", "mold_name", "name", "disc_name"], "Unnamed Disc");
@@ -52,22 +71,20 @@ function normalizeDisc(row: CatalogRow, index: number): PublicCatalogDisc {
   ];
   const color = asString(row, ["color", "fallback_color", "primary_color", "disc_color"], colorFromString(`${brand} ${mold}`));
   const slug = asString(row, ["slug", "disc_slug"], buildDiscSlug(brand, mold, id));
+  const brandSlug = asString(row, ["brand_slug"], slugify(brand));
 
   return {
     id,
     slug,
     brand,
-    brandSlug: asString(row, ["brand_slug"], slugify(brand)),
+    brandSlug,
     mold,
     category,
     flightNumbers,
     imageUrl: asNullableString(row, ["image_url", "disc_image_url", "image", "photo_url"]),
-    brandLogoUrl: asNullableString(row, ["brand_logo_url", "logo_url", "manufacturer_logo_url"]),
+    brandLogoUrl: brandLogos[brandSlug] ?? null,
     flightChartImage: asNullableString(row, ["flight_chart_image"]),
     color,
-    flightSummary: asNullableString(row, ["flight_summary", "summary", "description"]),
-    whatToExpect: asNullableString(row, ["what_to_expect", "flight_notes", "expectations"]),
-    brandContext: asNullableString(row, ["brand_context", "manufacturer_context"]),
   };
 }
 
@@ -96,13 +113,13 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
     request = request.or(`brand.ilike.%${escaped}%,mold_name.ilike.%${escaped}%`);
   }
 
-  const { data, error } = await request;
+  const [{ data, error }, brandLogos] = await Promise.all([request, getBrandLogoMap(supabase)]);
   if (error || !data) {
     console.warn("Catalog Supabase query failed; using fallback catalog preview.", error?.message);
     return filterFallback(query, boundedLimit);
   }
 
-  return data.map(normalizeDisc);
+  return data.map((row, index) => normalizeDisc(row, index, brandLogos));
 }
 
 export async function getCatalogDiscBySlug(slug: string) {
@@ -110,7 +127,10 @@ export async function getCatalogDiscBySlug(slug: string) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback ?? null;
 
-  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle();
+  const [{ data, error }, brandLogos] = await Promise.all([
+    supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle(),
+    getBrandLogoMap(supabase),
+  ]);
   if (error || !data) return fallback ?? null;
-  return normalizeDisc(data, 0);
+  return normalizeDisc(data, 0, brandLogos);
 }
