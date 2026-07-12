@@ -209,3 +209,33 @@ export async function getDiscRouteById(id: string) {
 
   return { brandSlug, moldSlug };
 }
+
+// Every disc's route, for sitemap.xml — unlike searchCatalogDiscs this has
+// no result cap, so it pages through the full table (PostgREST caps a
+// single request well under the ~1,171 row count).
+export async function getAllDiscRoutes(): Promise<{ brandSlug: string; moldSlug: string }[]> {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) {
+    return FALLBACK_CATALOG.map((disc) => ({ brandSlug: disc.brandSlug, moldSlug: disc.moldSlug }));
+  }
+
+  const routes = new Map<string, { brandSlug: string; moldSlug: string }>();
+  const pageSize = 1000;
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .select("brand_slug,brand,mold_name")
+      .range(from, from + pageSize - 1);
+    if (error || !data || data.length === 0) break;
+
+    for (const row of data as CatalogRow[]) {
+      const brandSlug = asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"]));
+      const moldSlug = slugify(asString(row, ["mold_name"]));
+      if (brandSlug && moldSlug) routes.set(`${brandSlug}/${moldSlug}`, { brandSlug, moldSlug });
+    }
+
+    if (data.length < pageSize) break;
+  }
+
+  return Array.from(routes.values());
+}

@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 // Chat widget disabled for now — not deleted, may come back later.
 // import { ChatWidget } from "@/components/chat/ChatWidget";
+import { DISCVAULT } from "@/lib/constants";
 import "./globals.css";
 
 const softwareAppJsonLd = {
@@ -17,6 +18,7 @@ const softwareAppJsonLd = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(DISCVAULT.siteUrl),
   title: "DiscVault — Your Disc Collection, Finally Organized",
   description:
     "DiscVault is a disc golf app that helps you catalog your discs, build smarter bags, track rounds, and discover new molds. Browse the public disc catalog — no sign-in required.",
