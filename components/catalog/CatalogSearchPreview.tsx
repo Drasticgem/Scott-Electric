@@ -101,7 +101,7 @@ export function CatalogSearchPreview({ initialDiscs }: CatalogSearchPreviewProps
         </ul>
         {(focused || trimmedQuery) && (
           <a href={catalogHref} className="flex items-center justify-between border-t border-border px-4 py-3 text-[14px] font-semibold text-accent transition hover:bg-paper/80">
-            <span>{trimmedQuery ? `Search all results for “${trimmedQuery}”` : "Open the full catalog"}</span>
+            <span>{trimmedQuery ? `Search all results for “${trimmedQuery}”` : "Open the catalog preview"}</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>
         )}

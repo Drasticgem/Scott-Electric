@@ -57,8 +57,8 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
 
         <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start" : ""}>
           <div className="space-y-6">
-            <div className="rounded-[38px] bg-paper p-8 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-4 lg:p-10">
-              <div className="flex items-start justify-between gap-6 max-[480px]:gap-4">
+            <div className="rounded-[38px] bg-paper p-6 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-3 lg:p-6">
+              <div className="flex items-start justify-between gap-4 max-[480px]:gap-3">
                 {disc.brandLogoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
                   <img src={disc.brandLogoUrl} alt={`${disc.brand} logo`} className="max-h-14 max-w-[170px] object-contain object-left" />
@@ -71,17 +71,17 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
                   src={disc.imageUrl}
                   color={disc.color}
                   alt={`${disc.brand} ${disc.mold}`}
-                  className="h-[150px] w-[150px] shrink-0 max-[480px]:h-[140px] max-[480px]:w-[140px] lg:h-[190px] lg:w-[190px]"
+                  className="h-[112px] w-[112px] shrink-0 max-[480px]:h-[105px] max-[480px]:w-[105px] lg:h-[142px] lg:w-[142px]"
                 />
               </div>
 
-              <div className="mt-8 max-[480px]:mt-2">
+              <div className="mt-3 max-[480px]:mt-1">
                 <h1
                   className={`font-[family-name:var(--font-display)] font-black leading-[0.98] tracking-[-0.05em] text-ink ${moldTitleSizeClass(disc.mold)}`}
                 >
                   {disc.mold}
                 </h1>
-                <p className="mt-3 text-[18px] text-muted">{disc.category}</p>
+                <p className="mt-1 text-[18px] text-muted">{disc.category}</p>
               </div>
             </div>
 
