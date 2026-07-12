@@ -57,7 +57,7 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
 
         <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start" : ""}>
           <div className="space-y-6">
-            <div className="rounded-[38px] bg-paper p-6 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-3 lg:p-6">
+            <div className="rounded-[38px] bg-paper p-6 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-5 lg:p-6">
               <div className="flex items-start justify-between gap-4 max-[480px]:gap-3">
                 {disc.brandLogoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
