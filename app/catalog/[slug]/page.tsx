@@ -18,12 +18,22 @@ export async function generateMetadata({ params }: DiscDetailPageProps): Promise
   };
 }
 
-// Long mold names (e.g. "Time-Lapse (Retooled)") need to shrink to stay
-// legible on one or two lines instead of overflowing the card at full size.
+// Long mold names (e.g. "Time-Lapse (Retooled)") should wrap onto a second
+// line at a large size — same as the app — rather than shrink to fit one
+// line. Only truly excessive names get a modest reduction.
 function moldTitleSizeClass(mold: string) {
-  if (mold.length > 22) return "text-[clamp(24px,4vw,38px)]";
-  if (mold.length > 14) return "text-[clamp(30px,4.5vw,48px)]";
-  return "text-[clamp(36px,5vw,64px)]";
+  if (mold.length > 28) return "text-[clamp(26px,6vw,44px)]";
+  return "text-[clamp(34px,7vw,64px)]";
+}
+
+// Bolds the opening fragment up to (and including) the first "." or ","
+// — the app's editorial treatment for these write-ups: a bold lede, then
+// lighter continuation text.
+function splitLede(text: string): [string, string] {
+  const match = text.match(/^[^.,]*[.,]/);
+  if (!match) return [text, ""];
+  const lede = match[0];
+  return [lede, text.slice(lede.length).trimStart()];
 }
 
 export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
@@ -102,11 +112,14 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
 }
 
 function InfoCard({ title, body }: { title: string; body: string }) {
+  const [lede, rest] = splitLede(body);
+
   return (
     <article className="rounded-[30px] bg-paper p-7 shadow-sm max-[480px]:p-6">
       <h2 className="mb-4 font-[family-name:var(--font-display)] text-[20px] font-black text-ink">{title}</h2>
       <p className="font-[family-name:var(--font-editorial)] text-[19px] leading-[1.55] text-ink-soft max-[768px]:text-[17px]">
-        {body}
+        <span className="font-bold text-ink">{lede}</span>
+        {rest && ` ${rest}`}
       </p>
     </article>
   );
