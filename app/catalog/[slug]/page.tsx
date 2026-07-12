@@ -20,10 +20,11 @@ export async function generateMetadata({ params }: DiscDetailPageProps): Promise
 
 // Long mold names (e.g. "Time-Lapse (Retooled)") should wrap onto a second
 // line at a large size — same as the app — rather than shrink to fit one
-// line. Only truly excessive names get a modest reduction.
+// line. Sized generously enough that multi-word names reliably wrap
+// instead of stretching edge-to-edge on one line.
 function moldTitleSizeClass(mold: string) {
-  if (mold.length > 28) return "text-[clamp(26px,6vw,44px)]";
-  return "text-[clamp(34px,7vw,64px)]";
+  if (mold.length > 28) return "text-[clamp(28px,6.5vw,48px)]";
+  return "text-[clamp(40px,8vw,72px)]";
 }
 
 // Bolds the opening fragment up to (and including) the first "." or ","
@@ -69,7 +70,7 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
                   src={disc.imageUrl}
                   color={disc.color}
                   alt={`${disc.brand} ${disc.mold}`}
-                  className="h-[120px] w-[120px] shrink-0 max-[480px]:h-[112px] max-[480px]:w-[112px] lg:h-[144px] lg:w-[144px]"
+                  className="h-[150px] w-[150px] shrink-0 max-[480px]:h-[140px] max-[480px]:w-[140px] lg:h-[190px] lg:w-[190px]"
                 />
               </div>
 
