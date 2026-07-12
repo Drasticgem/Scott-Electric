@@ -10,11 +10,11 @@ import { Logo } from "./Logo";
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const LINKS = [
-  { href: "#features", label: "Features" },
+  { href: "/#features", label: "Features" },
   { href: "/catalog", label: "Catalog" },
-  { href: "#why", label: "Why DiscVault" },
-  { href: "#security", label: "Security" },
-  { href: "#contact", label: "Partner" },
+  { href: "/#why", label: "Why DiscVault" },
+  { href: "/#security", label: "Security" },
+  { href: "/#contact", label: "Partner" },
 ] as const;
 
 /**
@@ -77,7 +77,7 @@ export function Header() {
           className="absolute inset-0 -z-10 bg-paper/80 supports-[backdrop-filter]:bg-paper/70 backdrop-blur-md border-b border-border"
         />
 
-        <a href="#hero" aria-label="DiscVault — home">
+        <a href="/" aria-label="DiscVault — home">
           <Logo size="md" />
         </a>
 

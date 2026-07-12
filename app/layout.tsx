@@ -60,16 +60,19 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/*
-          Strip any #hash from the URL before hydration so reloading on
-          a deep-linked section (e.g. #services) doesn't trigger the
-          browser's native anchor auto-scroll. We always want full page
-          loads of "/" to land on the hero. In-page link clicks still
-          work — this only runs once on initial document parse.
+          Strip any #hash from the URL before hydration — but only for
+          external/direct loads (bookmark, shared link, typed URL). A
+          bookmarked "#security" link landing mid-page with no context read
+          as broken, so those should land on the hero instead. Same-origin
+          referrers are real in-app navigation (e.g. a header/footer link on
+          /catalog pointing at "/#why") and must keep the hash so the browser
+          actually scrolls to the section — that's the whole point of the
+          link. This only runs once on initial document parse.
         */}
         <script
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-            __html: `try{if(window.location.hash){history.replaceState(null,"",window.location.pathname+window.location.search);}}catch(e){}`,
+            __html: `try{if(window.location.hash){var r=document.referrer,sameOrigin=r&&new URL(r).origin===window.location.origin;if(!sameOrigin){history.replaceState(null,"",window.location.pathname+window.location.search);}}}catch(e){}`,
           }}
         />
         <script

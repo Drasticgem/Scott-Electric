@@ -2,16 +2,16 @@ import { DISCVAULT } from "@/lib/constants";
 import { Logo } from "./Logo";
 
 const PRODUCT = [
-  { href: "#features", label: "Features" },
+  { href: "/#features", label: "Features" },
   { href: "/catalog", label: "Catalog" },
   { href: DISCVAULT.appStoreUrl, label: "Download" },
 ];
 
 const COMPANY = [
-  { href: "#why", label: "Why DiscVault" },
-  { href: "#about", label: "About" },
-  { href: "#security", label: "Security & Privacy" },
-  { href: "#contact", label: "Partner" },
+  { href: "/#why", label: "Why DiscVault" },
+  { href: "/#about", label: "About" },
+  { href: "/#security", label: "Security & Privacy" },
+  { href: "/#contact", label: "Partner" },
 ];
 
 export function Footer() {

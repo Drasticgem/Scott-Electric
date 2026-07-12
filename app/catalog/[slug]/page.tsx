@@ -53,9 +53,9 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
           ← Back to catalog
         </a>
 
-        <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start" : ""}>
+        <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start" : ""}>
           <div className="space-y-6">
-            <div className="rounded-[38px] bg-paper p-8 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-6">
+            <div className="rounded-[38px] bg-paper p-8 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-5 lg:p-10">
               <div className="flex items-start justify-between gap-6">
                 {disc.brandLogoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
@@ -69,11 +69,11 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
                   src={disc.imageUrl}
                   color={disc.color}
                   alt={`${disc.brand} ${disc.mold}`}
-                  className="h-[120px] w-[120px] shrink-0 max-[480px]:h-[96px] max-[480px]:w-[96px]"
+                  className="h-[120px] w-[120px] shrink-0 max-[480px]:h-[112px] max-[480px]:w-[112px] lg:h-[144px] lg:w-[144px]"
                 />
               </div>
 
-              <div className="mt-8">
+              <div className="mt-8 max-[480px]:mt-5">
                 <h1
                   className={`font-[family-name:var(--font-display)] font-black leading-[0.98] tracking-[-0.05em] text-ink ${moldTitleSizeClass(disc.mold)}`}
                 >
