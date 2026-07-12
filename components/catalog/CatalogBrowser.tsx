@@ -78,7 +78,7 @@ export function CatalogBrowser({ initialDiscs, initialQuery }: CatalogBrowserPro
           className={`grid grid-cols-2 gap-x-6 gap-y-12 transition-opacity duration-200 sm:grid-cols-3 lg:grid-cols-5 ${isFetching ? "opacity-50" : "opacity-100"}`}
         >
           {discs.map((disc) => (
-            <a key={disc.id} href={`/catalog/${encodeURIComponent(disc.id)}`} className="group text-center">
+            <a key={disc.id} href={`/discs/${disc.brandSlug}/${disc.moldSlug}`} className="group text-center">
               <div className="mx-auto mb-4 flex aspect-square w-full max-w-[180px] items-center justify-center rounded-[32px] bg-paper p-5 shadow-[0_18px_45px_rgba(0,0,0,0.08)] transition duration-200 group-hover:-translate-y-1 group-hover:shadow-[0_24px_60px_rgba(0,0,0,0.12)]">
                 <DiscImage src={disc.imageUrl} color={disc.color} alt={`${disc.brand} ${disc.mold}`} className="h-full w-full" />
               </div>

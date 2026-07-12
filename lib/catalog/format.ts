@@ -24,8 +24,3 @@ export function colorFromString(value: string) {
   }
   return palette[Math.abs(hash) % palette.length];
 }
-
-export function buildDiscSlug(brand: string, mold: string, id: string) {
-  const base = [slugify(brand), slugify(mold)].filter(Boolean).join("-");
-  return base ? `${base}-${id}` : id;
-}

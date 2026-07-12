@@ -1,6 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { FALLBACK_CATALOG } from "./fallback";
-import { buildDiscSlug, colorFromString, slugify } from "./format";
+import { colorFromString, slugify } from "./format";
 import type { CatalogSearchParams, FlightNumbers, PublicCatalogDisc } from "./types";
 
 type CatalogRow = Record<string, unknown>;
@@ -101,15 +101,14 @@ function normalizeDisc(row: CatalogRow, index: number, brandLogos: BrandLogoMap)
     asNumber(row, ["fade"], 0),
   ];
   const color = asString(row, ["color", "fallback_color", "primary_color", "disc_color"], colorFromString(`${brand} ${mold}`));
-  const slug = asString(row, ["slug", "disc_slug"], buildDiscSlug(brand, mold, id));
   const brandSlug = asString(row, ["brand_slug"], slugify(brand));
 
   return {
     id,
-    slug,
     brand,
     brandSlug,
     mold,
+    moldSlug: slugify(mold),
     category,
     flightNumbers,
     imageUrl: asNullableString(row, ["image_url", "disc_image_url", "image", "photo_url"]),
@@ -154,15 +153,27 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
   return data.map((row, index) => normalizeDisc(row, index, {}));
 }
 
-export async function getCatalogDiscBySlug(slug: string) {
-  const fallback = FALLBACK_CATALOG.find((disc) => disc.slug === slug || disc.id === slug);
+// The public disc URL is /discs/<brand-slug>/<mold-slug> — readable and
+// stable for SEO, unlike a raw row id. discs has brand_slug but no
+// mold-slug column (and the DB's own name_slug has quality issues, e.g.
+// trailing hyphens), so this fetches every disc for the brand (a small,
+// cheap set — ~20-30 rows) and matches by slugifying mold_name in app code.
+export async function getDiscByBrandAndMold(brandSlug: string, moldSlug: string) {
+  const fallback = FALLBACK_CATALOG.find(
+    (disc) => disc.brandSlug === brandSlug && disc.moldSlug === moldSlug,
+  );
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback ?? null;
 
-  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("id", slug).limit(1).maybeSingle();
+  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).eq("brand_slug", brandSlug);
   if (error || !data) return fallback ?? null;
 
-  const disc = normalizeDisc(data, 0, {});
+  const row = (data as CatalogRow[]).find(
+    (candidate) => slugify(asString(candidate, ["mold", "mold_name", "name", "disc_name"])) === moldSlug,
+  );
+  if (!row) return fallback ?? null;
+
+  const disc = normalizeDisc(row, 0, {});
   const [brandLogos, discContext, brandContext] = await Promise.all([
     getBrandLogoMap(supabase),
     getDiscContext(supabase, disc.brand, disc.mold),
@@ -176,4 +187,25 @@ export async function getCatalogDiscBySlug(slug: string) {
     whatToExpect: asNullableString(discContext ?? {}, ["what_to_expect"]),
     brandContext: asNullableString(brandContext ?? {}, ["brand_context"]) ?? asNullableString(discContext ?? {}, ["brand_context"]),
   };
+}
+
+// Legacy support: the old /catalog/<id> route now 301s here once it knows
+// the disc's real brand/mold slugs, in case any of those links already got
+// shared or indexed.
+export async function getDiscRouteById(id: string) {
+  const fallback = FALLBACK_CATALOG.find((disc) => disc.id === id);
+  if (fallback) return { brandSlug: fallback.brandSlug, moldSlug: fallback.moldSlug };
+
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase.from(TABLE_NAME).select("brand_slug,brand,mold_name").eq("id", id).limit(1).maybeSingle();
+  if (error || !data) return null;
+
+  const row = data as CatalogRow;
+  const brandSlug = asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"]));
+  const moldSlug = slugify(asString(row, ["mold_name"]));
+  if (!brandSlug || !moldSlug) return null;
+
+  return { brandSlug, moldSlug };
 }
