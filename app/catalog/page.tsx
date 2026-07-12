@@ -14,7 +14,9 @@ interface CatalogPageProps {
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
-  const discs = await searchCatalogDiscs({ query, limit: 48 });
+  // 100 comfortably covers the current hydrated-disc set (~75) so the
+  // browse page shows everything available rather than an arbitrary cut.
+  const discs = await searchCatalogDiscs({ query, limit: 100 });
 
   return (
     <section className="min-h-screen bg-surface py-16 max-[768px]:py-10">

@@ -1,6 +1,7 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { FALLBACK_CATALOG } from "./fallback";
 import { colorFromString, slugify } from "./format";
+import { HYDRATED_DISCS } from "@/lib/data/hydratedDiscs";
 import type { CatalogSearchParams, FlightNumbers, PublicCatalogDisc } from "./types";
 
 type CatalogRow = Record<string, unknown>;
@@ -12,7 +13,30 @@ const BRANDS_TABLE_NAME = process.env.SUPABASE_BRANDS_TABLE || "brands";
 const DISC_CONTEXTS_TABLE_NAME = process.env.SUPABASE_DISC_CONTEXTS_TABLE || "disc_contexts";
 const BRAND_CONTEXTS_TABLE_NAME = process.env.SUPABASE_BRAND_CONTEXTS_TABLE || "brand_contexts";
 const DEFAULT_LIMIT = 24;
-const MAX_LIMIT = 60;
+const MAX_LIMIT = 100;
+
+// The public catalog is temporarily restricted to discs with a real hydrated
+// image (see lib/data/hydratedDiscs.ts) — everything else in `discs` still
+// only has a color-swatch fallback, which reads as unfinished for a public
+// page. HYDRATED_KEYS is for exact (brand, mold) membership checks;
+// HYDRATED_MOLD_NAMES narrows the Supabase query to just candidate rows.
+const HYDRATED_KEYS = new Set(HYDRATED_DISCS.map((d) => `${slugify(d.brand)}/${slugify(d.mold)}`));
+const HYDRATED_MOLD_NAMES = Array.from(new Set(HYDRATED_DISCS.map((d) => d.mold)));
+
+function isHydrated(brandSlug: string, moldSlug: string) {
+  return HYDRATED_KEYS.has(`${brandSlug}/${moldSlug}`);
+}
+
+// Unbiased Fisher-Yates shuffle — used for the "randomized" default catalog
+// order instead of a `.sort(() => Math.random() - 0.5)` biased shuffle.
+function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 // Only the columns the catalog UI actually renders — not a full `select("*")`.
 // Extend this list deliberately as new fields get wired into the UI.
@@ -126,7 +150,7 @@ function filterFallback(query?: string, limit = DEFAULT_LIMIT) {
           value.toLowerCase().includes(normalizedQuery),
         ),
       )
-    : FALLBACK_CATALOG;
+    : shuffle(FALLBACK_CATALOG);
   return source.slice(0, limit);
 }
 
@@ -135,22 +159,30 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
   const supabase = getSupabaseServerClient();
   if (!supabase) return filterFallback(query, boundedLimit);
 
-  let request = supabase.from(TABLE_NAME).select(SELECT_COLUMNS).limit(boundedLimit);
-  const term = query?.trim();
-
-  if (term) {
-    const escaped = term.replaceAll("%", "\\%").replaceAll("_", "\\_");
-    request = request.or(`brand.ilike.%${escaped}%,mold_name.ilike.%${escaped}%`);
-  }
-
-  const { data, error } = await request;
+  const { data, error } = await supabase.from(TABLE_NAME).select(SELECT_COLUMNS).in("mold_name", HYDRATED_MOLD_NAMES);
   if (error || !data) {
     console.warn("Catalog Supabase query failed; using fallback catalog preview.", error?.message);
     return filterFallback(query, boundedLimit);
   }
 
+  const hydratedRows = (data as CatalogRow[]).filter((row) =>
+    isHydrated(
+      asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"])),
+      slugify(asString(row, ["mold_name"])),
+    ),
+  );
+
+  const term = query?.trim().toLowerCase();
+  const matched = term
+    ? hydratedRows.filter((row) =>
+        [asString(row, ["brand"]), asString(row, ["mold_name"])].some((value) =>
+          value.toLowerCase().includes(term),
+        ),
+      )
+    : shuffle(hydratedRows);
+
   // List/grid results never render a brand logo, so skip that lookup here.
-  return data.map((row, index) => normalizeDisc(row, index, {}));
+  return matched.slice(0, boundedLimit).map((row, index) => normalizeDisc(row, index, {}));
 }
 
 // The public disc URL is /discs/<brand-slug>/<mold-slug> — readable and
@@ -159,6 +191,8 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
 // trailing hyphens), so this fetches every disc for the brand (a small,
 // cheap set — ~20-30 rows) and matches by slugifying mold_name in app code.
 export async function getDiscByBrandAndMold(brandSlug: string, moldSlug: string) {
+  if (!isHydrated(brandSlug, moldSlug)) return null;
+
   const fallback = FALLBACK_CATALOG.find(
     (disc) => disc.brandSlug === brandSlug && disc.moldSlug === moldSlug,
   );
@@ -191,7 +225,8 @@ export async function getDiscByBrandAndMold(brandSlug: string, moldSlug: string)
 
 // Legacy support: the old /catalog/<id> route now 301s here once it knows
 // the disc's real brand/mold slugs, in case any of those links already got
-// shared or indexed.
+// shared or indexed. Resolves to null (404) for anything outside the
+// current hydrated set, same as getDiscByBrandAndMold.
 export async function getDiscRouteById(id: string) {
   const fallback = FALLBACK_CATALOG.find((disc) => disc.id === id);
   if (fallback) return { brandSlug: fallback.brandSlug, moldSlug: fallback.moldSlug };
@@ -205,36 +240,28 @@ export async function getDiscRouteById(id: string) {
   const row = data as CatalogRow;
   const brandSlug = asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"]));
   const moldSlug = slugify(asString(row, ["mold_name"]));
-  if (!brandSlug || !moldSlug) return null;
+  if (!brandSlug || !moldSlug || !isHydrated(brandSlug, moldSlug)) return null;
 
   return { brandSlug, moldSlug };
 }
 
-// Every disc's route, for sitemap.xml — unlike searchCatalogDiscs this has
-// no result cap, so it pages through the full table (PostgREST caps a
-// single request well under the ~1,171 row count).
+// Every disc's route, for sitemap.xml — scoped to the same hydrated set as
+// the rest of the public catalog, DB-verified so the sitemap never lists a
+// URL that would 404.
 export async function getAllDiscRoutes(): Promise<{ brandSlug: string; moldSlug: string }[]> {
   const supabase = getSupabaseServerClient();
   if (!supabase) {
     return FALLBACK_CATALOG.map((disc) => ({ brandSlug: disc.brandSlug, moldSlug: disc.moldSlug }));
   }
 
+  const { data, error } = await supabase.from(TABLE_NAME).select("brand_slug,brand,mold_name").in("mold_name", HYDRATED_MOLD_NAMES);
+  if (error || !data) return [];
+
   const routes = new Map<string, { brandSlug: string; moldSlug: string }>();
-  const pageSize = 1000;
-  for (let from = 0; ; from += pageSize) {
-    const { data, error } = await supabase
-      .from(TABLE_NAME)
-      .select("brand_slug,brand,mold_name")
-      .range(from, from + pageSize - 1);
-    if (error || !data || data.length === 0) break;
-
-    for (const row of data as CatalogRow[]) {
-      const brandSlug = asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"]));
-      const moldSlug = slugify(asString(row, ["mold_name"]));
-      if (brandSlug && moldSlug) routes.set(`${brandSlug}/${moldSlug}`, { brandSlug, moldSlug });
-    }
-
-    if (data.length < pageSize) break;
+  for (const row of data as CatalogRow[]) {
+    const brandSlug = asString(row, ["brand_slug"]) || slugify(asString(row, ["brand"]));
+    const moldSlug = slugify(asString(row, ["mold_name"]));
+    if (isHydrated(brandSlug, moldSlug)) routes.set(`${brandSlug}/${moldSlug}`, { brandSlug, moldSlug });
   }
 
   return Array.from(routes.values());

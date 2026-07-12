@@ -33,7 +33,7 @@ export function CatalogBrowser({ initialDiscs, initialQuery }: CatalogBrowserPro
     setIsFetching(true);
 
     const timer = window.setTimeout(async () => {
-      const params = new URLSearchParams({ limit: "48" });
+      const params = new URLSearchParams({ limit: "100" });
       if (trimmed) params.set("q", trimmed);
 
       try {
