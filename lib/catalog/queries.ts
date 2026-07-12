@@ -143,13 +143,12 @@ function normalizeDisc(row: CatalogRow, index: number, brandLogos: BrandLogoMap)
 }
 
 function filterFallback(query?: string, limit = DEFAULT_LIMIT) {
-  const normalizedQuery = query?.trim().toLowerCase();
-  const source = normalizedQuery
-    ? FALLBACK_CATALOG.filter((disc) =>
-        [disc.brand, disc.mold, disc.category].some((value) =>
-          value.toLowerCase().includes(normalizedQuery),
-        ),
-      )
+  const words = query?.trim().toLowerCase().split(/\s+/).filter(Boolean) ?? [];
+  const source = words.length
+    ? FALLBACK_CATALOG.filter((disc) => {
+        const haystack = `${disc.brand} ${disc.mold} ${disc.category}`.toLowerCase();
+        return words.every((word) => haystack.includes(word));
+      })
     : shuffle(FALLBACK_CATALOG);
   return source.slice(0, limit);
 }
@@ -172,13 +171,18 @@ export async function searchCatalogDiscs({ query, limit = DEFAULT_LIMIT }: Catal
     ),
   );
 
-  const term = query?.trim().toLowerCase();
-  const matched = term
-    ? hydratedRows.filter((row) =>
-        [asString(row, ["brand"]), asString(row, ["mold_name"])].some((value) =>
-          value.toLowerCase().includes(term),
-        ),
-      )
+  // Multi-word AND match against brand + mold + category combined, so
+  // "latitude flow" and "axiom putter" both work — a single field's
+  // ilike/includes check would never match either, since neither word
+  // pair lives in one field.
+  const words = query?.trim().toLowerCase().split(/\s+/).filter(Boolean) ?? [];
+  const matched = words.length
+    ? hydratedRows.filter((row) => {
+        const haystack = [asString(row, ["brand"]), asString(row, ["mold_name"]), asString(row, ["category"])]
+          .join(" ")
+          .toLowerCase();
+        return words.every((word) => haystack.includes(word));
+      })
     : shuffle(hydratedRows);
 
   // List/grid results never render a brand logo, so skip that lookup here.

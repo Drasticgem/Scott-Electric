@@ -9,7 +9,9 @@ import { searchCatalogDiscs } from "@/lib/catalog/queries";
  * card backed by the catalog query layer.
  */
 export async function BrowseCatalog() {
-  const previewDiscs = await searchCatalogDiscs({ query: "axiom", limit: 6 });
+  // Empty query -> a shuffled sample across the whole hydrated set, not
+  // just one brand.
+  const previewDiscs = await searchCatalogDiscs({ limit: 6 });
 
   return (
     <section
