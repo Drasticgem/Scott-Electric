@@ -58,30 +58,29 @@ export default async function DiscDetailPage({ params }: DiscDetailPageProps) {
         <div className={hasRightColumn ? "grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start" : ""}>
           <div className="space-y-6">
             <div className="rounded-[38px] bg-paper p-6 shadow-[0_22px_70px_rgba(0,0,0,0.08)] max-[480px]:p-5 lg:p-6">
-              <div className="flex items-start justify-between gap-4 max-[480px]:gap-3">
-                {disc.brandLogoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
-                  <img src={disc.brandLogoUrl} alt={`${disc.brand} logo`} className="max-h-14 max-w-[170px] object-contain object-left" />
-                ) : (
-                  <p className="pt-1 text-[13px] font-black uppercase text-muted-light" style={{ letterSpacing: "0.14em" }}>
-                    {disc.brand}
-                  </p>
-                )}
+              <div className="flex items-center justify-between gap-4 max-[480px]:gap-3">
+                <div className="min-w-0">
+                  {disc.brandLogoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- catalog brand logos are remote Supabase/public URLs with unknown domains.
+                    <img src={disc.brandLogoUrl} alt={`${disc.brand} logo`} className="max-h-14 max-w-[170px] object-contain object-left" />
+                  ) : (
+                    <p className="pt-1 text-[13px] font-black uppercase text-muted-light" style={{ letterSpacing: "0.14em" }}>
+                      {disc.brand}
+                    </p>
+                  )}
+                  <h1
+                    className={`mt-3 max-[480px]:mt-2 font-[family-name:var(--font-display)] font-black leading-[0.98] tracking-[-0.05em] text-ink ${moldTitleSizeClass(disc.mold)}`}
+                  >
+                    {disc.mold}
+                  </h1>
+                  <p className="mt-1 text-[18px] text-muted">{disc.category}</p>
+                </div>
                 <DiscImage
                   src={disc.imageUrl}
                   color={disc.color}
                   alt={`${disc.brand} ${disc.mold}`}
-                  className="h-[112px] w-[112px] shrink-0 max-[480px]:h-[105px] max-[480px]:w-[105px] lg:h-[142px] lg:w-[142px]"
+                  className="h-[126px] w-[126px] shrink-0 max-[480px]:h-[118px] max-[480px]:w-[118px] lg:h-[160px] lg:w-[160px]"
                 />
-              </div>
-
-              <div className="mt-3 max-[480px]:mt-1">
-                <h1
-                  className={`font-[family-name:var(--font-display)] font-black leading-[0.98] tracking-[-0.05em] text-ink ${moldTitleSizeClass(disc.mold)}`}
-                >
-                  {disc.mold}
-                </h1>
-                <p className="mt-1 text-[18px] text-muted">{disc.category}</p>
               </div>
             </div>
 
