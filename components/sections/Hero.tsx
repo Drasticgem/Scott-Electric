@@ -66,11 +66,11 @@ export function Hero() {
                       className="mb-4 text-[11px] font-semibold uppercase text-accent max-[768px]:hidden"
                       style={{ letterSpacing: "0.22em" }}
                     >
-                      For Disc Golfers
+                      Disc golf, organized.
                     </p>
 
                     <h1
-                      className="font-[family-name:var(--font-display)] font-black text-ink"
+                      className="font-[family-name:var(--font-display)] font-black text-ink max-[768px]:hidden"
                       style={{
                         fontSize: "clamp(34px, 4.4vw, 58px)",
                         lineHeight: 1.05,
@@ -78,6 +78,17 @@ export function Hero() {
                       }}
                     >
                       Your collection matters.
+                    </h1>
+
+                    <h1
+                      className="hidden font-[family-name:var(--font-display)] font-black text-ink max-[768px]:block"
+                      style={{
+                        fontSize: "clamp(34px, 4.4vw, 58px)",
+                        lineHeight: 1.05,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      Disc golf, organized.
                     </h1>
                   </div>
                 </Reveal>
@@ -136,10 +147,10 @@ export function Hero() {
                       zoomed mockup leaves only ~15px of clearance above
                       the viewport's own edge. */}
                   <p className="hidden max-w-[270px] font-[family-name:var(--font-display)] text-[19px] leading-[1.5] italic text-ink-soft lg:block">
-                    Tastefully designed for a native, iOS-first experience.
+                    Natively designed for iPhone.
                   </p>
                   <p className="max-w-[280px] font-[family-name:var(--font-display)] text-[15px] leading-[1.3] italic text-ink-soft lg:hidden">
-                    Tastefully designed, iOS-first.
+                    Natively designed for iPhone.
                   </p>
                 </div>
               </div>

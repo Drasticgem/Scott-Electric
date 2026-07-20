@@ -12,7 +12,6 @@ const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 const LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/catalog", label: "Catalog" },
-  { href: "/#why", label: "Why DiscVault" },
   { href: "/#security", label: "Security" },
   { href: "/#contact", label: "Partner" },
 ] as const;

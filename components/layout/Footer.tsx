@@ -8,8 +8,6 @@ const PRODUCT = [
 ];
 
 const COMPANY = [
-  { href: "/#why", label: "Why DiscVault" },
-  { href: "/#about", label: "About" },
   { href: "/#security", label: "Security & Privacy" },
   { href: "/#contact", label: "Partner" },
 ];
