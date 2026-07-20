@@ -9,7 +9,9 @@ import { searchCatalogDiscs } from "@/lib/catalog/queries";
  * card backed by the catalog query layer.
  */
 export async function BrowseCatalog() {
-  const previewDiscs = await searchCatalogDiscs({ query: "axiom", limit: 6 });
+  // Empty query -> a shuffled sample across the whole hydrated set, not
+  // just one brand.
+  const previewDiscs = await searchCatalogDiscs({ limit: 6 });
 
   return (
     <section
@@ -35,18 +37,18 @@ export async function BrowseCatalog() {
                   letterSpacing: "-0.035em",
                 }}
               >
-                Search the catalog before you bag it.
+                Preview the catalog before you download.
               </h2>
               <p className="mb-7 text-[17px] leading-[1.75] text-muted">
-                Browse the public DiscVault database by brand or mold, preview
-                app-style disc rows, and open a clean read-only web catalog — no
-                sign-in required.
+                Get a taste of the DiscVault database by brand or mold, right
+                here in the browser — no sign-in required. The full catalog,
+                search, and your personal vault live in the app.
               </p>
               <a
                 href="/catalog"
                 className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[14px] font-semibold text-paper transition hover:-translate-y-px hover:bg-ink-soft"
               >
-                Browse Full Catalog
+                Preview the Catalog
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             </div>

@@ -83,7 +83,7 @@ export function CatalogSearchPreview({ initialDiscs }: CatalogSearchPreviewProps
           {results.length > 0 ? (
             results.slice(0, 6).map((disc) => (
               <li key={disc.id}>
-                <a href={`/catalog/${encodeURIComponent(disc.id)}`} className="flex items-center gap-4 px-4 py-3 transition hover:bg-paper/80">
+                <a href={`/discs/${disc.brandSlug}/${disc.moldSlug}`} className="flex items-center gap-4 px-4 py-3 transition hover:bg-paper/80">
                   <DiscImage src={disc.imageUrl} color={disc.color} alt={`${disc.brand} ${disc.mold}`} className="h-14 w-14 shrink-0" />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-semibold uppercase text-muted-light" style={{ letterSpacing: "0.08em" }}>
@@ -101,7 +101,7 @@ export function CatalogSearchPreview({ initialDiscs }: CatalogSearchPreviewProps
         </ul>
         {(focused || trimmedQuery) && (
           <a href={catalogHref} className="flex items-center justify-between border-t border-border px-4 py-3 text-[14px] font-semibold text-accent transition hover:bg-paper/80">
-            <span>{trimmedQuery ? `Search all results for “${trimmedQuery}”` : "Open the full catalog"}</span>
+            <span>{trimmedQuery ? `Search all results for “${trimmedQuery}”` : "Open the catalog preview"}</span>
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>
         )}

@@ -26,6 +26,9 @@
   /* ── Fonts — Apple system stack (resolves to SF Pro on Apple devices) ── */
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  /* ui-serif resolves to New York itself on Safari/WebKit (Apple's system
+     serif) — used for editorial body copy (catalog write-ups), not UI text. */
+  --font-editorial: ui-serif, Georgia, "Times New Roman", serif;
 
   /* Spacing scale: Tailwind v4 defaults to --spacing: 0.25rem (4px),
      which already matches the legacy 8px-baseline tokens exactly:

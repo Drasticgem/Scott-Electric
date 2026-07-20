@@ -41,7 +41,7 @@ export function About() {
               context, and intelligent recommendations into one clean app.
             </p>
             <a
-              href="#why"
+              href="/#why"
               className="inline-block rounded-full border-[1.5px] border-accent/60 bg-transparent px-6 py-3 text-[13px] font-semibold text-accent transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-white"
             >
               Read our story →

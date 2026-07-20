@@ -2,10 +2,10 @@ export type FlightNumbers = [number, number, number, number];
 
 export interface PublicCatalogDisc {
   id: string;
-  slug: string;
   brand: string;
   brandSlug: string;
   mold: string;
+  moldSlug: string;
   category: string;
   flightNumbers: FlightNumbers;
   imageUrl?: string | null;

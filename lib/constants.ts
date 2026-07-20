@@ -5,6 +5,9 @@
 export const DISCVAULT = {
   name: "DiscVault",
   tagline: "Your collection matters.",
+  // The domain actually owned (see email comment below) — used as the
+  // canonical origin for metadataBase, sitemap.xml, and robots.txt.
+  siteUrl: "https://discvault.site",
   // The one real mailbox (Microsoft 365) used for both sending and
   // receiving — discvault.site is the domain actually owned; discvault.app
   // was never registered, so nothing on the site should reference it.

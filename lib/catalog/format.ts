@@ -7,12 +7,6 @@ export function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function titleFromQuery(value?: string) {
-  const query = value?.trim();
-  if (!query) return "Catalog";
-  return query.toUpperCase();
-}
-
 export function colorFromString(value: string) {
   const palette = [
     "#5b4bda",
@@ -29,9 +23,4 @@ export function colorFromString(value: string) {
     hash = value.charCodeAt(index) + ((hash << 5) - hash);
   }
   return palette[Math.abs(hash) % palette.length];
-}
-
-export function buildDiscSlug(brand: string, mold: string, id: string) {
-  const base = [slugify(brand), slugify(mold)].filter(Boolean).join("-");
-  return base ? `${base}-${id}` : id;
 }
