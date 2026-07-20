@@ -21,14 +21,14 @@ export const CREDENTIALS: Credential[] = [
   },
   {
     value: "Free",
-    title: "Browse Without an Account",
-    sub: "No sign-in required to explore",
-    shortLabel: "No Sign-In Required",
+    title: "Free to Browse",
+    sub: "No cost to explore the catalog",
+    shortLabel: "Free to Browse",
   },
   {
     value: "iOS",
-    title: "Built for iPhone",
+    title: "Natively designed for iPhone",
     sub: "Designed for on-course use",
-    shortLabel: "Built for iPhone",
+    shortLabel: "Natively designed for iPhone",
   },
 ];

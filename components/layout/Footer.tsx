@@ -68,7 +68,7 @@ function MobileFooter() {
       <div className="mt-24 flex flex-col items-center">
         <Logo size="lg" />
         <p className="mt-4 text-[11px] text-ink-soft">
-          Browse the catalog. No sign-in required.
+          Browse the catalog for free.
         </p>
       </div>
 

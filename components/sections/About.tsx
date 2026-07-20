@@ -40,12 +40,6 @@ export function About() {
               disc catalog, personal vault tools, bag organization, round
               context, and intelligent recommendations into one clean app.
             </p>
-            <a
-              href="/#why"
-              className="inline-block rounded-full border-[1.5px] border-accent/60 bg-transparent px-6 py-3 text-[13px] font-semibold text-accent transition-colors duration-200 hover:border-accent hover:bg-accent hover:text-white"
-            >
-              Read our story →
-            </a>
           </Reveal>
 
           {/* Placeholder preview — desktop only */}

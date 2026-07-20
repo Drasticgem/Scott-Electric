@@ -15,13 +15,13 @@ export function WhyDiscVault() {
           <Reveal>
             <div className="max-w-[560px]">
               <p
-                className="mb-3 text-[10px] font-semibold uppercase text-accent"
+                className="mb-3 text-[10px] font-semibold uppercase text-accent max-[768px]:hidden"
                 style={{ letterSpacing: "0.22em" }}
               >
-                Why DiscVault
+                Disc golf, organized.
               </p>
               <h2
-                className="mb-5 font-[family-name:var(--font-display)] font-black text-ink"
+                className="mb-5 font-[family-name:var(--font-display)] font-black text-ink max-[768px]:hidden"
                 style={{
                   fontSize: "clamp(26px, 3.4vw, 40px)",
                   lineHeight: 1.1,
@@ -29,6 +29,16 @@ export function WhyDiscVault() {
                 }}
               >
                 Disc golf bags get complicated fast.
+              </h2>
+              <h2
+                className="mb-5 hidden font-[family-name:var(--font-display)] font-black text-ink max-[768px]:block"
+                style={{
+                  fontSize: "clamp(26px, 3.4vw, 40px)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.015em",
+                }}
+              >
+                Disc golf, organized.
               </h2>
               <p className="text-[15px] leading-[1.75] text-muted">
                 Every disc has a purpose, a flight, a feel, a memory, and a
@@ -39,7 +49,7 @@ export function WhyDiscVault() {
             </div>
           </Reveal>
 
-          <Reveal stagger className="flex flex-col gap-3">
+          <Reveal stagger className="flex flex-col gap-3 max-[768px]:hidden">
             {CREDENTIALS.map((c) => (
               <WhyBadge
                 key={c.shortLabel}
