@@ -81,7 +81,7 @@ export function Hero() {
                     </h1>
 
                     <h1
-                      className="hidden font-[family-name:var(--font-display)] font-black text-ink max-[768px]:block max-[768px]:text-center"
+                      className="hidden font-[family-name:var(--font-display)] font-black text-ink max-[768px]:block"
                       style={{
                         fontSize: "clamp(34px, 4.4vw, 58px)",
                         lineHeight: 1.05,
@@ -105,7 +105,7 @@ export function Hero() {
                 <div className="hero-copy-scrub">
                   <Reveal>
                     <div>
-                      <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mb-4 max-[768px]:mx-auto max-[768px]:text-center max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
+                      <p className="mb-9 max-w-[480px] text-[17px] leading-[1.7] text-muted max-[768px]:mb-4 max-[768px]:text-[14px] max-[768px]:leading-[1.6]">
                         Catalog discs, build smarter bags, track rounds, and
                         discover what to throw next.
                       </p>
