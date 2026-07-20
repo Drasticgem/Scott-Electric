@@ -41,7 +41,7 @@ export async function BrowseCatalog() {
               </h2>
               <p className="mb-7 text-[17px] leading-[1.75] text-muted">
                 Get a taste of the DiscVault database by brand or mold, right
-                here in the browser — no sign-in required. The full catalog,
+                here in the browser — free to browse. The full catalog,
                 search, and your personal vault live in the app.
               </p>
               <a

@@ -8,8 +8,6 @@ const PRODUCT = [
 ];
 
 const COMPANY = [
-  { href: "/#why", label: "Why DiscVault" },
-  { href: "/#about", label: "About" },
   { href: "/#security", label: "Security & Privacy" },
   { href: "/#contact", label: "Partner" },
 ];
@@ -68,7 +66,7 @@ function MobileFooter() {
       <div className="mt-24 flex flex-col items-center">
         <Logo size="lg" />
         <p className="mt-4 text-[11px] text-ink-soft">
-          Browse the catalog. No sign-in required.
+          Browse the catalog for free.
         </p>
       </div>
 

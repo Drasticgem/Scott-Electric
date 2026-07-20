@@ -11,8 +11,8 @@ interface PrivacyPoint {
 const PRIVACY_POINTS: PrivacyPoint[] = [
   {
     icon: EyeOff,
-    title: "Browse without an account",
-    description: "The full public catalog is open to everyone — no sign-in required.",
+    title: "Free to browse",
+    description: "The full public catalog is free to explore — no cost, ever.",
   },
   {
     icon: Lock,
