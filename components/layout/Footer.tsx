@@ -80,11 +80,11 @@ function MobileFooter() {
           © {new Date().getFullYear()} DiscVault. All rights reserved.
         </p>
         <p className="mt-2 text-[11px] text-ink-soft">
-          <a href="/privacy" className="hover:text-accent">
+          <a href="/privacy" className="text-accent transition-colors hover:text-accent-dark">
             Privacy Policy
           </a>{" "}
           ·{" "}
-          <a href="/terms" className="hover:text-accent">
+          <a href="/terms" className="text-accent transition-colors hover:text-accent-dark">
             Terms of Service
           </a>
         </p>
@@ -148,11 +148,11 @@ function DesktopFooter() {
           © {new Date().getFullYear()} DiscVault. All rights reserved.
         </span>
         <span className="text-[11px] text-ink-soft">
-          <a href="/privacy" className="hover:text-accent">
+          <a href="/privacy" className="text-accent transition-colors hover:text-accent-dark">
             Privacy Policy
           </a>{" "}
           ·{" "}
-          <a href="/terms" className="hover:text-accent">
+          <a href="/terms" className="text-accent transition-colors hover:text-accent-dark">
             Terms of Service
           </a>
         </span>
