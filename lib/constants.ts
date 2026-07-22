@@ -16,7 +16,9 @@ export const DISCVAULT = {
   supportEmail: "discvault.app@discvault.site",
   supportEmailHref: "mailto:discvault.app@discvault.site",
   // Legal operator of record, for Privacy Policy / Terms of Service.
-  legalOperator: "Timothy Barnes",
+  // Kept as the product name, not the founder's personal name — not
+  // publicly disclosed anywhere except where the App Store itself requires it.
+  legalOperator: "DiscVault",
   // TODO: replace with the live App Store link at launch
   appStoreUrl: "#download",
   socials: {

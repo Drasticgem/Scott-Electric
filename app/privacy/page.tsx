@@ -42,9 +42,8 @@ export default function PrivacyPolicyPage() {
 
         <div className="space-y-10 text-[15px] leading-[1.75] text-ink-soft/90">
           <p>
-            DiscVault (&quot;the App&quot;) is operated by{" "}
-            <strong className="text-ink">{DISCVAULT.legalOperator}</strong>, a
-            sole proprietor based in the United States (&quot;we,&quot;
+            DiscVault (&quot;the App&quot;) is operated as a sole
+            proprietorship based in the United States (&quot;we,&quot;
             &quot;us&quot;). This policy explains what information DiscVault
             collects, how it is used, and the choices you have. Questions or
             requests:{" "}
@@ -294,8 +293,6 @@ export default function PrivacyPolicyPage() {
           <PolicySection title="Contact">
             <p>
               <strong className="text-ink">{DISCVAULT.legalOperator}</strong>
-              <br />
-              Operator, DiscVault
               <br />
               <a
                 href={DISCVAULT.emailHref}
