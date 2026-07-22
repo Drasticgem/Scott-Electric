@@ -10,12 +10,24 @@ import { submitContactForm } from "@/app/actions/contact";
 
 type Status = "idle" | "success" | "error";
 
+interface PartnerFormProps {
+  eyebrow?: string;
+  heading?: string;
+  defaultReason?: (typeof REASONS)[number];
+}
+
 /**
- * Partner / support form embedded in the closing CTA. Client-side validation
- * (React Hook Form + the shared Zod schema) is a UX nicety only — the server
- * action re-validates the same schema before ever calling Resend.
+ * Partner / support form embedded in the closing CTA, and reused as-is on
+ * the standalone /support page (with the reason pre-selected). Client-side
+ * validation (React Hook Form + the shared Zod schema) is a UX nicety only
+ * — the server action re-validates the same schema before ever calling
+ * Resend.
  */
-export function PartnerForm() {
+export function PartnerForm({
+  eyebrow = "Partner & Support",
+  heading = "Tell us how we can help",
+  defaultReason,
+}: PartnerFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const nameId = useId();
   const emailId = useId();
@@ -95,14 +107,14 @@ export function PartnerForm() {
         className="mb-2 text-[11px] font-semibold uppercase text-accent"
         style={{ letterSpacing: "0.18em" }}
       >
-        Partner &amp; Support
+        {eyebrow}
       </p>
       <h3
         id="partner-form-heading"
         className="mb-5 font-[family-name:var(--font-display)] font-black text-ink"
         style={{ fontSize: "clamp(20px, 2vw, 26px)", lineHeight: 1.15 }}
       >
-        Tell us how we can help
+        {heading}
       </h3>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -133,7 +145,7 @@ export function PartnerForm() {
           <div className="relative">
             <select
               id={reasonId}
-              defaultValue=""
+              defaultValue={defaultReason ?? ""}
               className="block w-full appearance-none rounded-lg border border-border bg-paper px-4 py-[11px] pr-10 text-[14px] text-ink transition-[border-color,box-shadow] duration-150 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25"
               {...register("reason")}
             >
