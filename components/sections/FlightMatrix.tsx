@@ -19,7 +19,7 @@ import { FLIGHT_MATRIX_CLIPS } from "@/lib/data/flightMatrixDemo";
 export function FlightMatrix() {
   return (
     <section
-      aria-label="Flight matrix"
+      aria-label="Disc matrix"
       className="border-t border-border bg-paper py-24 max-[768px]:py-16"
     >
       <div className="container-1140 grid grid-cols-1 items-center lg:grid-cols-2 lg:gap-16">
@@ -29,7 +29,7 @@ export function FlightMatrix() {
               className="mb-3 text-[10px] font-semibold uppercase text-accent"
               style={{ letterSpacing: "0.22em" }}
             >
-              Flight Matrix
+              Disc Matrix
             </p>
             <h2
               className="mb-4 font-[family-name:var(--font-display)] font-black text-ink"
