@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Logo } from "@/components/layout/Logo";
+import { DiscMark } from "@/components/layout/DiscMark";
 import { PartnerForm } from "@/components/forms/PartnerForm";
 import { DISCVAULT } from "@/lib/constants";
 
@@ -13,7 +13,7 @@ export default function SupportPage() {
   return (
     <section className="flex min-h-screen items-center bg-surface py-20 max-[768px]:py-14">
       <div className="mx-auto w-full max-w-[520px] px-6 text-center">
-        <Logo size="md" className="inline-block" />
+        <DiscMark size={52} className="inline-block" />
 
         <p
           className="mt-6 mb-2 text-[11px] font-semibold uppercase text-accent-dark"
