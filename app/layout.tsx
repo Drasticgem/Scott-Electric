@@ -19,18 +19,18 @@ const softwareAppJsonLd = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(DISCVAULT.siteUrl),
-  title: "DiscVault — Your Disc Collection, Finally Organized",
+  title: "DiscVault — Your Disc Collection, Organized",
   description:
     "DiscVault is a disc golf app that helps you catalog your discs, build smarter bags, track rounds, and discover new molds. Browse the public disc catalog for free.",
   openGraph: {
-    title: "DiscVault — Your Disc Collection, Finally Organized",
+    title: "DiscVault — Your Disc Collection, Organized",
     description:
       "Catalog discs, build smarter bags, track rounds, and discover what to throw next. Browse the public disc catalog for free.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "DiscVault — Your Disc Collection, Finally Organized",
+    title: "DiscVault — Your Disc Collection, Organized",
     description:
       "Catalog discs, build smarter bags, track rounds, and discover what to throw next.",
   },
